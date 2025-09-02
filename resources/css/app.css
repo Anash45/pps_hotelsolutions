@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/sf-pro-display/SFPRODISPLAYREGULAR.OTF') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/sf-pro-display/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/sf-pro-display/SFPRODISPLAYBOLD.OTF') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  font-family: 'SF Pro Display', sans-serif;
+}
+
+.guest-box{
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 1) , rgba(255, 255, 255, 1));
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04), -5px -5px 250px rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(42px);
+}
+
+[type='text']:focus, input:where(:not([type])):focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus{
+    box-shadow: none;
+    outline: none;
+}

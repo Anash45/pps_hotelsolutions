@@ -25,8 +25,17 @@ export default function ResetPassword({ token, email }) {
         <GuestLayout>
             <Head title="Reset Password" />
 
-            <form onSubmit={submit}>
-                <div>
+
+            <div className="flex flex-col gap-1.5 mb-6 text-grey900">
+                <h2 className="font-semibold text-[30px] leading-9">
+                    Set a New Password
+                </h2>
+                <p className="text-sm tracking-wide leading-6 text-[#64748B]">
+                    Create a strong password to secure your account.
+                </p>
+            </div>
+            <form onSubmit={submit} className="flex flex-col gap-6">
+                <div className='hidden'>
                     <InputLabel htmlFor="email" value="Email" />
 
                     <TextInput
@@ -34,7 +43,7 @@ export default function ResetPassword({ token, email }) {
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
+                        className="block w-full"
                         autoComplete="username"
                         onChange={(e) => setData('email', e.target.value)}
                     />
@@ -42,7 +51,7 @@ export default function ResetPassword({ token, email }) {
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                <div className="flex flex-col gap-1">
                     <InputLabel htmlFor="password" value="Password" />
 
                     <TextInput
@@ -50,8 +59,9 @@ export default function ResetPassword({ token, email }) {
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
+                        className="block w-full"
                         autoComplete="new-password"
+                        placeholder="Enter new password"
                         isFocused={true}
                         onChange={(e) => setData('password', e.target.value)}
                     />
@@ -59,7 +69,7 @@ export default function ResetPassword({ token, email }) {
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                <div className="flex flex-col gap-1">
                     <InputLabel
                         htmlFor="password_confirmation"
                         value="Confirm Password"
@@ -70,7 +80,8 @@ export default function ResetPassword({ token, email }) {
                         id="password_confirmation"
                         name="password_confirmation"
                         value={data.password_confirmation}
-                        className="mt-1 block w-full"
+                        placeholder="Re-enter new password"
+                        className="block w-full"
                         autoComplete="new-password"
                         onChange={(e) =>
                             setData('password_confirmation', e.target.value)
@@ -83,8 +94,8 @@ export default function ResetPassword({ token, email }) {
                     />
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                <div className="flex items-center justify-end">
+                    <PrimaryButton className="w-full" disabled={processing}>
                         Reset Password
                     </PrimaryButton>
                 </div>
