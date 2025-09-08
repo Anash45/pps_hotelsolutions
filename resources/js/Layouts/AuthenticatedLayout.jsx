@@ -15,7 +15,7 @@ export default function AuthenticatedLayout({ children }) {
     return (
         <div className="h-screen max-w-[2500px] mx-auto py-2 px-2 flex lg:flex-row flex-col gap-2 bg-white">
             <Sidebar />
-            <main className="grow rounded-lg body-main">{children}</main>
+            <main className="grow rounded-lg body-main overflow-y-auto">{children}</main>
         </div>
     );
 }
