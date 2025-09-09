@@ -17,6 +17,9 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboard
+    Route::get('/', function () {
+        return redirect()->route('dashboard');
+    });
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard/Index');
     })->name('dashboard');
@@ -32,10 +35,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('hotels.index');
 
     // Code Generator
+
+
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/codes', function () {
         return Inertia::render('Codes/Index'); // create resources/js/Pages/Codes.jsx
     })->name('codes.index');
-
 });
 
 Route::middleware('auth')->group(function () {
@@ -44,4 +51,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
