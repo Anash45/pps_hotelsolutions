@@ -11,7 +11,7 @@ export default function GuestLayout({ children }) {
                     </div>
                 </div>
                 <div className="pt-[72px] pb-8 max-w-[580px] mx-auto w-full">
-                    <div className="w-full sm:p-8 py-8 px-6 guest-box rounded-[14px] flex flex-col gap-3">
+                    <div className="w-full sm:p-8 py-8 px-6 main-box rounded-[14px] flex flex-col gap-3">
                         <div className="w-full">
                             {children}
                         </div>

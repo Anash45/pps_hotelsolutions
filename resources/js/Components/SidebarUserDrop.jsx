@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import { ChevronUp, LogOut, User } from "lucide-react";
-import { router } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 
 const SidebarUserDrop = () => {
     const [open, setOpen] = useState(false);
     const wrapperRef = useRef(null);
+    const user = usePage().props.auth.user;
 
     // Close on outside click
     useEffect(() => {
@@ -34,7 +35,11 @@ const SidebarUserDrop = () => {
             >
                 <div className="flex items-center gap-3 font-inter">
                     <img
-                        src="/images/Avatar.png"
+                        src={
+                            user.profile_image
+                                ? `/storage/${user.profile_image}`
+                                : "/images/Avatar.png"
+                        }
                         alt="User Avatar"
                         className="h-11 w-11 rounded-[6px]"
                     />
@@ -66,7 +71,7 @@ const SidebarUserDrop = () => {
                 <ul className="flex flex-col px-2">
                     <li>
                         <a
-                            href="#profile"
+                            href={route("profile.edit")}
                             className="flex items-center gap-3 p-2 text-[#09090B] font-medium rounded-md text-sm hover:bg-gray-100"
                         >
                             <User

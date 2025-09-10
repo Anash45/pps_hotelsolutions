@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use File;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Storage;
+use Str;
 
 class ProfileController extends Controller
 {
@@ -19,7 +22,6 @@ class ProfileController extends Controller
     public function edit(Request $request): Response
     {
         return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
         ]);
     }
@@ -27,18 +29,52 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+    public function updatePhoto(Request $request)
+    {
+        $request->validate([
+            'profile_image' => 'required|image|max:5120', // 5 MB
+        ]);
+
+        $user = $request->user();
+
+        // Delete previous image if exists
+        if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+            Storage::disk('public')->delete($user->profile_image);
         }
 
-        $request->user()->save();
+        // Store new image
+        $path = $request->file('profile_image')->store('profile-images', 'public');
 
-        return Redirect::route('profile.edit');
+        // Update DB
+        $user->profile_image = $path;
+        $user->save();
+
+        return back()->with('success', 'Photo updated');
     }
+
+
+
+    public function update(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+        ], [
+            'first_name.required' => 'First name is required.',
+            'last_name.required' => 'Last name is required.',
+        ]);
+
+        $user = $request->user();
+        $user->first_name = $validated['first_name'];
+        $user->last_name = $validated['last_name'];
+
+
+        $user->save();
+
+        return redirect()->route('profile.edit');
+    }
+
 
     /**
      * Delete the user's account.
