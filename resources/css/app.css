@@ -107,8 +107,8 @@ input:where(:not([type])):focus,
 [multiple]:focus,
 textarea:focus,
 select:focus {
-    box-shadow: none;
-    outline: none;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .body-auth {

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'role',
         'profile_image',
+        'hotel_id',
     ];
 
     /**
@@ -47,5 +48,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function hotel()
+    {
+        return $this->belongsTo(Hotel::class);
     }
 }

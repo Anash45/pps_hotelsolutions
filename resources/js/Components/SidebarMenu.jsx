@@ -1,6 +1,6 @@
 "use client";
 import { Link, usePage } from "@inertiajs/react";
-import { Code2, Home, Hotel, KeyRound } from "lucide-react";
+import { Code2, Home, Hotel, KeyRound, Users } from "lucide-react";
 import React from "react";
 
 // Define menu items in an array
@@ -8,6 +8,12 @@ const menuItems = [
     { name: "Dashboard", icon: Home, route: "dashboard" },
     { name: "Key Management", icon: KeyRound, route: "keys.index" },
     { name: "Hotel Configurator", icon: Hotel, route: "hotels.index" },
+    {
+        name: "Users Management",
+        icon: Users,
+        route: "users.index",
+        adminOnly: true,
+    },
     {
         name: "Code Generator",
         icon: Code2,

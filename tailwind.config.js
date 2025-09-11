@@ -19,7 +19,8 @@ export default {
                 grey900: "#1f1f1f",
                 black: "#000000",
                 primary: "#84AF83",
-                slate600: "#475569"
+                slate600: "#475569",
+                body: "#263238"
             },
         },
     },

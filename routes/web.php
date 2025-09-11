@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +52,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/codes', function () {
         return Inertia::render('Codes/Index'); // create resources/js/Pages/Codes.jsx
     })->name('codes.index');
+
+    Route::resource('users', UserController::class);
+
 });
 
 Route::middleware('auth')->group(function () {

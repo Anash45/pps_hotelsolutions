@@ -19,8 +19,9 @@ export default function UpdateProfileInformation({
         useForm({
             first_name: user.first_name || "",
             last_name: user.last_name || "",
-            email: user.email,
+            email: user.email || "",
             profile_image: user.profile_image || null,
+            hotel_name: user.hotel?.hotel_name || "",
         });
 
     const submit = (e) => {
@@ -59,6 +60,34 @@ export default function UpdateProfileInformation({
 
                 <form onSubmit={submit} className="space-y-5 xl:max-w-[1000px]">
                     {/* First Name & Last Name */}
+                    {/* Hotel Name (only for hotel users) */}
+                    {user.role === "hotel" && (
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div className="md:col-span-4 space-y-2">
+                                <InputLabel
+                                    className="text-[#344054] font-medium"
+                                    htmlFor="hotel_name"
+                                    value="Hotel Name"
+                                />
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.hotel_name}
+                                />
+                            </div>
+                            <div className="md:col-span-8">
+                                <TextInput
+                                    id="hotel_name"
+                                    name="hotel_name"
+                                    className="block w-full"
+                                    value={data.hotel_name}
+                                    onChange={(e) =>
+                                        setData("hotel_name", e.target.value)
+                                    }
+                                    required
+                                />
+                            </div>
+                        </div>
+                    )}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                         <div className="md:col-span-4 space-y-2">
                             <InputLabel
@@ -151,7 +180,6 @@ export default function UpdateProfileInformation({
                     <Divider />
 
                     <div className="flex items-center gap-4 justify-end">
-
                         <Transition
                             show={recentlySuccessful}
                             enter="transition ease-in-out"

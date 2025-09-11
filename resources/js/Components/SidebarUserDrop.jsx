@@ -38,17 +38,17 @@ const SidebarUserDrop = () => {
                         src={
                             user.profile_image
                                 ? `/storage/${user.profile_image}`
-                                : "/images/Avatar.png"
+                                : "/images/user-placeholder.png"
                         }
                         alt="User Avatar"
-                        className="h-11 w-11 rounded-[6px]"
+                        className="h-11 w-11 rounded-[6px] object-cover object-center"
                     />
                     <div className="flex flex-col gap-0.5">
                         <span className="text-[15.5px] leading-[22px] text-[#71717A] font-medium">
-                            Erica
+                            {user.first_name}
                         </span>
-                        <span className="text-[13.5px] leading-[18px] text-[#71717A] font-medium">
-                            erica@example.com
+                        <span className="text-[13.5px] leading-[18px] text-[#71717A] font-medium break-all">
+                            {user.email}
                         </span>
                     </div>
                 </div>
