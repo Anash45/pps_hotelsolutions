@@ -27,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
                 return [
                     'success' => session('success'),
                     'error' => session('error'),
+                    'data' => session('data', []),
+                    'generatedCodes' => session('generatedCodes', []),
                 ];
             },
         ]);

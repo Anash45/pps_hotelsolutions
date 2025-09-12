@@ -151,7 +151,6 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        // Prevent deleting yourself
         if ($user->id === auth()->id()) {
             return redirect()
                 ->route('users.index')
@@ -162,7 +161,7 @@ class UserController extends Controller
 
         return redirect()
             ->route('users.index')
-            ->with('success', 'User deleted.');
+            ->with('success', 'User deleted (soft).');
     }
 
 }

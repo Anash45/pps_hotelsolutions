@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CodesController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -46,13 +47,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Code Generator
 
 
+
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/codes', function () {
-        return Inertia::render('Codes/Index'); // create resources/js/Pages/Codes.jsx
-    })->name('codes.index');
+    Route::resource('codes', CodesController::class);
 
+    Route::get('/codes/group/{group}/download', [CodesController::class, 'downloadCsv'])
+        ->name('codes.group.download');
     Route::resource('users', UserController::class);
 
 });

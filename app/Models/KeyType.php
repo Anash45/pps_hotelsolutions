@@ -2,31 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Hotel extends Model
+class KeyType extends Model
 {
-    use HasFactory;
+    protected $fillable = ['name', 'display_name'];
+    public $timestamps = false;
 
-    protected $fillable = ['hotel_name'];
-
-    // Relationship: Hotel has many users
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
-
+    // A key type has many code groups
     public function codeGroups(): HasMany
     {
         return $this->hasMany(CodeGroup::class);
     }
 
-    // A hotel has many codes
+    // A key type has many codes
     public function codes(): HasMany
     {
         return $this->hasMany(Code::class);
     }
-
 }

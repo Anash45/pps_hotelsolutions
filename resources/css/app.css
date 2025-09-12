@@ -72,6 +72,10 @@ html {
     scrollbar-width: thin;
     scrollbar-color: #83af82 rgba(0, 0, 0, 0.04);
 }
+
+body{
+    color: #1f1f1f;
+}
 .main-box {
     background-image: linear-gradient(
         to right,

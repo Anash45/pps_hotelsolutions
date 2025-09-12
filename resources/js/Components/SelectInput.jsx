@@ -1,8 +1,16 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useEffect } from "react";
+import Select from "react-select";
 
 export default forwardRef(function SelectInput(
-    { className = '', isFocused = false, children, ...props },
-    ref,
+    {
+        className = "",
+        isFocused = false,
+        value,
+        onChange,
+        options = [],
+        ...props
+    },
+    ref
 ) {
     const localRef = useRef(null);
 
@@ -11,22 +19,71 @@ export default forwardRef(function SelectInput(
     }));
 
     useEffect(() => {
-        if (isFocused) {
-            localRef.current?.focus();
+        if (isFocused && localRef.current) {
+            localRef.current.focus();
         }
     }, [isFocused]);
 
+    const customStyles = {
+        control: (base) => ({
+            ...base,
+            borderColor: "#9CAADE",
+            borderRadius: "0.5rem",
+            minHeight: "42px",
+            boxShadow: "none",
+            "&:hover": { borderColor: "#64748B" },
+        }),
+        dropdownIndicator: (base) => ({
+            ...base,
+            color: "#64748B",
+            "&:hover": { color: "#1f1f1f" },
+        }),
+        indicatorSeparator: () => ({
+            display: "none",
+        }),
+        option: (base, state) => ({
+            ...base,
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            backgroundColor: state.isSelected ? "#84af83" : "#fff",
+            color: state.isSelected ? "#ffffff" : "#1f1f1f",
+            "&:hover": { backgroundColor: "#84af832a", color: "#1f1f1f" },
+        }),
+        menu: (base) => ({
+            ...base,
+            borderRadius: "0.5rem",
+            overflow: "hidden",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+        }),
+        singleValue: (base) => ({
+            ...base,
+            display: "flex",
+            color: "#1f1f1f",
+            alignItems: "center",
+            gap: "8px",
+        }),
+    };
+
     return (
-        <select
+        <Select
             {...props}
-            className={
-                'rounded-lg placeholder:text-[#64748B] text-grey900 text-sm leading-none px-[14px] py-[13px] border border-[#9CAADE] focus:outline-0 focus:border-primary focus:shadow-none' +
-                ' ' +
-                className
+            inputRef={localRef}
+            className={className}
+            classNamePrefix="custom-select"
+            options={options}
+            isSearchable={false}
+            value={options.find((opt) => opt.value === value) || null}
+            onChange={(option) =>
+                onChange({ target: { value: option?.value } })
             }
-            ref={localRef}
-        >
-            {children}
-        </select>
+            styles={customStyles}
+            formatOptionLabel={(option) => (
+                <div className="flex items-center gap-2">
+                    {option.icon && <span>{option.icon}</span>}
+                    <span>{option.label}</span>
+                </div>
+            )}
+        />
     );
 });

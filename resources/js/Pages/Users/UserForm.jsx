@@ -128,10 +128,11 @@ export default function UserForm({ user = null }) {
                         value={data.role}
                         onChange={(e) => setData("role", e.target.value)}
                         className="w-full block"
-                    >
-                        <option value="admin">Admin</option>
-                        <option value="hotel">Hotel</option>
-                    </SelectInput>
+                        options={[
+                            { value: "admin", label: "Admin" },
+                            { value: "hotel", label: "Hotel" },
+                        ]}
+                    />
                     <InputError message={errors.role} className="mt-1" />
                 </div>
             </div>
