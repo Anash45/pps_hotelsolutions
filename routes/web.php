@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CodesController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\KeyAssignmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -34,17 +35,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard/Index');
     })->name('dashboard');
 
-    // Key Management
-    Route::get('/keys', function () {
-        return Inertia::render('Keys/Index'); // create resources/js/Pages/Keys.jsx
-    })->name('keys.index');
 
     // Hotel Configurator
     Route::get('/hotels', function () {
         return Inertia::render('Hotels/Index'); // create resources/js/Pages/Hotels.jsx
     })->name('hotels.index');
 
-    // Code Generator
+    // Keys Management
+
+    Route::resource('keys', KeyAssignmentController::class);
 
 
 

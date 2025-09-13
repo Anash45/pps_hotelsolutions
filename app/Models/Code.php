@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Code extends Model
 {
@@ -44,5 +45,10 @@ class Code extends Model
     public function group(): BelongsTo
     {
         return $this->belongsTo(CodeGroup::class, 'group_id');
+    }
+
+    public function keyAssignment(): HasOne
+    {
+        return $this->hasOne(KeyAssignment::class);
     }
 }

@@ -23,6 +23,8 @@
         "vite": "^7.0.4"
     },
     "dependencies": {
+        "datatables.net-dt": "^2.3.4",
+        "datatables.net-react": "^1.0.1",
         "dayjs": "^1.11.18",
         "lucide-react": "^0.542.0",
         "react-dropzone": "^14.3.8",
