@@ -1,13 +1,18 @@
 import { forwardRef, useImperativeHandle, useRef, useEffect } from "react";
 import Select from "react-select";
+import AsyncSelect from "react-select/async";
 
 export default forwardRef(function SelectInput(
     {
         className = "",
         isFocused = false,
+        isSearchable = false,
         value,
         onChange,
-        options = [],
+        options = [], // for small dataset
+        async = false, // new prop to enable async
+        loadOptions, // function for async loading
+        placeholder = "Select...",
         ...props
     },
     ref
@@ -65,6 +70,25 @@ export default forwardRef(function SelectInput(
         }),
     };
 
+    if (async) {
+        return (
+            <AsyncSelect
+                {...props}
+                cacheOptions
+                defaultOptions
+                loadOptions={loadOptions} // function(inputValue, callback) {}
+                inputRef={localRef}
+                className={className}
+                classNamePrefix="custom-select"
+                placeholder={placeholder}
+                styles={customStyles}
+                onChange={(option) =>
+                    onChange({ target: { value: option?.value } })
+                }
+            />
+        );
+    }
+
     return (
         <Select
             {...props}
@@ -72,18 +96,13 @@ export default forwardRef(function SelectInput(
             className={className}
             classNamePrefix="custom-select"
             options={options}
-            isSearchable={false}
+            isSearchable={isSearchable}
+            placeholder={placeholder}
             value={options.find((opt) => opt.value === value) || null}
             onChange={(option) =>
                 onChange({ target: { value: option?.value } })
             }
             styles={customStyles}
-            formatOptionLabel={(option) => (
-                <div className="flex items-center gap-2">
-                    {option.icon && <span>{option.icon}</span>}
-                    <span>{option.label}</span>
-                </div>
-            )}
         />
     );
 });

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import TestModal from "@/Components/TestModal";
+import CreateKeyModal from "@/Components/CreateKeyModal";
 
 const ModalContext = createContext();
 
@@ -15,22 +16,23 @@ export function ModalProvider({ children }) {
 
             {modal && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center"
+                    className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto sm:py-10 py-4 sm:px-4 px-2"
                     aria-modal="true"
                     role="dialog"
                 >
                     {/* 🔹 Shared Backdrop */}
                     <div
-                        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+                        className="fixed inset-0 bg-black/20 backdrop-blur-sm"
                         onClick={closeModal}
                     />
 
-                    {/* 🔹 Modal Container (so each modal stays centered) */}
-                    <div className="relative z-10">
-                        {modal?.name === "TestModal" && (
-                            <TestModal {...modal.props} onClose={closeModal} />
+                    {/* 🔹 Modal Container */}
+                        {modal?.name === "CreateKeyModal" && (
+                            <CreateKeyModal
+                                {...modal.props}
+                                onClose={closeModal}
+                            />
                         )}
-                    </div>
                 </div>
             )}
         </ModalContext.Provider>

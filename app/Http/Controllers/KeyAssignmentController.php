@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\KeyAssignment;
 use App\Models\Code;
 use App\Models\Hotel;
+use App\Models\KeyType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,25 +14,35 @@ class KeyAssignmentController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $keyTypes = KeyType::get();
 
         if ($user->role === 'admin') {
             $hotelId = $request->query('hotel_id');
             $hotels = Hotel::select('id', 'hotel_name')->get();
 
             $codes = [];
+            $availableCodes = [];
             if ($hotelId) {
                 $codes = Code::with(['keyAssignment', 'hotel', 'keyType'])
                     ->where('hotel_id', $hotelId)
                     ->where('status', 'active')
                     ->whereHas('keyAssignment')
                     ->get();
+
+                $availableCodes = Code::with(['hotel', 'keyType'])
+                    ->where('hotel_id', $hotelId)
+                    ->where('status', 'inactive')
+                    ->doesntHave('keyAssignment')
+                    ->get();
             }
 
             return Inertia::render('Keys/Index', [
                 'hotels' => $hotels,
                 'codes' => $codes,
+                'availableCodes' => $availableCodes,
                 'selectedHotel' => $hotelId,
                 'isAdmin' => true,
+                'keyTypes' => $keyTypes
             ]);
         } else {
             $codes = Code::with(['keyAssignment', 'keyType', 'hotel'])
@@ -40,9 +51,17 @@ class KeyAssignmentController extends Controller
                 ->whereHas('keyAssignment')
                 ->get();
 
+            $availableCodes = Code::with(['hotel', 'keyType'])
+                ->where('hotel_id', $user->hotel_id)
+                ->where('status', 'inactive')
+                ->doesntHave('keyAssignment')
+                ->get();
+
             return Inertia::render('Keys/Index', [
                 'codes' => $codes,
+                'availableCodes' => $availableCodes,
                 'isAdmin' => false,
+                'keyTypes' => $keyTypes
             ]);
         }
     }
