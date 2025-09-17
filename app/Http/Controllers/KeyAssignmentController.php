@@ -15,14 +15,17 @@ class KeyAssignmentController extends Controller
         $user = $request->user();
 
         if ($user->role === 'admin') {
-            // Admin can choose a hotel from dropdown
             $hotelId = $request->query('hotel_id');
-
             $hotels = Hotel::select('id', 'hotel_name')->get();
 
-            $codes = Code::with(['keyAssignment', 'hotel', 'keyType'])
-                ->when($hotelId, fn($q) => $q->where('hotel_id', $hotelId))
-                ->get();
+            $codes = [];
+            if ($hotelId) {
+                $codes = Code::with(['keyAssignment', 'hotel', 'keyType'])
+                    ->where('hotel_id', $hotelId)
+                    ->where('status', 'active')
+                    ->whereHas('keyAssignment')
+                    ->get();
+            }
 
             return Inertia::render('Keys/Index', [
                 'hotels' => $hotels,
@@ -31,9 +34,10 @@ class KeyAssignmentController extends Controller
                 'isAdmin' => true,
             ]);
         } else {
-            // Hotel user — only their own hotel's codes
             $codes = Code::with(['keyAssignment', 'keyType', 'hotel'])
                 ->where('hotel_id', $user->hotel_id)
+                ->where('status', 'active')
+                ->whereHas('keyAssignment')
                 ->get();
 
             return Inertia::render('Keys/Index', [
