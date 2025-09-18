@@ -211,6 +211,10 @@ div.dt-container .dt-paging .dt-paging-button:hover{
     color: #fff !important;
 }
 
+.react-datepicker__tab-loop {
+    margin-top: -4px !important;
+}
+
 @media (max-width: 1024px) {
     .mobile-sidebar-wrapper {
         background-color: rgba(0, 0, 0, 0.25);

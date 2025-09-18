@@ -8,6 +8,7 @@ use App\Models\Hotel;
 use App\Models\KeyType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Log;
 
 class KeyAssignmentController extends Controller
 {
@@ -61,6 +62,7 @@ class KeyAssignmentController extends Controller
                 'codes' => $codes,
                 'availableCodes' => $availableCodes,
                 'isAdmin' => false,
+                'selectedHotel' => $user->hotel_id,
                 'keyTypes' => $keyTypes
             ]);
         }
@@ -87,6 +89,63 @@ class KeyAssignmentController extends Controller
 
         return redirect()->back()->with('success', 'Key assignment created successfully.');
     }
+
+    public function recognize(Request $request)
+    {
+        Log::info('Recognize request started', [
+            'input' => $request->input('input'),
+            'hotel_id' => $request->input('hotel_id')
+        ]);
+
+        $request->validate([
+            'input' => 'required|string',
+            'hotel_id' => 'required|exists:hotels,id',
+        ]);
+
+        $input = trim($request->input('input'));
+        $hotelId = $request->input('hotel_id');
+
+        Log::info('Trimmed input', ['input' => $input]);
+
+        // Remove domain if input is a URL
+        $codeString = preg_replace('#^https?://[^/]+/#', '', $input);
+        Log::info('Processed code string from input', ['codeString' => $codeString]);
+
+        // Try to find code by code string and hotel
+        $query = Code::where('hotel_id', $hotelId)
+            ->where(function ($q) use ($input, $codeString) {
+                $q->where('code', $input)
+                    ->orWhere('code', $codeString);
+            })
+            ->where('status', 'inactive')
+            ->doesntHave('keyAssignment');
+
+        Log::info('Executing code lookup query', [
+            'hotel_id' => $hotelId,
+            'search_terms' => [$input, $codeString]
+        ]);
+
+        $code = $query->first();
+
+        if ($code) {
+            Log::info('Code recognized successfully', ['code_id' => $code->id]);
+            return response()->json([
+                'recognized' => true,
+                'code' => $code,
+            ]);
+        }
+
+        Log::warning('No matching code found', [
+            'hotel_id' => $hotelId,
+            'input' => $input,
+            'codeString' => $codeString
+        ]);
+
+        return response()->json([
+            'recognized' => false,
+        ]);
+    }
+
 
     public function show(KeyAssignment $keyAssignment)
     {

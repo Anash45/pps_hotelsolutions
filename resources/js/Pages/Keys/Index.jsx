@@ -13,10 +13,11 @@ export default function Keys() {
         selectedHotel = null,
     } = usePage().props;
 
-    const [selected, setSelected] = useState(selectedHotel ? String(selectedHotel) : "");
+    const [selected, setSelected] = useState(
+        selectedHotel ? String(selectedHotel) : ""
+    );
     const isAdmin = auth.user.role === "admin";
 
-    console.log(selectedHotel, selected);
     const handleHotelChange = (e) => {
         setSelected(e.target.value);
         router.get(route("keys.index"), { hotel_id: e.target.value });
@@ -27,7 +28,10 @@ export default function Keys() {
             <Head title="Keys" />
 
             <div className="py-4 md:px-6 px-4 flex flex-col gap-6">
-                <KeysTitle title={"Keys Management"} />
+                <KeysTitle
+                    title={"Keys Management"}
+                    selectedHotel={selected}
+                />
 
                 {isAdmin && (
                     <div className="mb-6 w-64">

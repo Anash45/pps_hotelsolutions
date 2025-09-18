@@ -44,7 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Keys Management
 
     Route::resource('keys', KeyAssignmentController::class);
-
+    Route::post('/keys/recognize', [KeyAssignmentController::class, 'recognize']);
 
 
 });
