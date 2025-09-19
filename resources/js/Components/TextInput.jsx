@@ -54,7 +54,15 @@ export default forwardRef(function TextInput(
         return (
             <ReactDatePicker
                 selected={value ? new Date(value) : null}
-                onChange={(date) => onChange({ target: { value: date } })}
+                onChange={(date) =>
+                    onChange({
+                        target: {
+                            name: props.name,          // 🔹 include the name
+                            value: date ? format(date, "yyyy-MM-dd") : "", // 🔹 format for backend
+                        },
+                    })
+                }
+
                 dateFormat="dd.MM.yyyy" // German format
                 locale={de}
                 customInput={<CustomInput ref={localRef} />}

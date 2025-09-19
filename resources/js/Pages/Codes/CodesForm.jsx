@@ -15,7 +15,8 @@ export default function CodesForm() {
         hotel_id: hotels.length > 0 ? hotels[0].id : "",
         key_type: keyTypes.length > 0 ? keyTypes[0].name : "",
         no_of_codes: "10",
-        domain: "https://test-app.ppshotelsolutions.de",
+        domain: import.meta.env.VITE_LINK_URL ||
+            "https://test-app.ppshotelsolutions.de",
     });
 
     const [previewCodes, setPreviewCodes] = useState([]);

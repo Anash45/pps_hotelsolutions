@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { router } from '@inertiajs/react';
+
+
 import InputError from "./InputError";
 import SelectInput from "./SelectInput";
 import InputLabel from "./InputLabel";
@@ -7,11 +10,14 @@ import TextInput from "./TextInput";
 import LightButton from "./PrimaryButton copy";
 import Divider from "./Divider";
 import axios from "axios";
+import Alert from "./Alert";
 
 export default function CreateKeyModal({
     onClose,
     keyTypes,
     selectedHotel,
+    onSuccess,
+    codeId = null,
     title = "Register new key",
     description = "Scan QR code (barcode scanner input line) - or insert code/URL",
 }) {
@@ -23,7 +29,7 @@ export default function CreateKeyModal({
         setShow(false);
         setTimeout(onClose, 200);
     };
-    console.log(selectedHotel);
+    console.log(selectedHotel, keyTypes, codeId);
 
     const LINK_URL =
         import.meta.env.VITE_LINK_URL ||
@@ -34,9 +40,10 @@ export default function CreateKeyModal({
         label: kt.display_name,
     }));
 
-    const [showFields, setShowFields] = useState(false);
-    const [gdprConsent, setGdprConsent] = useState(false);
+    const [gdprConsent, setGdprConsent] = useState(true);
+    const [keyTypeId, setKeyTypeId] = useState(null);
     const [formData, setFormData] = useState({
+        hotel_id: selectedHotel ?? null,  // ✅ include here
         salutation: "",
         title: "",
         first_name: "",
@@ -46,7 +53,8 @@ export default function CreateKeyModal({
         email: "",
         stay_from: "",
         stay_till: "",
-        keyType: "",
+        gdpr_consent: gdprConsent,   // keep inside formData
+        code_id: null        // track selected code
     });
 
     const [formErrors, setFormErrors] = useState({});
@@ -54,36 +62,43 @@ export default function CreateKeyModal({
     const [recognized, setRecognized] = useState(false);
     const [selectedCode, setSelectedCode] = useState(null);
     const [recognizeError, setRecognizeError] = useState("");
+    const [submitSuccess, setSubmitSuccess] = useState("");
+
+    // Sync gdprConsent when changed (if you add a checkbox)
+    const handleGdprChange = (e) => {
+        setFormData((prev) => ({
+            ...prev,
+            gdpr_consent: e.target.checked,
+        }));
+
+        setGdprConsent(e.target.checked);
+    };
+
+    // Sync hotel_id when hotel changes
+    useEffect(() => {
+        setFormData((prev) => ({
+            ...prev,
+            hotel_id: selectedHotel,   // ✅ always in sync
+        }));
+    }, [selectedHotel]);
+
+    // When a code is selected
+    useEffect(() => {
+        if (selectedCode) {
+            setFormData((prev) => ({
+                ...prev,
+                code_id: selectedCode.id
+            }));
+        }
+    }, [selectedCode]);
 
     useEffect(() => {
         setRecognized(false);
         setSelectedCode(null);
         setRecognizeError("");
+        setKeyTypeId(null);
     }, [barcodeInput, selectedHotel]);
 
-    const handleRecognize = async () => {
-        setRecognizeError("");
-        setRecognized(false);
-        setSelectedCode(null);
-        if (!barcodeInput.trim() || !selectedHotel) {
-            setRecognizeError("Please enter barcode/URL and select a hotel.");
-            return;
-        }
-        try {
-            const res = await axios.post("/keys/recognize", {
-                input: barcodeInput.trim(),
-                hotel_id: selectedHotel,
-            });
-            if (res.data.recognized && res.data.code) {
-                setRecognized(true);
-                setSelectedCode(res.data.code);
-            } else {
-                setRecognizeError("Key not recognized or already assigned.");
-            }
-        } catch (e) {
-            setRecognizeError("Recognition failed.");
-        }
-    };
 
     // Handles field changes
     const handleChange = (e) => {
@@ -92,10 +107,27 @@ export default function CreateKeyModal({
             ...prev,
             [name]: value,
         }));
+
+        console.log(name, value);
     };
 
+
+    useEffect(() => {
+        if (!gdprConsent) {
+            setFormData((prev) => ({
+                ...prev,
+                first_name: "",
+                last_name: "",
+                email: "",
+                salutation: "",
+                title: "",
+            }));
+        }
+    }, [gdprConsent]);
+
+
     // Handles form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!recognized || !selectedCode) return;
@@ -103,19 +135,87 @@ export default function CreateKeyModal({
         const url = formData.id ? `/keys/${formData.id}` : "/keys";
         const method = formData.id ? "put" : "post";
 
-        axios[method](url, {
-            ...formData,
-            code_id: selectedCode.id,
-            hotel_id: selectedHotel,
-            gdprConsent: gdprConsent,
-        })
-            .then(() => setFormErrors({}))
-            .catch((err) => {
-                if (err.response?.data?.errors) {
-                    setFormErrors(err.response.data.errors);
-                }
+        try {
+            const res = await axios[method](url, formData);
+
+            console.log("✅ Success response:", res.data);
+            setFormErrors({});
+
+            // Optional: reset form after success
+            setBarcodeInput('');
+            setFormData({
+                salutation: "",
+                title: "",
+                first_name: "",
+                last_name: "",
+                room_number: "",
+                mobile_number: "",
+                email: "",
+                stay_from: "",
+                stay_till: "",
+                gdpr_consent: gdprConsent,
             });
+
+            setTimeout(() => {
+                handleClose();
+            }, 3000);
+            onSuccess();
+            setSubmitSuccess("Key has been created!");
+
+        } catch (err) {
+            if (err.response?.data?.errors) {
+                console.log("❌ Validation errors:", err.response.data.errors);
+                setFormErrors(err.response.data.errors);
+            } else {
+                console.error("❌ Unexpected error:", err);
+            }
+        } finally {
+            console.log("📌 Request finished");
+        }
     };
+
+    const handleRecognize = async () => {
+        setRecognizeError("");
+        setRecognized(false);
+        setSelectedCode(null);
+
+        if (!barcodeInput.trim() || !selectedHotel) {
+            setRecognizeError("Please enter barcode/URL and select a hotel.");
+            return;
+        }
+
+        try {
+            const res = await axios.post("/keys/recognize", {
+                input: barcodeInput.trim(),
+                hotel_id: selectedHotel,
+            });
+
+            if (res.data.recognized && res.data.code) {
+                setRecognized(true);
+                setSelectedCode(res.data.code);
+                setKeyTypeId(res.data.code.key_type_id);
+                console.log("✅ Recognized:", res.data.code);
+            } else {
+                setRecognizeError("Key not recognized or already assigned.");
+            }
+        } catch (e) {
+            if (e.response) {
+                if (e.response.status === 404) {
+                    setRecognizeError("Code not found.");
+                } else if (e.response.status === 422) {
+                    setRecognizeError(e.response.data.error || "Code already active/assigned.");
+                } else {
+                    setRecognizeError("Unexpected error occurred.");
+                }
+                console.error("❌ Error response:", e.response.data);
+            } else {
+                setRecognizeError("Network error.");
+                console.error("❌ Network/Unknown error:", e);
+            }
+        }
+    };
+
+
 
     return (
         <div
@@ -168,23 +268,25 @@ export default function CreateKeyModal({
                         )}
                         <InputError message={recognizeError} />
                     </div>
+                    {submitSuccess !== "" && (<Alert type="success" message={submitSuccess} />)}
+
                     <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3">
                         {/* Disable all inputs if not recognized */}
                         <div className="space-y-1">
                             <InputLabel
-                                htmlFor="keyType"
+                                htmlFor="key_type"
                                 value="Key Type"
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <SelectInput
-                                id="keyType"
-                                name="keyType"
-                                onChange={handleChange}
+                                id="key_type"
+                                value={keyTypeId}
+                                onChange={() => { console.log('Readonly!'); }}
                                 className="w-full block"
                                 placeholder="Key Type"
                                 options={keyTypesOptions}
                             />
-                            <InputError message={formErrors.keyType?.[0]} />
+                            <InputError message={formErrors.key_type?.[0]} />
                         </div>
                         <div className="space-y-1">
                             <InputLabel
@@ -195,6 +297,7 @@ export default function CreateKeyModal({
                             <TextInput
                                 id="stay_from"
                                 name="stay_from"
+                                value={formData.stay_from}
                                 onChange={handleChange}
                                 type="date"
                                 className="date-inp block w-full"
@@ -212,6 +315,7 @@ export default function CreateKeyModal({
                             <TextInput
                                 id="stay_till"
                                 name="stay_till"
+                                value={formData.stay_till}
                                 onChange={handleChange}
                                 type="date"
                                 className="date-inp block w-full"
@@ -227,15 +331,15 @@ export default function CreateKeyModal({
                     >
                         <input
                             type="checkbox"
-                            name="gdpr_consent"
-                            checked={gdprConsent}
-                            onChange={(e) => setGdprConsent(e.target.checked)}
+                            name="gdprConsent"
+                            checked={formData.gdpr_consent}
+                            onChange={handleGdprChange}
                             id="gdpr_consent"
                             className="text-primary rounded"
                         />
                         <div className="flex flex-col gap-1">
                             <span className="text-sm font-medium text-slate600">
-                                Enter guest data (name, title, salutation)
+                                Enter guest data (name, title, salutation, email etc.)
                             </span>
                             <span className="text-xs text-slate600">
                                 If disabled, no person names will be saved for
@@ -246,7 +350,7 @@ export default function CreateKeyModal({
                     <Divider />
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
                         {/* Salutation */}
-                        <div className="space-y-1">
+                        <div className={`space-y-1 ${gdprConsent ? 'block' : 'hidden'}`}>
                             <InputLabel
                                 htmlFor="salutation"
                                 value="Salutation"
@@ -255,6 +359,7 @@ export default function CreateKeyModal({
                             <SelectInput
                                 id="salutation"
                                 name="salutation"
+                                value={formData.salutation}
                                 onChange={handleChange}
                                 className="w-full block"
                                 options={[
@@ -267,7 +372,7 @@ export default function CreateKeyModal({
                         </div>
 
                         {/* Title */}
-                        <div className="space-y-1">
+                        <div className={`space-y-1 ${gdprConsent ? 'block' : 'hidden'}`}>
                             <InputLabel
                                 htmlFor="title"
                                 value="Title"
@@ -285,7 +390,7 @@ export default function CreateKeyModal({
                         </div>
 
                         {/* First name */}
-                        <div className="space-y-1">
+                        <div className={`space-y-1 ${gdprConsent ? 'block' : 'hidden'}`}>
                             <InputLabel
                                 htmlFor="first_name"
                                 value="First Name"
@@ -304,7 +409,7 @@ export default function CreateKeyModal({
                         </div>
 
                         {/* Last name */}
-                        <div className="space-y-1">
+                        <div className={`space-y-1 ${gdprConsent ? 'block' : 'hidden'}`}>
                             <InputLabel
                                 htmlFor="last_name"
                                 value="Last Name"
@@ -323,7 +428,7 @@ export default function CreateKeyModal({
                         </div>
 
                         {/* Room number */}
-                        <div className="space-y-1">
+                        <div className={`space-y-1`}>
                             <InputLabel
                                 htmlFor="room_number"
                                 value="Room Number"
@@ -341,10 +446,10 @@ export default function CreateKeyModal({
                         </div>
 
                         {/* Mobile phone number */}
-                        <div className="space-y-1">
+                        <div className={`space-y-1 ${keyTypeId == 2 ? 'block' : 'hidden'}`}>
                             <InputLabel
                                 htmlFor="mobile_number"
-                                value="Mobile Phone Number"
+                                value="Mobile Phone Number (for Key finder only)"
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -359,7 +464,7 @@ export default function CreateKeyModal({
                         </div>
 
                         {/* Email (full width) */}
-                        <div className="space-y-1">
+                        <div className={`space-y-1 ${gdprConsent ? 'block' : 'hidden'}`}>
                             <InputLabel
                                 htmlFor="email"
                                 value="Email Address"
@@ -378,6 +483,9 @@ export default function CreateKeyModal({
                         </div>
                     </div>
                     <div className="flex items-center gap-2 justify-end flex-wrap">
+                        {Object.keys(formErrors).length > 0 && (
+                            <InputError message="Fix the errors in the form." />
+                        )}
                         <LightButton onClick={handleClose}>Cancel</LightButton>
                         <PrimaryButton disabled={!recognized} onClick={handleSubmit}>
                             Register new Key

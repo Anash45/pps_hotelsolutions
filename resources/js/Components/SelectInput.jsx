@@ -69,7 +69,6 @@ export default forwardRef(function SelectInput(
             gap: "8px",
         }),
     };
-
     if (async) {
         return (
             <AsyncSelect
@@ -83,7 +82,12 @@ export default forwardRef(function SelectInput(
                 placeholder={placeholder}
                 styles={customStyles}
                 onChange={(option) =>
-                    onChange({ target: { value: option?.value } })
+                    onChange({
+                        target: {
+                            name: props.name,
+                            value: option?.value ?? "",
+                        },
+                    })
                 }
             />
         );
@@ -100,7 +104,12 @@ export default forwardRef(function SelectInput(
             placeholder={placeholder}
             value={options.find((opt) => opt.value === value) || null}
             onChange={(option) =>
-                onChange({ target: { value: option?.value } })
+                onChange({
+                    target: {
+                        name: props.name,
+                        value: option?.value ?? "",
+                    },
+                })
             }
             styles={customStyles}
         />

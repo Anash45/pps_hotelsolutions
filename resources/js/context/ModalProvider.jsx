@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import TestModal from "@/Components/TestModal";
 import CreateKeyModal from "@/Components/CreateKeyModal";
+import { router } from "@inertiajs/react";
 
 const ModalContext = createContext();
 
@@ -27,12 +28,15 @@ export function ModalProvider({ children }) {
                     />
 
                     {/* 🔹 Modal Container */}
-                        {modal?.name === "CreateKeyModal" && (
-                            <CreateKeyModal
-                                {...modal.props}
-                                onClose={closeModal}
-                            />
-                        )}
+                    {modal?.name === "CreateKeyModal" && (
+                        <CreateKeyModal
+                            {...modal.props}
+                            onSuccess={() => {
+                                router.reload({ only: ["codes"] });
+                            }}
+                            onClose={closeModal}
+                        />
+                    )}
                 </div>
             )}
         </ModalContext.Provider>

@@ -52,7 +52,7 @@ export default function Keys() {
                     </div>
                 )}
 
-                <KeysTable codes={codes} />
+                <KeysTable selectedHotel={selectedHotel} codes={codes} />
             </div>
         </AuthenticatedLayout>
     );

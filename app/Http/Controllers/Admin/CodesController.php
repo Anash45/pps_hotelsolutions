@@ -54,7 +54,7 @@ class CodesController extends Controller
                 'hotel_id' => $hotel->id,
                 'code' => $code,
                 'key_type_id' => $keyType->id,
-                'status' => 'active',
+                'status' => 'inactive',
                 'generated_at' => now(),
                 'group_id' => $group->id,
             ];
@@ -63,7 +63,7 @@ class CodesController extends Controller
                 'code' => $code,
                 'hotel_name' => $hotel->hotel_name,
                 'key_type_name' => $keyType->display_name,
-                'status' => 'active',
+                'status' => 'inactive',
                 'generated_at' => now()->format('Y-m-d H:i:s'),
             ];
         }
