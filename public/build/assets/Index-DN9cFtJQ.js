@@ -1,1 +1,0 @@
-import{j as t,H as e}from"./app-CzSMpXLj.js";import{A as r}from"./AuthenticatedLayout-BeYHQ6b3.js";import"./ApplicationLogo-BZDfvhCJ.js";import"./createLucideIcon-D7lIhYno.js";import"./x-CW_FIfiI.js";function p(){return t.jsx(r,{children:t.jsx(e,{title:"Keys"})})}export{p as default};

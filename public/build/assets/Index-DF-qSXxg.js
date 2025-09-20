@@ -1,1 +1,0 @@
-import{j as t,H as o}from"./app-CzSMpXLj.js";import{A as e}from"./AuthenticatedLayout-BeYHQ6b3.js";import"./ApplicationLogo-BZDfvhCJ.js";import"./createLucideIcon-D7lIhYno.js";import"./x-CW_FIfiI.js";function p(){return t.jsx(e,{children:t.jsx(o,{title:"Hotels"})})}export{p as default};

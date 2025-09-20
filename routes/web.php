@@ -45,6 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('keys', KeyAssignmentController::class);
     Route::post('/keys/recognize', [KeyAssignmentController::class, 'recognize']);
+    Route::put('/keys/{id}/status', [KeyAssignmentController::class, 'updateStatus']);
 
 
 });

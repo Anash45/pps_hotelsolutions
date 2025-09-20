@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { router } from '@inertiajs/react';
-
+import { router } from "@inertiajs/react";
 
 import InputError from "./InputError";
 import SelectInput from "./SelectInput";
@@ -17,10 +16,12 @@ export default function CreateKeyModal({
     keyTypes,
     selectedHotel,
     onSuccess,
-    codeId = null,
+    code = null,
     title = "Register new key",
     description = "Scan QR code (barcode scanner input line) - or insert code/URL",
 }) {
+    const [existingCode, setexistingCode] = useState(code);
+
     const [show, setShow] = useState(false);
     useEffect(() => {
         requestAnimationFrame(() => setShow(true));
@@ -29,7 +30,6 @@ export default function CreateKeyModal({
         setShow(false);
         setTimeout(onClose, 200);
     };
-    console.log(selectedHotel, keyTypes, codeId);
 
     const LINK_URL =
         import.meta.env.VITE_LINK_URL ||
@@ -40,27 +40,36 @@ export default function CreateKeyModal({
         label: kt.display_name,
     }));
 
-    const [gdprConsent, setGdprConsent] = useState(true);
-    const [keyTypeId, setKeyTypeId] = useState(null);
+    const [gdprConsent, setGdprConsent] = useState(
+        existingCode?.key_assignment?.gdpr_consent ?? true
+    );
+    const [keyTypeId, setKeyTypeId] = useState(
+        existingCode?.key_type_id ?? null
+    );
     const [formData, setFormData] = useState({
-        hotel_id: selectedHotel ?? null,  // ✅ include here
-        salutation: "",
-        title: "",
-        first_name: "",
-        last_name: "",
-        room_number: "",
-        mobile_number: "",
-        email: "",
-        stay_from: "",
-        stay_till: "",
-        gdpr_consent: gdprConsent,   // keep inside formData
-        code_id: null        // track selected code
+        hotel_id: selectedHotel ?? null, // ✅ include here
+        salutation: existingCode?.key_assignment?.salutation ?? "",
+        title: existingCode?.key_assignment?.title ?? "",
+        first_name: existingCode?.key_assignment?.first_name ?? "",
+        last_name: existingCode?.key_assignment?.last_name ?? "",
+        room_number: existingCode?.key_assignment?.room_number ?? "",
+        phone_number: existingCode?.key_assignment?.phone_number ?? "",
+        email: existingCode?.key_assignment?.email ?? "",
+        stay_from: existingCode?.key_assignment?.stay_from ?? "",
+        stay_till: existingCode?.key_assignment?.stay_till ?? "",
+        gdpr_consent: existingCode?.key_assignment?.gdpr_consent ?? gdprConsent, // keep inside formData
+        code_id: existingCode?.id ?? null,
+        ...(existingCode ? { id: existingCode.key_assignment.id } : {}),
     });
 
+    console.log(selectedHotel, keyTypes, keyTypeId, existingCode);
+
     const [formErrors, setFormErrors] = useState({});
-    const [barcodeInput, setBarcodeInput] = useState("");
-    const [recognized, setRecognized] = useState(false);
-    const [selectedCode, setSelectedCode] = useState(null);
+    const [barcodeInput, setBarcodeInput] = useState(existingCode?.code ?? "");
+    const [recognized, setRecognized] = useState(
+        existingCode?.code !== "" ?? false
+    );
+    const [selectedCode, setSelectedCode] = useState(existingCode ?? null);
     const [recognizeError, setRecognizeError] = useState("");
     const [submitSuccess, setSubmitSuccess] = useState("");
 
@@ -78,7 +87,7 @@ export default function CreateKeyModal({
     useEffect(() => {
         setFormData((prev) => ({
             ...prev,
-            hotel_id: selectedHotel,   // ✅ always in sync
+            hotel_id: selectedHotel, // ✅ always in sync
         }));
     }, [selectedHotel]);
 
@@ -87,18 +96,19 @@ export default function CreateKeyModal({
         if (selectedCode) {
             setFormData((prev) => ({
                 ...prev,
-                code_id: selectedCode.id
+                code_id: selectedCode.id,
             }));
         }
     }, [selectedCode]);
 
     useEffect(() => {
-        setRecognized(false);
-        setSelectedCode(null);
+        if (existingCode === null) {
+            setRecognized(false);
+            setSelectedCode(null);
+            setKeyTypeId(null);
+        }
         setRecognizeError("");
-        setKeyTypeId(null);
     }, [barcodeInput, selectedHotel]);
-
 
     // Handles field changes
     const handleChange = (e) => {
@@ -110,21 +120,6 @@ export default function CreateKeyModal({
 
         console.log(name, value);
     };
-
-
-    useEffect(() => {
-        if (!gdprConsent) {
-            setFormData((prev) => ({
-                ...prev,
-                first_name: "",
-                last_name: "",
-                email: "",
-                salutation: "",
-                title: "",
-            }));
-        }
-    }, [gdprConsent]);
-
 
     // Handles form submission
     const handleSubmit = async (e) => {
@@ -138,30 +133,37 @@ export default function CreateKeyModal({
         try {
             const res = await axios[method](url, formData);
 
+            console.log(formData);
+
             console.log("✅ Success response:", res.data);
             setFormErrors({});
 
             // Optional: reset form after success
-            setBarcodeInput('');
-            setFormData({
-                salutation: "",
-                title: "",
-                first_name: "",
-                last_name: "",
-                room_number: "",
-                mobile_number: "",
-                email: "",
-                stay_from: "",
-                stay_till: "",
-                gdpr_consent: gdprConsent,
-            });
+            if (existingCode !== null) {
+                setBarcodeInput("");
+                setFormData({
+                    salutation: "",
+                    title: "",
+                    first_name: "",
+                    last_name: "",
+                    room_number: "",
+                    phone_number: "",
+                    email: "",
+                    stay_from: "",
+                    stay_till: "",
+                    gdpr_consent: gdprConsent,
+                });
+            }
 
             setTimeout(() => {
                 handleClose();
             }, 3000);
             onSuccess();
-            setSubmitSuccess("Key has been created!");
-
+            if (existingCode !== null) {
+                setSubmitSuccess("Key has been updated!");
+            } else {
+                setSubmitSuccess("Key has been created!");
+            }
         } catch (err) {
             if (err.response?.data?.errors) {
                 console.log("❌ Validation errors:", err.response.data.errors);
@@ -203,7 +205,9 @@ export default function CreateKeyModal({
                 if (e.response.status === 404) {
                     setRecognizeError("Code not found.");
                 } else if (e.response.status === 422) {
-                    setRecognizeError(e.response.data.error || "Code already active/assigned.");
+                    setRecognizeError(
+                        e.response.data.error || "Code already active/assigned."
+                    );
                 } else {
                     setRecognizeError("Unexpected error occurred.");
                 }
@@ -214,8 +218,6 @@ export default function CreateKeyModal({
             }
         }
     };
-
-
 
     return (
         <div
@@ -253,13 +255,20 @@ export default function CreateKeyModal({
                                         setBarcodeInput(e.target.value)
                                     }
                                     required
+                                    readOnly={!!existingCode} // ✅ lock field if existingCode is set
                                 />
                             </div>
-                            <div>
-                                <PrimaryButton onClick={handleRecognize}>
-                                    <div className="py-[1px]">Recognize</div>
-                                </PrimaryButton>
-                            </div>
+
+                            {/* ✅ Show button only when creating new (existingCode is null) */}
+                            {!existingCode && (
+                                <div>
+                                    <PrimaryButton onClick={handleRecognize}>
+                                        <div className="py-[1px]">
+                                            Recognize
+                                        </div>
+                                    </PrimaryButton>
+                                </div>
+                            )}
                         </div>
                         {recognized && selectedCode && (
                             <div className="text-green-600 text-sm">
@@ -268,7 +277,9 @@ export default function CreateKeyModal({
                         )}
                         <InputError message={recognizeError} />
                     </div>
-                    {submitSuccess !== "" && (<Alert type="success" message={submitSuccess} />)}
+                    {submitSuccess !== "" && (
+                        <Alert type="success" message={submitSuccess} />
+                    )}
 
                     <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3">
                         {/* Disable all inputs if not recognized */}
@@ -281,7 +292,9 @@ export default function CreateKeyModal({
                             <SelectInput
                                 id="key_type"
                                 value={keyTypeId}
-                                onChange={() => { console.log('Readonly!'); }}
+                                onChange={() => {
+                                    console.log("Readonly!");
+                                }}
                                 className="w-full block"
                                 placeholder="Key Type"
                                 options={keyTypesOptions}
@@ -339,7 +352,8 @@ export default function CreateKeyModal({
                         />
                         <div className="flex flex-col gap-1">
                             <span className="text-sm font-medium text-slate600">
-                                Enter guest data (name, title, salutation, email etc.)
+                                Enter guest data (name, title, salutation, email
+                                etc.)
                             </span>
                             <span className="text-xs text-slate600">
                                 If disabled, no person names will be saved for
@@ -350,7 +364,11 @@ export default function CreateKeyModal({
                     <Divider />
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
                         {/* Salutation */}
-                        <div className={`space-y-1 ${gdprConsent ? 'block' : 'hidden'}`}>
+                        <div
+                            className={`space-y-1 ${
+                                gdprConsent ? "block" : "hidden"
+                            }`}
+                        >
                             <InputLabel
                                 htmlFor="salutation"
                                 value="Salutation"
@@ -363,16 +381,20 @@ export default function CreateKeyModal({
                                 onChange={handleChange}
                                 className="w-full block"
                                 options={[
-                                    { value: "mr", label: "Mr." },
-                                    { value: "mrs", label: "Mrs." },
-                                    { value: "ms", label: "Ms." },
+                                    { value: "Mr", label: "Mr." },
+                                    { value: "Mrs", label: "Mrs." },
+                                    { value: "Ms", label: "Ms." },
                                 ]}
                             />
                             <InputError message={formErrors.salutation?.[0]} />
                         </div>
 
                         {/* Title */}
-                        <div className={`space-y-1 ${gdprConsent ? 'block' : 'hidden'}`}>
+                        <div
+                            className={`space-y-1 ${
+                                gdprConsent ? "block" : "hidden"
+                            }`}
+                        >
                             <InputLabel
                                 htmlFor="title"
                                 value="Title"
@@ -381,6 +403,7 @@ export default function CreateKeyModal({
                             <TextInput
                                 id="title"
                                 name="title"
+                                value={formData.title}
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
@@ -390,7 +413,11 @@ export default function CreateKeyModal({
                         </div>
 
                         {/* First name */}
-                        <div className={`space-y-1 ${gdprConsent ? 'block' : 'hidden'}`}>
+                        <div
+                            className={`space-y-1 ${
+                                gdprConsent ? "block" : "hidden"
+                            }`}
+                        >
                             <InputLabel
                                 htmlFor="first_name"
                                 value="First Name"
@@ -399,6 +426,7 @@ export default function CreateKeyModal({
                             <TextInput
                                 id="first_name"
                                 name="first_name"
+                                value={formData.first_name}
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
@@ -409,7 +437,11 @@ export default function CreateKeyModal({
                         </div>
 
                         {/* Last name */}
-                        <div className={`space-y-1 ${gdprConsent ? 'block' : 'hidden'}`}>
+                        <div
+                            className={`space-y-1 ${
+                                gdprConsent ? "block" : "hidden"
+                            }`}
+                        >
                             <InputLabel
                                 htmlFor="last_name"
                                 value="Last Name"
@@ -418,6 +450,7 @@ export default function CreateKeyModal({
                             <TextInput
                                 id="last_name"
                                 name="last_name"
+                                value={formData.last_name}
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
@@ -437,6 +470,7 @@ export default function CreateKeyModal({
                             <TextInput
                                 id="room_number"
                                 name="room_number"
+                                value={formData.room_number}
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
@@ -446,25 +480,36 @@ export default function CreateKeyModal({
                         </div>
 
                         {/* Mobile phone number */}
-                        <div className={`space-y-1 ${keyTypeId == 2 ? 'block' : 'hidden'}`}>
+                        <div
+                            className={`space-y-1 ${
+                                keyTypeId == 2 ? "block" : "hidden"
+                            }`}
+                        >
                             <InputLabel
-                                htmlFor="mobile_number"
+                                htmlFor="phone_number"
                                 value="Mobile Phone Number (for Key finder only)"
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
-                                id="mobile_number"
-                                name="mobile_number"
+                                id="phone_number"
+                                name="phone_number"
+                                value={formData.phone_number}
                                 onChange={handleChange}
                                 type="tel"
                                 className="block w-full"
                                 placeholder="+49 123 456789"
                             />
-                            <InputError message={formErrors.mobile_number?.[0]} />
+                            <InputError
+                                message={formErrors.phone_number?.[0]}
+                            />
                         </div>
 
                         {/* Email (full width) */}
-                        <div className={`space-y-1 ${gdprConsent ? 'block' : 'hidden'}`}>
+                        <div
+                            className={`space-y-1 ${
+                                gdprConsent ? "block" : "hidden"
+                            }`}
+                        >
                             <InputLabel
                                 htmlFor="email"
                                 value="Email Address"
@@ -473,6 +518,7 @@ export default function CreateKeyModal({
                             <TextInput
                                 id="email"
                                 name="email"
+                                value={formData.email}
                                 onChange={handleChange}
                                 type="email"
                                 className="block w-full"
@@ -487,8 +533,13 @@ export default function CreateKeyModal({
                             <InputError message="Fix the errors in the form." />
                         )}
                         <LightButton onClick={handleClose}>Cancel</LightButton>
-                        <PrimaryButton disabled={!recognized} onClick={handleSubmit}>
-                            Register new Key
+                        <PrimaryButton
+                            disabled={!recognized}
+                            onClick={handleSubmit}
+                        >
+                            {existingCode === null
+                                ? "Register new Key"
+                                : "Update Key"}
                         </PrimaryButton>
                     </div>
                 </div>

@@ -10,7 +10,18 @@ class Hotel extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['hotel_name'];
+    protected $fillable = [
+        'hotel_name',
+        'heading',
+        'logo_image',
+        'banner_image',
+        'primary_color',
+        'background_color',
+        'text_color',
+        'button_text_color',
+        'page_text_color',
+        'key_finder_page_text',
+    ];
 
     // Relationship: Hotel has many users
     public function users()

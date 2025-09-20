@@ -6,6 +6,7 @@ import { Dropdown, DropdownItem } from "@/Components/DropdownUi";
 import { useModal } from "@/context/ModalProvider";
 import { usePage } from "@inertiajs/react";
 import { format, parseISO } from "date-fns";
+import { router } from "@inertiajs/react";
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
@@ -16,23 +17,29 @@ function formatDate(dateStr) {
     }
 }
 
-
 DataTable.use(DT);
 
 export default function KeysTable({ codes = [], selectedHotel = null }) {
     const { openModal } = useModal();
-
     const { keyTypes = [] } = usePage().props;
 
+    // Keep both tableData (for DataTable) and original mapping
     const tableData = codes.map((c) => ({
         name: c.key_assignment?.first_name
-            ? `${c.key_assignment.first_name} ${c.key_assignment.last_name ?? ""}`
+            ? `${c.key_assignment.salutation ?? ""} ${
+                  c.key_assignment.title ?? ""
+              } ${c.key_assignment.first_name} ${
+                  c.key_assignment.last_name ?? ""
+              }`
             : "-",
-        stay: `${formatDate(c.key_assignment?.stay_from)} - ${formatDate(c.key_assignment?.stay_till)}`,
+        stay: `${formatDate(c.key_assignment?.stay_from)} - ${formatDate(
+            c.key_assignment?.stay_till
+        )}`,
         room: c.key_assignment?.room_number ?? "-",
         status: c.status,
         keyType: c.key_type?.display_name ?? "-",
         id: c.id, // useful for actions
+        original: c, // ✅ keep the full object here
     }));
 
     const columns = [
@@ -50,35 +57,60 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
         {
             title: "Key Type",
             data: "keyType",
-            render: (data) => (!data || data === "-" ? "-" : `<span class="capitalize">${data}</span>`),
+            render: (data) =>
+                !data || data === "-"
+                    ? "-"
+                    : `<span class="capitalize">${data}</span>`,
         },
         {
             title: "Actions",
             data: "id",
             orderable: false,
             createdCell: (td, cellData, rowData) => {
-                // Inject React Dropdown
                 const root = createRoot(td);
                 root.render(
                     <Dropdown>
-                        <DropdownItem onClick={() =>
-                            openModal("CreateKeyModal", {
-                                keyTypes: keyTypes,
-                                selectedHotel: selectedHotel,
-                                codeId: rowData.id
-                            })
-                        }>
+                        <DropdownItem
+                            onClick={() =>
+                                openModal("CreateKeyModal", {
+                                    keyTypes,
+                                    selectedHotel,
+                                    code: rowData.original,
+                                })
+                            }
+                        >
                             Edit
                         </DropdownItem>
                         <DropdownItem
-                            onClick={() =>
-                                console.log(
-                                    rowData.status === "active" ? "Set Inactive" : "Set Active",
-                                    rowData.id
-                                )
-                            }
+                            onClick={async () => {
+                                try {
+                                    const newStatus =
+                                        rowData.status === "active"
+                                            ? "inactive"
+                                            : "active";
+
+                                    const res = await axios.put(
+                                        `/keys/${rowData.id}/status`,
+                                        {
+                                            status: newStatus,
+                                        }
+                                    );
+
+                                    console.log("✅ Status updated:", res.data);
+
+                                    // Refresh table or trigger callback
+                                    router.reload({ only: ["codes"] });
+                                } catch (err) {
+                                    console.error(
+                                        "❌ Failed to update status:",
+                                        err.response?.data || err
+                                    );
+                                }
+                            }}
                         >
-                            {rowData.status === "active" ? "Set Inactive" : "Set Active"}
+                            {rowData.status === "active"
+                                ? "Set Inactive"
+                                : "Set Active"}
                         </DropdownItem>
                     </Dropdown>
                 );

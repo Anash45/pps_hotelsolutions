@@ -7,6 +7,7 @@ use App\Models\Code;
 use App\Models\Hotel;
 use App\Models\KeyType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Log;
 
@@ -25,7 +26,6 @@ class KeyAssignmentController extends Controller
             if ($hotelId) {
                 $codes = Code::with(['keyAssignment', 'hotel', 'keyType'])
                     ->where('hotel_id', $hotelId)
-                    ->where('status', 'active')
                     ->whereHas('keyAssignment')
                     ->orderByDesc(
                         KeyAssignment::select('id')
@@ -45,7 +45,6 @@ class KeyAssignmentController extends Controller
         } else {
             $codes = Code::with(['keyAssignment', 'keyType', 'hotel'])
                 ->where('hotel_id', $user->hotel_id)
-                ->where('status', 'active')
                 ->whereHas('keyAssignment')
                 ->orderByDesc(
                     KeyAssignment::select('id')
@@ -135,6 +134,24 @@ class KeyAssignmentController extends Controller
         ], 201);
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        $code = Code::findOrFail($id);
+        $code->status = $validated['status'];
+        $code->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Key status updated to {$validated['status']}.",
+            'code' => $code,
+        ]);
+    }
+
+
 
 
     public function recognize(Request $request)
@@ -206,11 +223,19 @@ class KeyAssignmentController extends Controller
         return response()->json($keyAssignment->load('code.hotel', 'code.keyType'));
     }
 
-    public function update(Request $request, KeyAssignment $keyAssignment)
+    public function update(Request $request, $id)
     {
-        $this->authorizeAccess($keyAssignment);
+        $assignment = KeyAssignment::findOrFail($id);
 
-        $validated = $request->validate([
+        // Base rules
+        $rules = [
+            'hotel_id' => 'required|exists:hotels,id',
+            'code_id' => [
+                'required',
+                'exists:codes,id',
+                // ✅ allow current code_id but unique otherwise
+                Rule::unique('key_assignments', 'code_id')->ignore($assignment->id),
+            ],
             'salutation' => 'nullable|string',
             'title' => 'nullable|string',
             'first_name' => 'nullable|string',
@@ -218,15 +243,63 @@ class KeyAssignmentController extends Controller
             'email' => 'nullable|email',
             'phone_number' => 'nullable|string',
             'room_number' => 'nullable|string',
-            'stay_from' => 'nullable|date',
-            'stay_till' => 'nullable|date|after_or_equal:stay_from',
+            'stay_from' => 'required|date',
+            'stay_till' => 'required|date|after_or_equal:stay_from',
             'gdpr_consent' => 'boolean',
+        ];
+
+        // If GDPR consent is true → tighten rules
+        if ($request->boolean('gdpr_consent')) {
+            $rules['first_name'] = 'required|string';
+            $rules['last_name'] = 'required|string';
+            $rules['email'] = 'required|email';
+            $rules['salutation'] = 'required|string';
+        }
+
+        // Validate
+        $validated = $request->validate($rules);
+
+        // Extra check: code must belong to given hotel
+        $belongs = Code::where('id', $validated['code_id'])
+            ->where('hotel_id', $validated['hotel_id'])
+            ->exists();
+
+        if (!$belongs) {
+            return response()->json([
+                'success' => false,
+                'message' => 'The selected code does not belong to the given hotel.',
+            ], 422);
+        }
+
+        // Update KeyAssignment
+        $assignment->update([
+            'code_id' => $validated['code_id'],
+            'salutation' => $validated['salutation'] ?? null,
+            'title' => $validated['title'] ?? null,
+            'first_name' => $validated['first_name'] ?? null,
+            'last_name' => $validated['last_name'] ?? null,
+            'email' => $validated['email'] ?? null,
+            'phone_number' => $validated['phone_number'] ?? null,
+            'room_number' => $validated['room_number'] ?? null,
+            'stay_from' => $validated['stay_from'],
+            'stay_till' => $validated['stay_till'],
+            'gdpr_consent' => $validated['gdpr_consent'] ?? false,
         ]);
 
-        $keyAssignment->update($validated);
+        // Ensure Code is active
+        Code::where('id', $validated['code_id'])->update(['status' => 'active']);
 
-        return redirect()->back()->with('success', 'Key assignment updated successfully.');
+        Log::info('KeyAssignment updated successfully', [
+            'assignment' => $assignment,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Key assignment updated successfully.',
+            'assignment' => $assignment,
+        ]);
     }
+
 
     public function destroy(KeyAssignment $keyAssignment)
     {
