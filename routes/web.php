@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CodesController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\HotelsController;
 use App\Http\Controllers\KeyAssignmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -46,6 +47,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('keys', KeyAssignmentController::class);
     Route::post('/keys/recognize', [KeyAssignmentController::class, 'recognize']);
     Route::put('/keys/{id}/status', [KeyAssignmentController::class, 'updateStatus']);
+
+    // Hotels Management
+
+    Route::resource('hotels', HotelsController::class);
+    Route::match(['post', 'put'], '/hotels/updateBranding/{hotel}', [HotelsController::class, 'updateBranding'])
+        ->name('hotels.updateBranding');
 
 
 });
