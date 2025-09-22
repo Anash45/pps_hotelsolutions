@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import TestModal from "@/Components/TestModal";
 import CreateKeyModal from "@/Components/CreateKeyModal";
 import { router } from "@inertiajs/react";
+import HotelPageModal from "@/Components/HotelPageModal";
 
 const ModalContext = createContext();
 
@@ -30,6 +31,15 @@ export function ModalProvider({ children }) {
                     {/* 🔹 Modal Container */}
                     {modal?.name === "CreateKeyModal" && (
                         <CreateKeyModal
+                            {...modal.props}
+                            onSuccess={() => {
+                                router.reload({ only: ["codes"] });
+                            }}
+                            onClose={closeModal}
+                        />
+                    )}
+                    {modal?.name === "HotelPageModal" && (
+                        <HotelPageModal
                             {...modal.props}
                             onSuccess={() => {
                                 router.reload({ only: ["codes"] });

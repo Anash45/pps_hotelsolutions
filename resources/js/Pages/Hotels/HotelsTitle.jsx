@@ -17,6 +17,7 @@ export default function HotelsTitle({ title }) {
                 formData.append(key, value);
             }
         });
+        console.log("Sending Form Data: ", brandingFormData);
 
         try {
             const { data } = await axios.post(
@@ -24,8 +25,6 @@ export default function HotelsTitle({ title }) {
                 formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
-
-            console.log(data);
 
             if (data.success) {
                 setBrandingFormData((prev) => ({

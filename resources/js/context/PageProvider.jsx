@@ -13,7 +13,8 @@ export const PageProvider = ({ children }) => {
         logo_image: null,
         banner_image: null,
         key_finder_page_text: "",
-        page_text_color: "#000000"
+        page_text_color: "#000000",
+        buttons: []
     });
 
     const handleBrandingChange = (e) => {

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CodesController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\HotelPageController;
 use App\Http\Controllers\HotelsController;
 use App\Http\Controllers\KeyAssignmentController;
 use App\Http\Controllers\ProfileController;
@@ -53,6 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('hotels', HotelsController::class);
     Route::match(['post', 'put'], '/hotels/updateBranding/{hotel}', [HotelsController::class, 'updateBranding'])
         ->name('hotels.updateBranding');
+    Route::post('/hotel-pages', [HotelPageController::class, 'store'])->name('hotel-pages.store');
 
 
 });

@@ -24,7 +24,10 @@ class HotelsController extends Controller
 
             $selectedHotel = null;
             if ($hotelId) {
-                $selectedHotel = Hotel::find($hotelId);
+                $selectedHotel = Hotel::with([
+                    'buttons',
+                    'pages' => fn($q) => $q->select('id', 'hotel_id', 'title', 'slug') // omit `content`
+                ])->find(id: $hotelId);
             }
 
             return Inertia::render('Hotels/Index', [
@@ -33,7 +36,10 @@ class HotelsController extends Controller
                 'isAdmin' => true,
             ]);
         } else {
-            $hotel = Hotel::find($user->hotel_id);
+            $hotel = Hotel::with([
+                'buttons',
+                'pages' => fn($q) => $q->select('id', 'hotel_id', 'title', 'slug') // omit `content`
+            ])->find($user->hotel_id);
 
             return Inertia::render('Hotels/Index', [
                 'selectedHotel' => $hotel,

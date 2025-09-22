@@ -7,6 +7,8 @@ import BrandingImageUploader from "./BrandingImagesUploader";
 import Divider from "./Divider";
 import Textarea from "./Textarea";
 import { usePage } from "@inertiajs/react";
+import HotelBrandingButtons from "./HotelBrandingButtons";
+import HotelBrandingPages from "./HotelBrandingPages";
 
 export default function HotelBrandingForm() {
     const { auth, selectedHotel = null } = usePage().props;
@@ -15,7 +17,8 @@ export default function HotelBrandingForm() {
 
     useEffect(() => {
         if (selectedHotel) {
-            setBrandingFormData({
+            setBrandingFormData((prev) => ({
+                ...prev,
                 heading: selectedHotel.heading || "",
                 primary_color: selectedHotel.primary_color || "#000000",
                 background_color: selectedHotel.background_color || "#c1c1c1",
@@ -31,7 +34,8 @@ export default function HotelBrandingForm() {
                     : null,
                 key_finder_page_text: selectedHotel.key_finder_page_text || "",
                 page_text_color: selectedHotel.page_text_color || "#000000",
-            });
+                pages: selectedHotel?.pages,
+            }));
         }
     }, [selectedHotel]);
 
@@ -142,7 +146,10 @@ export default function HotelBrandingForm() {
                         />
                         <BrandingImageUploader
                             name="logo_image"
-                            value={brandingFormData.logo_image ?? brandingFormData.logo_image_url}
+                            value={
+                                brandingFormData.logo_image ??
+                                brandingFormData.logo_image_url
+                            }
                             onChange={handleBrandingChange}
                             label="Logo Image"
                         />
@@ -154,12 +161,23 @@ export default function HotelBrandingForm() {
                         />
                         <BrandingImageUploader
                             name="banner_image"
-                            value={brandingFormData.banner_image ?? brandingFormData.banner_image_url}
+                            value={
+                                brandingFormData.banner_image ??
+                                brandingFormData.banner_image_url
+                            }
                             onChange={handleBrandingChange}
                             label="Logo Image"
                         />
                     </div>
                 </div>
+                <Divider />
+
+                <HotelBrandingButtons />
+
+                <Divider />
+
+                <HotelBrandingPages />
+
                 <Divider />
 
                 <div className="flex flex-col gap-1">

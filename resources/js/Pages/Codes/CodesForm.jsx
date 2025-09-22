@@ -1,7 +1,7 @@
 import { useState } from "react";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
-import LightButton from "@/Components/PrimaryButton copy";
+import LightButton from "@/Components/LightButton";
 import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import { usePage, useForm } from "@inertiajs/react";

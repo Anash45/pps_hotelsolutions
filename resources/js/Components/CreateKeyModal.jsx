@@ -6,7 +6,7 @@ import SelectInput from "./SelectInput";
 import InputLabel from "./InputLabel";
 import PrimaryButton from "./PrimaryButton";
 import TextInput from "./TextInput";
-import LightButton from "./PrimaryButton copy";
+import LightButton from "./LightButton";
 import Divider from "./Divider";
 import axios from "axios";
 import Alert from "./Alert";
@@ -67,7 +67,7 @@ export default function CreateKeyModal({
     const [formErrors, setFormErrors] = useState({});
     const [barcodeInput, setBarcodeInput] = useState(existingCode?.code ?? "");
     const [recognized, setRecognized] = useState(
-        existingCode?.code !== "" ?? false
+        existingCode?.code ? existingCode.code !== "" : false
     );
     const [selectedCode, setSelectedCode] = useState(existingCode ?? null);
     const [recognizeError, setRecognizeError] = useState("");

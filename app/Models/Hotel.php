@@ -40,4 +40,13 @@ class Hotel extends Model
         return $this->hasMany(Code::class);
     }
 
+    public function buttons()
+    {
+        return $this->hasMany(HotelButton::class)->orderBy('order');
+    }
+
+    public function pages()
+    {
+        return $this->hasMany(Page::class);
+    }
 }

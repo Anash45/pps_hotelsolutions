@@ -47,9 +47,11 @@ export default function Hotels() {
                     )}
                 </div>
 
-                <div className="grid xl:grid-cols-[60%,40%] grid-cols-1 gap-[14px]">
+                <div className="grid xl:grid-cols-[60%,40%] grid-cols-1 gap-[14px] items-start">
                     <HotelBrandingForm />
-                    <HotelBrandingPreview />
+                    <div className="xl:order-2 order-1 sticky top-4">
+                        <HotelBrandingPreview />
+                    </div>
                 </div>
             </div>
         </AuthenticatedLayout>
