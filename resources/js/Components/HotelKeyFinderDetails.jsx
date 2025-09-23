@@ -59,7 +59,7 @@ const HotelKeyFinderDetails = ({}) => {
             <div className="grid grid-cols-2 gap-2">
                 <LightButton
                     onClick={() => window.open("tel:+491701234567")}
-                    className="bg-white border-[#F1F1F1] hover:bg-slate-100"
+                    className="border-[#F1F1F1]"
                 >
                     <span className="text-[#020617]">Phone</span>
                 </LightButton>

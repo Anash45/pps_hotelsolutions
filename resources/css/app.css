@@ -246,97 +246,117 @@ div.dt-container .dt-paging .dt-paging-button:hover {
 }
 
 @layer components {
-    .editor-content {
+    .custom-page-content {
         @apply text-gray-800 leading-relaxed;
     }
 
+    .custom-page-content .ql-align-center{
+        text-align: center
+    }
+
+    .custom-page-content .ql-align-center{
+        text-align: center
+    }
+
+    .custom-page-content .ql-align-justify{
+        text-align: justify
+    }
+
+    .custom-page-content .ql-align-left{
+        text-align: left
+    }
+
+    .custom-page-content .ql-align-right{
+        text-align: right
+    }
+
     /* Headings */
-    .editor-content h1 {
+    .custom-page-content h1 {
         @apply text-3xl font-bold;
     }
-    .editor-content h2 {
+    .custom-page-content h2 {
         @apply text-2xl font-semibold;
     }
-    .editor-content h3 {
+    .custom-page-content h3 {
         @apply text-xl font-semibold;
     }
-    .editor-content h4 {
+    .custom-page-content h4 {
         @apply text-lg font-semibold;
     }
-    .editor-content h5 {
+    .custom-page-content h5 {
         @apply text-base font-semibold;
     }
-    .editor-content h6 {
+    .custom-page-content h6 {
         @apply text-sm font-semibold uppercase tracking-wide;
     }
 
     /* Paragraph */
-    .editor-content p {
+    .custom-page-content p {
         @apply text-gray-700;
     }
 
     /* Links */
-    .editor-content a {
+    .custom-page-content a {
         @apply text-blue-600 underline hover:text-blue-800;
     }
 
     /* Lists */
-    .editor-content ul {
+    .custom-page-content ul {
         @apply list-disc pl-6;
     }
-    .editor-content ol {
+    .custom-page-content ol {
         @apply list-decimal pl-6;
     }
-    /* .editor-content li {
+    /* .custom-page-content li {
         @apply;
     } */
 
     /* Bold & Italic */
-    .editor-content strong {
+    .custom-page-content strong {
         @apply font-bold text-gray-900;
     }
-    .editor-content em {
+    .custom-page-content em {
         @apply italic;
     }
 
     /* Blockquote */
-    .editor-content blockquote {
+    .custom-page-content blockquote {
         @apply border-l-4 border-gray-300 pl-4 italic text-gray-600;
     }
 
     /* Inline Code */
-    .editor-content code {
+    .custom-page-content code {
         @apply bg-gray-100 px-1 py-0.5 rounded text-sm font-mono text-red-600;
     }
 
     /* Code Block */
-    .editor-content pre {
+    .custom-page-content pre {
         @apply bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto;
     }
 
     /* Horizontal Rule */
-    .editor-content hr {
+    .custom-page-content hr {
         @apply border-t border-gray-300 my-4;
     }
 
     /* Tables */
-    .editor-content table {
+    .custom-page-content table {
         @apply w-full border border-gray-300 border-collapse my-4;
     }
-    .editor-content th {
+    .custom-page-content th {
         @apply border border-gray-300 bg-gray-100 font-medium p-2 text-left;
     }
-    .editor-content td {
+    .custom-page-content td {
         @apply border border-gray-300 p-2;
     }
 
     /* Images */
-    .editor-content img {
+    .custom-page-content img {
         @apply max-w-full h-auto rounded-md my-4;
     }
 
     /* YouTube embeds (responsive iframe) */
-    .editor-content iframe {
+    .custom-page-content iframe {
         @apply w-full aspect-video rounded my-4;
     }
 }

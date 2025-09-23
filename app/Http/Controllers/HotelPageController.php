@@ -50,6 +50,47 @@ class HotelPageController extends Controller
         ], 201);
     }
 
+    public function update(Request $request, Page $page)
+    {
+        $user = $request->user();
+
+        // ✅ Authorization check
+        $hotel = Hotel::findOrFail($page->hotel_id);
+        if ($hotel->user_id !== $user->id && !$user->is_admin()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // ✅ Only validate title + content (no slug)
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'content' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    // Strip all tags, decode entities, and trim spaces
+                    $plainText = trim(strip_tags($value));
+
+                    if (strlen($plainText) === 0) {
+                        $fail('The ' . $attribute . ' field must contain text.');
+                    }
+                },
+            ],
+        ]);
+
+        // ✅ Update only title and content, leave slug untouched
+        $page->update([
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+        ]);
+
+        return response()->json([
+            'message' => 'Page updated successfully!',
+            'page' => $page,
+        ]);
+    }
+
+
+
     public function destroy($id)
     {
         $user = Auth::user();

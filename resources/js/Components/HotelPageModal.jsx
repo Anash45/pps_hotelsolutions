@@ -7,7 +7,6 @@ import InputLabel from "./InputLabel";
 import TextInput from "./TextInput";
 import HotelPageEditor from "./HotelPageEditor";
 import { router } from "@inertiajs/react";
-import { fromJSON } from "postcss";
 
 export default function HotelPageModal({
     onClose,

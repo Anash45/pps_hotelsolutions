@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KeyAssignment;
-use App\Models\Code;
 use App\Models\Hotel;
-use App\Models\KeyType;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
-use Log;
 use Storage;
 
 class HotelsController extends Controller
@@ -26,7 +21,7 @@ class HotelsController extends Controller
             if ($hotelId) {
                 $selectedHotel = Hotel::with([
                     'buttons',
-                    'pages' => fn($q) => $q->select('id', 'hotel_id', 'title', 'slug') // omit `content`
+                    'pages'
                 ])->find(id: $hotelId);
             }
 
@@ -38,7 +33,7 @@ class HotelsController extends Controller
         } else {
             $hotel = Hotel::with([
                 'buttons',
-                'pages' => fn($q) => $q->select('id', 'hotel_id', 'title', 'slug') // omit `content`
+                'pages'
             ])->find($user->hotel_id);
 
             return Inertia::render('Hotels/Index', [

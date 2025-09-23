@@ -1,18 +1,31 @@
 import { PageContext } from "@/context/PageProvider";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import MobileFrame from "./MobileFrame";
 import GuestBox from "./GuestBox";
 import HotelLanding from "./HotelLanding";
 import PrimaryButton from "./PrimaryButton";
 import HotelKeyFinder from "./HotelKeyFinder";
+import HotelCustomPage from "./HotelCustomPage";
 
 export default function HotelBrandingPreview() {
     const { brandingFormData } = useContext(PageContext);
 
-    const [tabs] = useState([
-        { button: "Landing", component: <HotelLanding /> },
-        { button: "Key Finder", component: <HotelKeyFinder /> }, // Replace with actual component
-    ]);
+    const tabs = useMemo(() => {
+        const landingTab = { button: "Landing", component: <HotelLanding /> };
+        const keyFinderTab = {
+            button: "Key Finder",
+            component: <HotelKeyFinder />,
+        };
+
+        const customTabs =
+            brandingFormData?.pages?.map((page) => ({
+                button: page.title,
+                component: <HotelCustomPage page={page} />,
+            })) || [];
+
+        // Order: Landing → Custom Pages → Key Finder
+        return [landingTab, ...customTabs, keyFinderTab];
+    }, [brandingFormData]);
 
     const [activeTab, setActiveTab] = useState(0);
 
@@ -28,7 +41,7 @@ export default function HotelBrandingPreview() {
                     </p>
                 </div>
 
-                <div className="p-1 rounded-lg bg-[#F1F5F9] flex gap-2">
+                <div className="p-1 rounded-lg bg-[#F1F5F9] flex gap-2 flex-wrap">
                     {tabs.map((tab, idx) => (
                         <button
                             key={idx}
