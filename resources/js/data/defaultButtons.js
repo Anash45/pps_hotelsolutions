@@ -8,8 +8,8 @@ export const defaultButtons = [
         type: "link",
         url: "#",
         icon: "Wifi", // string instead of component
-        background_color: "#f1f1f1",
-        text_color: "#000000",
+        background_color: null,
+        text_color: null,
     },
     {
         order: 2,
@@ -17,8 +17,8 @@ export const defaultButtons = [
         type: "link",
         url: "https://hotel.com",
         icon: "Globe",
-        background_color: "#f3f3f3",
-        text_color: "#000000",
+        background_color: null,
+        text_color: null,
     },
     {
         order: 3,
@@ -26,8 +26,8 @@ export const defaultButtons = [
         type: "tel",
         url: "tel:+123456789",
         icon: "Phone",
-        background_color: "#eeeeee",
-        text_color: "#000000",
+        background_color: null,
+        text_color: null,
     },
     {
         order: 4,
@@ -35,7 +35,7 @@ export const defaultButtons = [
         type: "map",
         url: "https://maps.google.com?q=hotel",
         icon: "MapPin",
-        background_color: "#e0e0e0",
-        text_color: "#000000",
+        background_color: null,
+        text_color: null,
     },
 ];

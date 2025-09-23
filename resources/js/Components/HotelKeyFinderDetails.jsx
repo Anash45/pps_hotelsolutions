@@ -1,0 +1,83 @@
+import { PageContext } from "@/context/PageProvider";
+import { Link } from "@inertiajs/react";
+import { format, parseISO } from "date-fns";
+import { useContext } from "react";
+import { getIcon } from "@/data/iconMap";
+import PrimaryButton from "./PrimaryButton";
+import LightButton from "./LightButton";
+
+function formatDate(dateStr) {
+    if (!dateStr) return "";
+    try {
+        return format(parseISO(dateStr), "dd.MM.yyyy");
+    } catch {
+        return dateStr;
+    }
+}
+
+const HotelKeyFinderDetails = ({}) => {
+    const { brandingFormData } = useContext(PageContext);
+    const keyDetails = {};
+
+    return (
+        <div className="space-y-4">
+            <div className="space-y-3 text-center">
+                {brandingFormData.logo_image_url ? (
+                    <img
+                        src={`${brandingFormData.logo_image_url}`}
+                        alt="Hotel"
+                        className="h-16 w-16 rounded-[10px] object-contain object-center border border-[#c0c0c0] mx-auto"
+                    />
+                ) : (
+                    <img
+                        src={`/images/building-placeholder.webp`}
+                        alt="Hotel"
+                        className="h-16 w-16 rounded-[10px] object-contain object-center border border-[#c0c0c0] mx-auto"
+                    />
+                )}
+
+                <p className="text-[#161616] text-2xl">
+                    {brandingFormData.heading ?? "Hotel Name"}
+                </p>
+            </div>
+            <p
+                style={{
+                    color: brandingFormData?.page_text_color ?? "#020617",
+                }}
+                className="text-center text-sm"
+            >
+                {brandingFormData.key_finder_page_text}
+            </p>
+            <p
+                style={{
+                    color: brandingFormData?.page_text_color ?? "#020617",
+                }}
+                className="text-center text-sm font-bold"
+            >
+                +49 170 1234567
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+                <LightButton
+                    onClick={() => window.open("tel:+491701234567")}
+                    className="bg-white border-[#F1F1F1] hover:bg-slate-100"
+                >
+                    <span className="text-[#020617]">Phone</span>
+                </LightButton>
+                <PrimaryButton
+                    onClick={() =>
+                        window.open(
+                            "https://wa.me/491701234567?text=" +
+                                encodeURIComponent(
+                                    "I found your key. Please contact me."
+                                )
+                        )
+                    }
+                    className=""
+                >
+                    Whats app
+                </PrimaryButton>
+            </div>
+        </div>
+    );
+};
+export default HotelKeyFinderDetails;

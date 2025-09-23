@@ -1,19 +1,52 @@
 import { PageContext } from "@/context/PageProvider";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import MobileFrame from "./MobileFrame";
 import GuestBox from "./GuestBox";
 import HotelLanding from "./HotelLanding";
+import PrimaryButton from "./PrimaryButton";
+import HotelKeyFinder from "./HotelKeyFinder";
 
 export default function HotelBrandingPreview() {
     const { brandingFormData } = useContext(PageContext);
-    // console.log(brandingFormData);
+
+    const [tabs] = useState([
+        { button: "Landing", component: <HotelLanding /> },
+        { button: "Key Finder", component: <HotelKeyFinder /> }, // Replace with actual component
+    ]);
+
+    const [activeTab, setActiveTab] = useState(0);
 
     return (
-        <div className="py-4 md:px-6 px-4 rounded-[14px] main-box bg-white flex flex-col gap-3 position-sticky top-0">
+        <div className="py-4 md:px-6 px-4 rounded-[14px] main-box bg-white flex flex-col gap-3 sticky top-0">
+            <div className="space-y-2 mb-6">
+                <div className="flex flex-col gap-1">
+                    <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
+                        Live Preview
+                    </h5>
+                    <p className="text-xs text-[#544854]">
+                        Preview is mobile (fixed width).
+                    </p>
+                </div>
+
+                <div className="p-1 rounded-lg bg-[#F1F5F9] flex gap-2">
+                    {tabs.map((tab, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => setActiveTab(idx)}
+                            className={`text-sm px-3 py-1.5 rounded-[6px] ${
+                                activeTab === idx
+                                    ? "bg-primary text-white"
+                                    : "bg-transparent text-[#020617]"
+                            }`}
+                        >
+                            {tab.button}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             <MobileFrame>
-                <GuestBox>
-                    <HotelLanding />
-                </GuestBox>
+                <GuestBox>{tabs[activeTab].component}</GuestBox>
             </MobileFrame>
         </div>
     );

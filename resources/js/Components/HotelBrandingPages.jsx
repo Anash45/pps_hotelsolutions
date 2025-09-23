@@ -1,16 +1,35 @@
 import { FileText, GripVertical, Plus } from "lucide-react";
 import LightButton from "./LightButton";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { PageContext } from "@/context/PageProvider";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Dropdown, DropdownItem } from "./DropdownUi";
 import { useModal } from "@/context/ModalProvider";
+import InputError from "./InputError";
 
-export default function HotelBrandingPages({}) {
+export default function HotelBrandingPages() {
     const { openModal } = useModal();
-    const { selectedHotel = null } = usePage().props;
-    const { brandingFormData, handleBrandingChange, setBrandingFormData } =
-        useContext(PageContext);
+    const { selectedHotel = null, errors: formErrors } = usePage().props;
+    const { brandingFormData } = useContext(PageContext);
+
+    // Delete handler
+    const handleDelete = async (pageId) => {
+        console.log("Delet btn");
+        if (!confirm("Are you sure you want to delete this page?")) return;
+
+        try {
+            await axios.delete(`/hotel-pages/${pageId}`);
+
+            router.reload({ only: ["selectedHotel"] });
+            console.log("Page deleted successfully");
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.error("Server error:", error.response.data);
+            } else {
+                console.error("Unknown error:", error);
+            }
+        }
+    };
 
     return (
         <div className="space-y-3">
@@ -41,28 +60,55 @@ export default function HotelBrandingPages({}) {
 
             <div className="w-full">
                 <div className="xl:w-max min-w-full space-y-3">
-                    {brandingFormData?.pages.map((page, idx) => (
-                        <div className="border border-gray-400 rounded-lg py-1 px-3.5 md:text-sm text:xs text[#263238] flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-gray-50 transition">
-                            <div className="lg:w-max w-full shrink-0 grow">
-                                <div className="flex items-center gap-2 flex-wrap justify-start">
-                                    <FileText size={20} />
-                                    <span className="text-gray900">
-                                        <span className="font-bold">
-                                            {brandingFormData.heading}
+                    {brandingFormData.pages !== undefined &&
+                        brandingFormData.pages.map((page, idx) => (
+                            <div
+                                key={idx}
+                                className="border border-gray-400 rounded-lg py-1 px-3.5 md:text-sm text-xs text-[#263238] flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-gray-50 transition"
+                            >
+                                <div className="lg:w-max w-full shrink-0 grow">
+                                    <div className="flex items-center gap-2 flex-wrap justify-start">
+                                        <FileText size={20} />
+                                        <span className="text-gray900">
+                                            <span className="font-bold">
+                                                {brandingFormData.heading}
+                                            </span>
+                                            /{page.slug}
                                         </span>
-                                        /{page.slug}
-                                    </span>
+                                    </div>
+
+                                    {/* Display errors under title */}
+                                    <InputError
+                                        message={
+                                            formErrors?.pages?.[idx]?.title?.[0]
+                                        }
+                                    />
+                                </div>
+
+                                <div className="lg:w-10 w-full flex items-center gap-2">
+                                    <Dropdown>
+                                        <DropdownItem
+                                            onClick={() =>
+                                                openModal("HotelPageModal", {
+                                                    page,
+                                                    selectedHotel:
+                                                        selectedHotel,
+                                                })
+                                            }
+                                        >
+                                            Edit
+                                        </DropdownItem>
+                                        <DropdownItem
+                                            onClick={() =>
+                                                handleDelete(page.id)
+                                            }
+                                        >
+                                            Delete
+                                        </DropdownItem>
+                                    </Dropdown>
                                 </div>
                             </div>
-
-                            <div className="lg:w-10 w-full flex items-center gap-2">
-                                <Dropdown>
-                                    <DropdownItem>Edit</DropdownItem>
-                                    <DropdownItem>Delete</DropdownItem>
-                                </Dropdown>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
                 </div>
             </div>
         </div>

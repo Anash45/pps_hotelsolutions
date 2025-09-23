@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hotel;
 use App\Models\Page;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -10,17 +12,25 @@ class HotelPageController extends Controller
 {
     public function store(Request $request)
     {
+        $user = $request->user(); // logged-in user
+
         $validated = $request->validate([
             'hotel_id' => ['required', 'exists:hotels,id'],
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:hotel_pages,slug'],
+            'slug' => ['nullable', 'string', 'max:255'],
         ]);
 
-        // auto-generate slug if not provided
+        // Authorization check
+        $hotel = Hotel::findOrFail($validated['hotel_id']);
+        if ($hotel->user_id !== $user->id && !$user->is_admin()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // Auto-generate slug if not provided
         $slug = $validated['slug'] ?? Str::slug($validated['title']);
 
-        // ensure unique slug per hotel
+        // Ensure unique slug per hotel
         $originalSlug = $slug;
         $count = 1;
         while (Page::where('slug', $slug)->where('hotel_id', $validated['hotel_id'])->exists()) {
@@ -39,4 +49,25 @@ class HotelPageController extends Controller
             'page' => $page,
         ], 201);
     }
+
+    public function destroy($id)
+    {
+        $user = Auth::user();
+
+        // Find the page
+        $page = Page::findOrFail($id);
+
+        // Check if user is admin or page belongs to user's hotel
+        if (!$user->is_admin() && $page->hotel_id !== $user->hotel_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Delete the page
+        $page->delete();
+
+        return response()->json([
+            'message' => 'Page deleted successfully.',
+        ]);
+    }
+
 }

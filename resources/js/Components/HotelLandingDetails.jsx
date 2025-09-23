@@ -18,12 +18,13 @@ const HotelLandingDetails = ({}) => {
     const keyDetails = {};
 
     return (
-        <div className="space-y-4">
+        <div
+            className="space-y-4"
+            style={{ color: `${brandingFormData?.text_color ?? '#020617'}` }}
+        >
             <div className="flex justify-between gap-3 flex-wrap">
-                <span className="text-sm font-medium text-[#020617]">
-                    Max Mustermann
-                </span>
-                <span className="text-xs text-[#6F6F70]">Zimmer 312</span>
+                <span className="text-sm font-medium">Max Mustermann</span>
+                <span className="text-xs">Zimmer 312</span>
             </div>
             <div className="space-y-3 text-center">
                 {brandingFormData.logo_image_url ? (
@@ -40,10 +41,10 @@ const HotelLandingDetails = ({}) => {
                     />
                 )}
                 <div className="flex flex-col">
-                    <p className="text-[#161616] text-2xl">
+                    <p className="text-2xl">
                         {brandingFormData.heading ?? "Hotel Name"}
                     </p>
-                    <span className="text-xs text-[#414C5C] font-montserrat">
+                    <span className="text-xs font-montserrat">
                         {keyDetails?.stay_from
                             ? formatDate(keyDetails?.stay_from)
                             : "22.12.2025"}{" "}
@@ -76,8 +77,18 @@ const HotelLandingDetails = ({}) => {
                             key={idx}
                             className={`block w-full px-4 py-3 rounded-xl border text-sm hotel-button`}
                             style={{
-                                backgroundColor: `${button.background_color}`,
-                                borderColor: `${button.background_color}`,
+                                color: `${
+                                    button.text_color ??
+                                    brandingFormData.button_text_color
+                                }`,
+                                backgroundColor: `${
+                                    button.background_color ??
+                                    brandingFormData.primary_color
+                                }`,
+                                borderColor: `${
+                                    button.background_color ??
+                                    brandingFormData.primary_color
+                                }`,
                             }}
                             href={button.url}
                         >

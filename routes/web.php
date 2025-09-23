@@ -55,6 +55,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::match(['post', 'put'], '/hotels/updateBranding/{hotel}', [HotelsController::class, 'updateBranding'])
         ->name('hotels.updateBranding');
     Route::post('/hotel-pages', [HotelPageController::class, 'store'])->name('hotel-pages.store');
+    Route::delete('/hotel-pages/{id}', [HotelPageController::class, 'destroy'])->name('hotel-pages.destroy');
 
 
 });
