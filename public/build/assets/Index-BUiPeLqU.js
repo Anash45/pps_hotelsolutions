@@ -1,1 +1,0 @@
-import{j as t,H as e}from"./app-BOPNnxpf.js";import{A as o}from"./AuthenticatedLayout-dwv0OHsJ.js";import"./ApplicationLogo-KJIgtNwd.js";function i(){return t.jsx(o,{children:t.jsx(e,{title:"Hotels"})})}export{i as default};
