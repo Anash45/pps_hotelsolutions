@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useEffect } from "react";
-import Select from "react-select";
+import Select, { components as defaultComponents } from "react-select";
 import AsyncSelect from "react-select/async";
 
 export default forwardRef(function SelectInput(
@@ -69,18 +69,38 @@ export default forwardRef(function SelectInput(
             gap: "8px",
         }),
     };
+
+    // Custom Option with icon
+    const Option = (props) => (
+        <defaultComponents.Option {...props}>
+            {props.data.icon && <props.data.icon size={16} />}
+            {props.data.label}
+        </defaultComponents.Option>
+    );
+
+    // Custom SingleValue with icon
+    const SingleValue = (props) => (
+        <defaultComponents.SingleValue {...props}>
+            {props.data.icon && <props.data.icon size={16} />}
+            {props.data.label}
+        </defaultComponents.SingleValue>
+    );
+
+    const components = { Option, SingleValue };
+
     if (async) {
         return (
             <AsyncSelect
                 {...props}
                 cacheOptions
                 defaultOptions
-                loadOptions={loadOptions} // function(inputValue, callback) {}
+                loadOptions={loadOptions}
                 inputRef={localRef}
                 className={className}
                 classNamePrefix="custom-select"
                 placeholder={placeholder}
                 styles={customStyles}
+                components={components}
                 onChange={(option) =>
                     onChange({
                         target: {
@@ -102,6 +122,8 @@ export default forwardRef(function SelectInput(
             options={options}
             isSearchable={isSearchable}
             placeholder={placeholder}
+            styles={customStyles}
+            components={components}
             value={options.find((opt) => opt.value === value) || null}
             onChange={(option) =>
                 onChange({
@@ -111,7 +133,6 @@ export default forwardRef(function SelectInput(
                     },
                 })
             }
-            styles={customStyles}
         />
     );
 });

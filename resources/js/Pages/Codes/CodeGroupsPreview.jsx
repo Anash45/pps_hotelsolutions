@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
-import { Download } from "lucide-react";
+import { Download, Trash2 } from "lucide-react";
 
 export default function CodeGroupsPreview({ previewGroups, domain }) {
     return (
@@ -18,7 +18,7 @@ export default function CodeGroupsPreview({ previewGroups, domain }) {
                         </div>
                         <div className="w-24 shrink-0">Type</div>
                         <div className="w-14">Number</div>
-                        <div className="w-8 text-center shrink-0">CSV</div>
+                        <div className="w-10 text-center shrink-0">Action</div>
                     </div>
 
                     {/* Rows */}
@@ -64,11 +64,11 @@ export default function CodeGroupsPreview({ previewGroups, domain }) {
                                         <span>{cg.count}</span>
                                     </span>
                                 </div>
-                                <div className="lg:w-8 flex items-center gap-2 shrink-0">
+                                <div className="lg:w-10 flex items-center gap-2 shrink-0">
                                     <span className="lg:hidden text-[10px] text-gray-500">
-                                        CSV:{" "}
+                                        Action:{" "}
                                     </span>
-                                    <span className="text-xs text-body">
+                                    <span className="text-xs text-body flex gap-1">
                                         <a
                                             target="_blank"
                                             href={route(
@@ -80,6 +80,20 @@ export default function CodeGroupsPreview({ previewGroups, domain }) {
                                             <Download
                                                 size={16}
                                                 className="text-body mx-auto"
+                                                strokeWidth={2}
+                                            />
+                                        </a>
+                                        <a
+                                            onClick={() => confirm('Are you sure? It will only be deleted if there are no key assignments')}
+                                            href={route(
+                                                "codes.group.delete",
+                                                cg.id
+                                            )}
+                                            className="text-center"
+                                        >
+                                            <Trash2
+                                                size={16}
+                                                className="text-red-600 mx-auto"
                                                 strokeWidth={2}
                                             />
                                         </a>

@@ -46,6 +46,7 @@ export default function CreateKeyModal({
     const [keyTypeId, setKeyTypeId] = useState(
         existingCode?.key_type_id ?? null
     );
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         hotel_id: selectedHotel ?? null, // ✅ include here
         salutation: existingCode?.key_assignment?.salutation ?? "",
@@ -124,6 +125,7 @@ export default function CreateKeyModal({
     // Handles form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         if (!recognized || !selectedCode) return;
 
@@ -138,33 +140,18 @@ export default function CreateKeyModal({
             console.log("✅ Success response:", res.data);
             setFormErrors({});
 
-            // Optional: reset form after success
-            if (existingCode !== null) {
-                setBarcodeInput("");
-                setFormData({
-                    salutation: "",
-                    title: "",
-                    first_name: "",
-                    last_name: "",
-                    room_number: "",
-                    phone_number: "",
-                    email: "",
-                    stay_from: "",
-                    stay_till: "",
-                    gdpr_consent: gdprConsent,
-                });
-            }
-
             setTimeout(() => {
                 handleClose();
-            }, 3000);
+            }, 2000);
             onSuccess();
+            setLoading(false);
             if (existingCode !== null) {
                 setSubmitSuccess("Key has been updated!");
             } else {
                 setSubmitSuccess("Key has been created!");
             }
         } catch (err) {
+            setLoading(false);
             if (err.response?.data?.errors) {
                 console.log("❌ Validation errors:", err.response.data.errors);
                 setFormErrors(err.response.data.errors);
@@ -172,6 +159,7 @@ export default function CreateKeyModal({
                 console.error("❌ Unexpected error:", err);
             }
         } finally {
+            setLoading(false);
             console.log("📌 Request finished");
         }
     };
@@ -529,12 +517,13 @@ export default function CreateKeyModal({
                         </div>
                     </div>
                     <div className="flex items-center gap-2 justify-end flex-wrap">
+                        {loading ? <p className="text-sm">Loading...</p> : ""}
                         {Object.keys(formErrors).length > 0 && (
                             <InputError message="Fix the errors in the form." />
                         )}
                         <LightButton onClick={handleClose}>Cancel</LightButton>
                         <PrimaryButton
-                            disabled={!recognized}
+                            disabled={!recognized || loading}
                             onClick={handleSubmit}
                         >
                             {existingCode === null

@@ -50,6 +50,12 @@ export default function HotelBrandingPages() {
                             selectedHotel: selectedHotel,
                         });
                     }}
+                    disabled={!selectedHotel}
+                    title={`${
+                        selectedHotel
+                            ? "Create new button"
+                            : "Select a hotel first to create new button"
+                    }`}
                 >
                     <div className="flex justify-center items-center gap-[10px]">
                         <Plus size={16} />
@@ -73,7 +79,10 @@ export default function HotelBrandingPages() {
                                             <span className="font-bold">
                                                 {brandingFormData.heading}
                                             </span>
-                                            /{page.title} <span className="text-xs">({page.slug})</span>
+                                            /{page.title}{" "}
+                                            <span className="text-xs">
+                                                ({page.slug})
+                                            </span>
                                         </span>
                                     </div>
 

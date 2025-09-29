@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\KeyfinderConsentMail;
 use App\Models\KeyAssignment;
 use App\Models\Code;
 use App\Models\Hotel;
@@ -10,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Log;
+use Mail;
+use Validator;
 
 class KeyAssignmentController extends Controller
 {
@@ -92,15 +95,24 @@ class KeyAssignmentController extends Controller
         // Validate request
         $validated = $request->validate($rules);
 
-        // Extra check: code must belong to given hotel
-        $belongs = Code::where('id', $validated['code_id'])
-            ->where('hotel_id', $validated['hotel_id'])
-            ->exists();
 
-        if (!$belongs) {
+        // 🔎 Extra check: ensure code belongs to hotel
+        $code = Code::where('id', $validated['code_id'])
+            ->where('hotel_id', $validated['hotel_id'])
+            ->first();
+
+        if (!$code) {
             return response()->json([
                 'success' => false,
                 'message' => 'The selected code does not belong to the given hotel.',
+            ], 422);
+        }
+
+        // 🔎 Check if this code already has an assignment
+        if ($code->keyAssignment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This key is already assigned.',
             ], 422);
         }
 
@@ -126,6 +138,13 @@ class KeyAssignmentController extends Controller
         Log::info('KeyAssignment created successfully', [
             'assignment' => $assignment,
         ]);
+
+
+        if ($request->boolean('gdpr_consent')) {
+
+            Mail::to($request->input('email'))
+                ->send(new KeyfinderConsentMail($code));
+        }
 
         return response()->json([
             'success' => true,

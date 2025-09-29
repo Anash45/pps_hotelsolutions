@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CodesController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ButtonController;
 use App\Http\Controllers\HotelPageController;
 use App\Http\Controllers\HotelsController;
 use App\Http\Controllers\KeyAssignmentController;
@@ -59,6 +60,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/hotel-pages/{page}', [HotelPageController::class, 'update'])
         ->name('hotel-pages.update');
 
+    Route::post('/buttons', [ButtonController::class, 'store'])->name('buttons.store');
+    Route::put('/buttons/{button}', [ButtonController::class, 'update'])->name('buttons.update');
+    Route::delete('/buttons/{button}', [ButtonController::class, 'destroy'])->name('buttons.destroy');
+    Route::post('/buttons/reorder', [ButtonController::class, 'reorder'])
+        ->name('buttons.reorder');
 
 });
 
@@ -67,9 +73,23 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/codes/group/{group}/download', [CodesController::class, 'downloadCsv'])
         ->name('codes.group.download');
+    Route::get('/codes/group/{group}/delete', [CodesController::class, 'deleteGroup'])
+        ->name('codes.group.delete');
     Route::resource('users', UserController::class);
 
 });
+
+Route::get('/key/{code}', [CodesController::class, 'showByKey'])
+    ->name('codes.showByKey');
+Route::get('/pages/{id}', [HotelPageController::class, 'show'])
+    ->name('pages.show');
+Route::get('/key/{code}/active', [CodesController::class, 'makeActive'])
+    ->name('key.makeActive');
+// Store new key assignment
+Route::post('/key-assignment/store', [CodesController::class, 'userStore'])
+    ->name('keyassignment.userStore');
+Route::get('/keyfinder/unsubscribe/{code}', [CodesController::class, 'unsubscribe'])
+    ->name('keyfinder.unsubscribe');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

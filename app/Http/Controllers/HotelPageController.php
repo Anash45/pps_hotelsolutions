@@ -10,6 +10,27 @@ use Illuminate\Support\Str;
 
 class HotelPageController extends Controller
 {
+    public function show($id)
+    {
+        $page = Page::with('hotel')->findOrFail($id);
+        // Fetch selectedHotel with details (using code’s hotel_id)
+        $selectedHotel = null;
+        if ($page->hotel_id) {
+            $selectedHotel = Hotel::with([
+                'buttons' => function ($q) {
+                    $q->orderBy('order'); // ascending
+                },
+                'pages',
+            ])->findOrFail($page->hotel_id);
+        }
+
+        return inertia('HotelPages/Show', [
+            'page' => $page,
+            'selectedHotel' => $selectedHotel,
+        ]);
+    }
+
+
     public function store(Request $request)
     {
         $user = $request->user(); // logged-in user

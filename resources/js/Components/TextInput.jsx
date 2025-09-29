@@ -52,7 +52,7 @@ export default forwardRef(function TextInput(
 
     if (type === "date") {
         return (
-            <ReactDatePicker
+            <ReactDatePicker className="w-full"
                 selected={value ? new Date(value) : null}
                 onChange={(date) =>
                     onChange({

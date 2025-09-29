@@ -3,6 +3,8 @@ import TestModal from "@/Components/TestModal";
 import CreateKeyModal from "@/Components/CreateKeyModal";
 import { router } from "@inertiajs/react";
 import HotelPageModal from "@/Components/HotelPageModal";
+import HotelButtonsModal from "@/Components/HotelButtonsModal";
+import HotelWifiModal from "@/Components/HotelWifiModal";
 
 const ModalContext = createContext();
 
@@ -44,6 +46,18 @@ export function ModalProvider({ children }) {
                             onSuccess={() => {
                                 router.reload({ only: ["codes"] });
                             }}
+                            onClose={closeModal}
+                        />
+                    )}
+                    {modal?.name === "HotelButtonsModal" && (
+                        <HotelButtonsModal
+                            {...modal.props}
+                            onClose={closeModal}
+                        />
+                    )}
+                    {modal?.name === "HotelWifiModal" && (
+                        <HotelWifiModal
+                            {...modal.props}
                             onClose={closeModal}
                         />
                     )}

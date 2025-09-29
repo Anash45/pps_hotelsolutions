@@ -1,55 +1,37 @@
 import { GripVertical, Plus } from "lucide-react";
 import LightButton from "./LightButton";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { PageContext } from "@/context/PageProvider";
 import { useContext, useEffect, useState } from "react";
-import { defaultButtons } from "@/data/defaultButtons";
 import { ReactSortable } from "react-sortablejs";
 import { getIcon } from "@/data/iconMap";
+import { Dropdown, DropdownItem } from "./DropdownUi";
+import { useModal } from "@/context/ModalProvider";
 
 export default function HotelBrandingButtons({}) {
+    const { openModal } = useModal();
     const { selectedHotel = null } = usePage().props;
-    const { brandingFormData, handleBrandingChange, setBrandingFormData } =
-        useContext(PageContext);
-    const [initialButtons, setInitialButtons] = useState(defaultButtons);
+    const { brandingFormData, setBrandingFormData } = useContext(PageContext);
 
-    useEffect(() => {
-        let finalButtons = defaultButtons;
+    const handleDelete = async (buttonId) => {
+        console.log("BTN ID:", buttonId);
+        if (!confirm("Are you sure you want to delete this button?")) return;
 
-        if (selectedHotel?.buttons && selectedHotel.buttons.length > 0) {
-            // Map hotel’s saved buttons, ensuring button_id is set
-            finalButtons = selectedHotel.buttons.map((btn) => ({
-                ...btn,
-                button_id: btn.id, // map DB id to button_id
-                hotel_id: selectedHotel.id,
-            }));
+        try {
+            await axios.delete(route("buttons.destroy", { button: buttonId }));
+
+            router.reload({ only: ["selectedHotel"] });
+            console.log("Button deleted successfully");
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.error("Server error:", error.response.data);
+            } else {
+                console.error("Unknown error:", error);
+            }
         }
+    };
 
-        setInitialButtons(finalButtons);
-
-        // 🔹 Ensure brandingFormData always has `buttons` key
-        setBrandingFormData((prev) => {
-            if (!prev.hasOwnProperty("buttons")) {
-                // add buttons if key doesn’t exist
-                return {
-                    ...prev,
-                    buttons: finalButtons,
-                };
-            }
-
-            if (!prev.buttons || prev.buttons.length === 0) {
-                // replace if empty
-                return {
-                    ...prev,
-                    buttons: finalButtons,
-                };
-            }
-
-            return prev; // keep existing
-        });
-    }, [selectedHotel, setBrandingFormData]);
-
-    console.log("Brading Data: ", brandingFormData);
+    console.log("DATA: ", brandingFormData);
 
     return (
         <div className="space-y-3">
@@ -59,10 +41,23 @@ export default function HotelBrandingButtons({}) {
                         Buttons
                     </h5>
                     <p className="text-xs text-[#544854]">
-                        The default is 4 buttons; change the order using ↑/↓.
+                        You can change the order using ↑/↓.
                     </p>
                 </div>
-                <LightButton className="py-[9px] px-[8px]">
+                <LightButton
+                    onClick={() =>
+                        openModal("HotelButtonsModal", {
+                            selectedHotel: selectedHotel,
+                        })
+                    }
+                    className="py-[9px] px-[8px]"
+                    disabled={!selectedHotel}
+                    title={`${
+                        selectedHotel
+                            ? "Create new button"
+                            : "Select a hotel first to create new button"
+                    }`}
+                >
                     <div className="flex justify-center items-center gap-[10px]">
                         <Plus size={16} />
                         <span className="text-sm font-medium">Add button</span>
@@ -78,26 +73,53 @@ export default function HotelBrandingButtons({}) {
                         {/* Checkbox / icon slot */}
                         <div className="w-[15%]">Icon</div>
                         <div className="w-[15%]">No.</div>
-                        <div className="w-[25%]">Text</div>
+                        <div className="w-[30%]">Text</div>
                         <div className="w-[20%]">Type</div>
-                        <div className="w-[20%]">Action</div>
+                        <div className="w-[15%]">Action</div>
                     </div>
 
                     {/* Row - responsive */}
                     <ReactSortable
                         list={brandingFormData.buttons || []}
                         setList={(newList) => {
-                            // Update the order property based on new position
                             const updatedList = newList.map((btn, index) => ({
                                 ...btn,
-                                order: index + 1, // 1-based index
+                                id: btn.id || btn.button_id,
+                                order: index + 1,
                             }));
 
-                            // Update brandingFormData with new button order
-                            setBrandingFormData((prev) => ({
-                                ...prev,
-                                buttons: updatedList,
-                            }));
+                            setBrandingFormData((prev) => {
+                                // detect if order really changed
+                                const hasChanged = updatedList.some(
+                                    (btn, i) =>
+                                        btn.order !== prev.buttons?.[i]?.order
+                                );
+                                if (hasChanged) {
+                                    axios
+                                        .post("/buttons/reorder", {
+                                            buttons: updatedList.map(
+                                                ({ id, order }) => ({
+                                                    id,
+                                                    order,
+                                                })
+                                            ),
+                                        })
+                                        .then((res) =>
+                                            console.log(
+                                                "Reorder success",
+                                                res.data
+                                            )
+                                        )
+                                        .catch((err) =>
+                                            console.error(
+                                                "Reorder failed",
+                                                err.response?.data || err
+                                            )
+                                        );
+                                }
+
+                                return { ...prev, buttons: updatedList };
+                            });
                         }}
                         handle=".drag-handle"
                         animation={150}
@@ -122,10 +144,9 @@ export default function HotelBrandingButtons({}) {
                                         <span className="lg:hidden text-[10px] text-gray-500 mr-1">
                                             Icon:
                                         </span>
+
                                         {Icon ? (
-                                            <Icon
-                                                size={18}
-                                            />
+                                            <Icon size={18} />
                                         ) : (
                                             <span>🔗</span>
                                         )}
@@ -138,11 +159,11 @@ export default function HotelBrandingButtons({}) {
                                         <span>{button.order}</span>
                                     </div>
 
-                                    <div className="lg:w-[25%] w-full flex items-center">
+                                    <div className="lg:w-[30%] w-full flex items-center">
                                         <span className="lg:hidden text-[10px] text-gray-500 mr-1">
                                             Text:
                                         </span>
-                                        <span>{button.title}</span>
+                                        <span>{button.text}</span>
                                     </div>
 
                                     <div className="lg:w-[20%] w-full flex items-center">
@@ -152,16 +173,30 @@ export default function HotelBrandingButtons({}) {
                                         <span>{button.type}</span>
                                     </div>
 
-                                    <div className="lg:w-[20%] w-full flex items-center gap-2">
-                                        <span className="lg:hidden text-[10px] text-gray-500 mr-1">
-                                            Action:
-                                        </span>
-                                        <button className="text-blue-600 hover:underline">
-                                            Edit
-                                        </button>
-                                        <button className="text-red-600 hover:underline">
-                                            Delete
-                                        </button>
+                                    <div className="lg:w-[15%] w-full flex items-center gap-2">
+                                        <Dropdown>
+                                            <DropdownItem
+                                                onClick={() =>
+                                                    openModal(
+                                                        "HotelButtonsModal",
+                                                        {
+                                                            button,
+                                                            selectedHotel:
+                                                                selectedHotel,
+                                                        }
+                                                    )
+                                                }
+                                            >
+                                                Edit
+                                            </DropdownItem>
+                                            <DropdownItem
+                                                onClick={() =>
+                                                    handleDelete(button.button_id)
+                                                }
+                                            >
+                                                Delete
+                                            </DropdownItem>
+                                        </Dropdown>
                                     </div>
                                 </div>
                             );

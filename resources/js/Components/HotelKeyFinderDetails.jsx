@@ -1,5 +1,5 @@
 import { PageContext } from "@/context/PageProvider";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { format, parseISO } from "date-fns";
 import { useContext } from "react";
 import { getIcon } from "@/data/iconMap";
@@ -17,7 +17,10 @@ function formatDate(dateStr) {
 
 const HotelKeyFinderDetails = ({}) => {
     const { brandingFormData } = useContext(PageContext);
+    const { codeDetails } = usePage().props;
     const keyDetails = {};
+
+    console.log(codeDetails);
 
     return (
         <div className="space-y-4">
@@ -54,11 +57,11 @@ const HotelKeyFinderDetails = ({}) => {
                 }}
                 className="text-center text-sm font-bold"
             >
-                +49 170 1234567
+                {codeDetails?.key_assignment?.phone_number ?? ""}
             </p>
             <div className="grid grid-cols-2 gap-2">
                 <LightButton
-                    onClick={() => window.open("tel:+491701234567")}
+                    onClick={() => window.open(`tel:+${codeDetails?.key_assignment?.phone_number}`)}
                     className="border-[#F1F1F1]"
                 >
                     <span className="text-[#020617]">Phone</span>
@@ -66,7 +69,7 @@ const HotelKeyFinderDetails = ({}) => {
                 <PrimaryButton
                     onClick={() =>
                         window.open(
-                            "https://wa.me/491701234567?text=" +
+                            `https://wa.me/${codeDetails?.key_assignment?.phone_number}?text=` +
                                 encodeURIComponent(
                                     "I found your key. Please contact me."
                                 )

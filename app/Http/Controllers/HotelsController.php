@@ -20,9 +20,11 @@ class HotelsController extends Controller
             $selectedHotel = null;
             if ($hotelId) {
                 $selectedHotel = Hotel::with([
-                    'buttons',
-                    'pages'
-                ])->find(id: $hotelId);
+                    'buttons' => function ($q) {
+                        $q->orderBy('order'); // ascending
+                    },
+                    'pages',
+                ])->findOrFail($hotelId);
             }
 
             return Inertia::render('Hotels/Index', [
@@ -32,7 +34,9 @@ class HotelsController extends Controller
             ]);
         } else {
             $hotel = Hotel::with([
-                'buttons',
+                'buttons' => function ($q) {
+                    $q->orderBy('order'); // ascending
+                },
                 'pages'
             ])->find($user->hotel_id);
 

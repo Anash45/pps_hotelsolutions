@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="de" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <title>Abmeldung Keyfinder bestätigt</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
+  <style>
+    @media (max-width:480px){
+      .wrapper{padding:16px !important;}
+      .card{border-radius:14px !important; padding:20px !important;}
+      .h1{font-size:22px !important; line-height:28px !important;}
+      .subtitle{font-size:14px !important;}
+      .body{font-size:16px !important; line-height:24px !important;}
+      .btn{display:block !important; width:100% !important;}
+      .links a{display:block !important; margin:10px 0 !important;}
+      .logo{width:56px !important; height:56px !important;}
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background:#f5f7fa;">
+  <!-- Preheader -->
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent;">
+    Ihre Abmeldung war erfolgreich. Alle Daten wurden gelöscht und der Keyfinder ist deaktiviert.
+  </div>
+
+  <center role="article" aria-roledescription="email" lang="de" style="width:100%; background:#f5f7fa;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td class="wrapper" align="center" style="padding:24px;">
+
+          <!-- Card -->
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0"
+                 style="width:100%; max-width:640px; background:#ffffff; border-radius:18px; box-shadow:0 2px 10px rgba(16,24,40,0.06);">
+            <tr>
+              <td class="card" style="padding:28px;">
+
+                <!-- Header -->
+                <table role="presentation" width="100%">
+                  <tr>
+                    <td align="center" style="padding-bottom:8px;">
+                      <img class="logo" src="{{logo_url}}" width="64" height="64" alt="{{hotel_name}} Logo"
+                           style="display:block; border:0; border-radius:12px; width:64px; height:64px;">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="center" class="h1"
+                        style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+                               font-size:24px; line-height:32px; font-weight:800; color:#2a2f36; padding-bottom:4px;">
+                      🔑 Keyfinder – Abmeldung bestätigt
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="center" class="subtitle"
+                        style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+                               font-size:15px; line-height:22px; color:#6b7280;">
+                      Für: <strong>{{hotel_name}}</strong>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Body -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:16px;">
+                  <tr>
+                    <td class="body"
+                        style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+                               font-size:15px; line-height:23px; color:#3a3f45;">
+                      <p style="margin:0 0 12px 0;">Guten Tag,</p>
+                      <p style="margin:0 0 12px 0;">
+                        wir bestätigen Ihre <strong>Abmeldung von der Keyfinder-Funktion</strong>. 
+                        Alle Ihre persönlichen Daten wurden gelöscht.
+                      </p>
+                      <p style="margin:0 0 12px 0;">
+                        Hinweis: Der <strong>Keyfinder ist nun deaktiviert</strong> und funktioniert nicht mehr.
+                      </p>
+                      <p style="margin:0 0 6px 0;">
+                        Wenn dies ein Versehen war, können Sie die Funktion jederzeit wieder aktivieren.
+                      </p>
+                    </td>
+                  </tr>
+
+                  <!-- Optionaler Re-Activate-CTA -->
+                  <tr>
+                    <td align="center" style="padding-top:12px; padding-bottom:8px;">
+                      <a class="btn" href="{{reactivate_url}}" target="_blank"
+                         style="background:#b9d9a5; color:#1f2937; text-decoration:none;
+                                font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+                                font-size:15px; line-height:20px; font-weight:700;
+                                padding:14px 22px; border-radius:12px; display:inline-block;">
+                        Keyfinder erneut aktivieren
+                      </a>
+                    </td>
+                  </tr>
+
+                  <!-- Sekundäre Links -->
+                  <tr>
+                    <td align="center" class="links" style="padding-top:6px;">
+                      <a href="{{privacy_url}}" target="_blank"
+                         style="color:#6b7280; text-decoration:underline; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:13px; margin-right:12px;">
+                        Datenschutz
+                      </a>
+                      <a href="{{terms_url}}" target="_blank"
+                         style="color:#6b7280; text-decoration:underline; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:13px;">
+                        AGB
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+          </table>
+
+          <!-- Footer -->
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%; max-width:640px;">
+            <tr>
+              <td align="center"
+                  style="padding:14px 18px 0 18px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+                         font-size:12px; line-height:18px; color:#98a2b3;">
+                Diese E-Mail wurde automatisch von der Hotelinfo &amp; Keyfinder Webapp gesendet. Bitte nicht direkt antworten.
+              </td>
+            </tr>
+            <tr>
+              <td align="center"
+                  style="padding:8px 18px 24px 18px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+                         font-size:12px; line-height:18px; color:#98a2b3;">
+                Diese Lösung wird bereitgestellt durch
+                <a href="https://pps-hotelkarten.de" target="_blank" style="color:#3b7a57; text-decoration:underline;">PPS&nbsp;GmbH</a>.
+              </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
+</html>
