@@ -40,7 +40,7 @@ export default function CodesPreview({ previewCodes, domain }) {
                                             href={`${domain}/${c.code}`}
                                             className="underline break-all"
                                         >
-                                            {domain}/{c.code}
+                                            {domain}/key/{c.code}
                                         </Link>
                                     </span>
                                 </div>
