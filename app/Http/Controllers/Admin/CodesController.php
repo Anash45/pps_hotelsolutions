@@ -250,7 +250,7 @@ class CodesController extends Controller
     {
         $codes = $group->codes()->with('hotel', 'keyType')->get();
 
-        $csvHeader = ['Hotel', 'URL', 'Type', 'Created At'];
+        $csvHeader = ['Hotel', 'URL', 'Serial', 'Type', 'Created At'];
 
         $callback = function () use ($codes, $csvHeader) {
             $file = fopen('php://output', 'w');
@@ -259,7 +259,8 @@ class CodesController extends Controller
             foreach ($codes as $code) {
                 fputcsv($file, [
                     $code->hotel->hotel_name ?? '',
-                    env('LINK_URL') . '/key/' . $code->code, // adjust your URL prefix if needed
+                    env('LINK_URL') . '/key/' . $code->code,
+                    $code->code ?? '',
                     $code->keyType->display_name ?? $code->keyType->name,
                     $code->created_at?->format('d.m.Y H:i') ?? '',
                 ]);
