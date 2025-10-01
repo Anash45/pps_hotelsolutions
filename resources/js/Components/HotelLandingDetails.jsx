@@ -60,7 +60,7 @@ const HotelLandingDetails = ({}) => {
                     <img
                         src={`/images/building-placeholder.webp`}
                         alt="Hotel"
-                        className="max-h-24 max-w-36 h-auto w-auto rounded-[10px] object-contain object-center mx-auto"
+                        className="max-h-24 max-w-36 h-auto w-auto object-contain object-center mx-auto"
                     />
                 )}
                 <div className="flex flex-col">

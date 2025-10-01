@@ -29,13 +29,13 @@ const HotelKeyFinderDetails = ({}) => {
                     <img
                         src={`${brandingFormData.logo_image_url}`}
                         alt="Hotel"
-                        className="h-16 w-16 rounded-[10px] object-contain object-center border border-[#c0c0c0] mx-auto"
+                        className="max-h-24 max-w-36 h-auto w-auto object-contain object-center border border-[#c0c0c0] mx-auto"
                     />
                 ) : (
                     <img
                         src={`/images/building-placeholder.webp`}
                         alt="Hotel"
-                        className="h-16 w-16 rounded-[10px] object-contain object-center border border-[#c0c0c0] mx-auto"
+                        className="max-h-24 max-w-36 h-auto w-auto object-contain object-center border border-[#c0c0c0] mx-auto"
                     />
                 )}
 
