@@ -47,6 +47,44 @@ class HotelsController extends Controller
         }
     }
 
+    public function testLanding(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->role === 'admin') {
+            $hotelId = $request->query('hotel_id');
+            $hotels = Hotel::select('id', 'hotel_name')->get();
+
+            $selectedHotel = null;
+            if ($hotelId) {
+                $selectedHotel = Hotel::with([
+                    'buttons' => function ($q) {
+                        $q->orderBy('order'); // ascending
+                    },
+                    'pages',
+                ])->findOrFail($hotelId);
+            }
+
+            return Inertia::render('TestLanding/Show', [
+                'hotels' => $hotels,            // for dropdown selection
+                'selectedHotel' => $selectedHotel, // details of chosen hotel
+                'isAdmin' => true,
+            ]);
+        } else {
+            $hotel = Hotel::with([
+                'buttons' => function ($q) {
+                    $q->orderBy('order'); // ascending
+                },
+                'pages'
+            ])->find($user->hotel_id);
+
+            return Inertia::render('TestLanding/Show', [
+                'selectedHotel' => $hotel,
+                'isAdmin' => false,
+            ]);
+        }
+    }
+
     public function updateBranding(Request $request, Hotel $hotel)
     {
         $user = auth()->user();

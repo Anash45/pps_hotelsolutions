@@ -1,5 +1,5 @@
 import { PageContext } from "@/context/PageProvider";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { format, parseISO } from "date-fns";
 import { useContext } from "react";
 import { getIcon } from "@/data/iconMap";
@@ -16,8 +16,11 @@ function formatDate(dateStr) {
 
 const HotelLandingDetails = ({}) => {
     const { openModal } = useModal();
+    const { codeDetails } = usePage().props;
     const { brandingFormData } = useContext(PageContext);
-    const keyDetails = {};
+
+    // ✅ Extract key_assignment into keyDetails (fallback empty object)
+    const keyDetails = codeDetails?.key_assignment ?? {};
 
     return (
         <div
@@ -33,16 +36,14 @@ const HotelLandingDetails = ({}) => {
                     </>
                 ) : (
                     <>
-                        {brandingFormData.first_name &&
-                            brandingFormData.last_name && (
-                                <span className="text-sm font-medium">
-                                    {brandingFormData.first_name}{" "}
-                                    {brandingFormData.last_name}
-                                </span>
-                            )}
-                        {brandingFormData.room_number && (
+                        {keyDetails?.first_name || keyDetails?.last_name && (
+                            <span className="text-sm font-medium">
+                                {keyDetails?.first_name} {keyDetails?.last_name}
+                            </span>
+                        )}
+                        {keyDetails?.room_number && (
                             <span className="text-xs">
-                                Zimmer {brandingFormData.room_number}
+                                Zimmer {keyDetails?.room_number}
                             </span>
                         )}
                     </>
@@ -53,35 +54,37 @@ const HotelLandingDetails = ({}) => {
                     <img
                         src={`${brandingFormData.logo_image_url}`}
                         alt="Hotel"
-                        className="h-16 w-16 rounded-[10px] object-contain object-center border border-[#c0c0c0] mx-auto"
+                        className="max-h-24 max-w-36 h-auto w-auto object-contain object-center mx-auto"
                     />
                 ) : (
                     <img
                         src={`/images/building-placeholder.webp`}
                         alt="Hotel"
-                        className="h-16 w-16 rounded-[10px] object-contain object-center border border-[#c0c0c0] mx-auto"
+                        className="max-h-24 max-w-36 h-auto w-auto rounded-[10px] object-contain object-center mx-auto"
                     />
                 )}
                 <div className="flex flex-col">
                     <p className="text-2xl">
                         {brandingFormData.heading ?? "Hotel Name"}
                     </p>
-                    <span className="text-xs font-montserrat">
-                        {keyDetails?.stay_from
-                            ? formatDate(keyDetails?.stay_from)
-                            : "22.12.2025"}{" "}
-                        -{" "}
-                        {keyDetails?.stay_till
-                            ? formatDate(keyDetails?.stay_till)
-                            : "22.12.2025"}
-                    </span>
+                    {keyDetails?.stay_from && keyDetails?.stay_till ? (
+                        <span className="text-xs font-montserrat">
+                            {keyDetails?.stay_from
+                                ? formatDate(keyDetails?.stay_from)
+                                : ""}{" "}
+                            -{" "}
+                            {keyDetails?.stay_till
+                                ? formatDate(keyDetails?.stay_till)
+                                : ""}
+                        </span>
+                    ) : null}
                 </div>
             </div>
             {brandingFormData.banner_image_url ? (
                 <img
                     src={`${brandingFormData.banner_image_url}`}
                     alt="Hotel"
-                    className="h-[132px] w-full rounded-[12px] object-cover object-center border mx-auto"
+                    className="h-[150px] w-full rounded-[12px] object-cover object-center border mx-auto"
                 />
             ) : (
                 <img

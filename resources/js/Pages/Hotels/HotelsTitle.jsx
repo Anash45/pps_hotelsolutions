@@ -1,15 +1,18 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { usePage } from "@inertiajs/react";
 import PrimaryButton from "@/Components/PrimaryButton";
 import { PageContext } from "@/context/PageProvider";
 import axios from "axios";
+import LightButton from "@/Components/LightButton";
 
 export default function HotelsTitle({ title }) {
     const { auth, selectedHotel = null } = usePage().props;
     const { brandingFormData, setBrandingFormData } = useContext(PageContext);
+    const [formLoading, setFormLoading] = useState(false);
 
     const handleSave = async () => {
         if (!selectedHotel) return;
+        setFormLoading(true);
 
         const formData = new FormData();
         Object.entries(brandingFormData).forEach(([key, value]) => {
@@ -40,17 +43,36 @@ export default function HotelsTitle({ title }) {
                         : null,
                 }));
             }
+            setFormLoading(false);
         } catch (error) {
             console.error("Error updating branding:", error);
+            setFormLoading(false);
         }
     };
+
+    function goToTestLanding(userRole, hotelId) {
+        if (userRole === "admin") {
+            window.location = `/test-landing?hotel_id=${hotelId}`;
+        } else {
+            window.location = `/test-landing`;
+        }
+    }
 
     return (
         <div className="flex items-center gap-3 flex-wrap justify-between">
             <h5 className="font-bold text-xl text-grey900">{title}</h5>
-            <div className="flex">
-                <PrimaryButton onClick={handleSave} disabled={!selectedHotel}>
-                    Save & Publish
+            <div className="flex flex-wrap gap-2">
+                <LightButton
+                    disabled={!selectedHotel}
+                    className="bg-slate-300"
+                    onClick={() =>
+                        goToTestLanding(auth.user.role, selectedHotel.id)
+                    }
+                >
+                    Test Landing
+                </LightButton>
+                <PrimaryButton onClick={handleSave} disabled={!selectedHotel || formLoading}>
+                    {formLoading ? "Saving..." : "Save & Publish"}
                 </PrimaryButton>
             </div>
         </div>

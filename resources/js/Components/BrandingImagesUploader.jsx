@@ -1,7 +1,6 @@
-// ImageUploader.jsx
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { X } from "lucide-react"; // install lucide-react or replace with your icon lib
+import { X } from "lucide-react";
 
 export default function BrandingImageUploader({
     name,
@@ -10,12 +9,30 @@ export default function BrandingImageUploader({
     label,
     maxSizeMB = 10,
 }) {
+    const [preview, setPreview] = useState(null);
+
+    // Update preview whenever value changes
+    useEffect(() => {
+        if (!value) {
+            setPreview(null);
+            return;
+        }
+
+        if (typeof value === "string") {
+            setPreview(value);
+        } else {
+            const objectUrl = URL.createObjectURL(value);
+            setPreview(objectUrl);
+
+            return () => URL.revokeObjectURL(objectUrl); // cleanup
+        }
+    }, [value]);
+
     const onDrop = useCallback(
         (acceptedFiles) => {
             if (acceptedFiles.length === 0) return;
 
             const file = acceptedFiles[0];
-            // Wrap as fake event so it works with handleBrandingChange
             onChange({
                 target: {
                     name,
@@ -40,7 +57,8 @@ export default function BrandingImageUploader({
     });
 
     const handleRemove = (e) => {
-        e.stopPropagation(); // prevent triggering file dialog
+        e.stopPropagation();
+        setPreview(null);
         onChange({
             target: {
                 name,
@@ -59,18 +77,13 @@ export default function BrandingImageUploader({
             >
                 <input {...getInputProps()} />
 
-                {value ? (
+                {preview && (
                     <div className="relative inline-block mb-2">
                         <img
-                            src={
-                                typeof value === "string"
-                                    ? value // when it's a URL (loaded from backend)
-                                    : URL.createObjectURL(value) // when it's a File object
-                            }
+                            src={preview}
                             alt="Preview"
                             className="max-h-20 max-w-full rounded-md object-contain"
                         />
-                        {/* Remove button */}
                         <button
                             type="button"
                             onClick={handleRemove}
@@ -79,7 +92,7 @@ export default function BrandingImageUploader({
                             <X size={14} className="text-gray-600" />
                         </button>
                     </div>
-                ) : null}
+                )}
 
                 <div className="space-y-1">
                     <p className="text-slate600 text-sm">
