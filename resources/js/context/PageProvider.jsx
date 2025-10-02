@@ -14,20 +14,45 @@ export const PageProvider = ({ children }) => {
         banner_image: null,
         key_finder_page_text: "",
         page_text_color: "#000000",
-        buttons: []
+        buttons: [],
     });
 
     const handleBrandingChange = (e) => {
         const { name, value } = e.target;
-        setBrandingFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+
+        setBrandingFormData((prev) => {
+            // Default: just update the field
+            let updates = { [name]: value };
+
+            // Special case: logo_image
+            if (name === "logo_image") {
+                updates.logo_image_url = value
+                    ? typeof value === "string"
+                        ? `/storage/${value}`
+                        : URL.createObjectURL(value)
+                    : null;
+            }
+
+            // Special case: banner_image
+            if (name === "banner_image") {
+                updates.banner_image_url = value
+                    ? typeof value === "string"
+                        ? `/storage/${value}`
+                        : URL.createObjectURL(value)
+                    : null;
+            }
+
+            return { ...prev, ...updates };
+        });
     };
 
     return (
         <PageContext.Provider
-            value={{ brandingFormData, setBrandingFormData, handleBrandingChange }}
+            value={{
+                brandingFormData,
+                setBrandingFormData,
+                handleBrandingChange,
+            }}
         >
             {children}
         </PageContext.Provider>
