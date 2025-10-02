@@ -33,7 +33,7 @@ class HotelPageController extends Controller
 
     public function store(Request $request)
     {
-        $user = $request->user(); // logged-in user
+        $user = auth()->user(); // logged-in user
 
         $validated = $request->validate([
             'hotel_id' => ['required', 'exists:hotels,id'],
@@ -44,7 +44,7 @@ class HotelPageController extends Controller
 
         // Authorization check
         $hotel = Hotel::findOrFail($validated['hotel_id']);
-        if ($hotel->user_id !== $user->id && !$user->is_admin()) {
+        if (($user->hotel?->id !== $hotel->id) && !$user->is_admin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -73,11 +73,11 @@ class HotelPageController extends Controller
 
     public function update(Request $request, Page $page)
     {
-        $user = $request->user();
+        $user = auth()->user();
 
         // ✅ Authorization check
         $hotel = Hotel::findOrFail($page->hotel_id);
-        if ($hotel->user_id !== $user->id && !$user->is_admin()) {
+        if (($user->hotel?->id !== $hotel->id) && !$user->is_admin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -114,7 +114,7 @@ class HotelPageController extends Controller
 
     public function destroy($id)
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
         // Find the page
         $page = Page::findOrFail($id);

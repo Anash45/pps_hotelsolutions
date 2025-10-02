@@ -93,13 +93,15 @@ class HotelsController extends Controller
             abort(403, 'Unauthorized');
         }
 
+        // var_dump($request);
+
         $validated = $request->validate([
             'heading' => 'nullable|string|max:255',
-            'primary_color' => 'nullable|string|max:7',
-            'background_color' => 'nullable|string|max:7',
-            'text_color' => 'nullable|string|max:7',
-            'button_text_color' => 'nullable|string|max:7',
-            'page_text_color' => 'nullable|string|max:7',
+            'primary_color' => 'nullable|string|max:100',
+            'background_color' => 'nullable|string|max:100',
+            'text_color' => 'nullable|string|max:100',
+            'button_text_color' => 'nullable|string|max:100',
+            'page_text_color' => 'nullable|string|max:100',
             'key_finder_page_text' => 'nullable|string',
             'logo_image' => 'nullable|image|max:10240', // 10 MB
             'banner_image' => 'nullable|image|max:10240',

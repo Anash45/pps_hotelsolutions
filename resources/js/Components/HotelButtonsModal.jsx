@@ -5,10 +5,25 @@ import PrimaryButton from "./PrimaryButton";
 import InputLabel from "./InputLabel";
 import TextInput from "./TextInput";
 import { PageContext } from "@/context/PageProvider";
-import { FileText, Globe, MapPin, Phone, Wifi } from "lucide-react";
+import {
+    FileText,
+    Globe,
+    Hotel,
+    Mail,
+    MapPin,
+    Phone,
+    Utensils,
+    Wifi,
+} from "lucide-react";
 import SelectInput from "./SelectInput";
 import ColorInput from "./ColorInput";
-import { FaFacebook, FaInstagram, FaPinterest } from "react-icons/fa";
+import {
+    FaFacebook,
+    FaInstagram,
+    FaPinterest,
+    FaSwimmingPool,
+    FaWhatsapp,
+} from "react-icons/fa";
 import { router } from "@inertiajs/react";
 
 export default function HotelButtonsModal({
@@ -40,6 +55,8 @@ export default function HotelButtonsModal({
         background_color: button?.background_color ?? "#84af83",
         url: button?.url ?? "",
         phone: button?.phone ?? "",
+        whatsapp: button?.whatsapp ?? "",
+        email: button?.email ?? "",
         wifi_name: button?.wifi_name ?? "",
         wifi_password: button?.wifi_password ?? "",
         page_id: button?.page_id ?? "",
@@ -52,6 +69,8 @@ export default function HotelButtonsModal({
             ...prev,
             [name]: value,
         }));
+
+        console.log(name, value);
     };
 
     const handleSave = async (e) => {
@@ -60,6 +79,7 @@ export default function HotelButtonsModal({
 
         try {
             let response;
+            console.log(formData);
             if (button) {
                 // Editing existing button
                 response = await axios.put(`/buttons/${button.button_id}`, {
@@ -91,7 +111,7 @@ export default function HotelButtonsModal({
         }
     };
 
-    console.log('Selected btn: ',button);
+    console.log("Selected btn: ", button);
 
     return (
         <div
@@ -143,6 +163,16 @@ export default function HotelButtonsModal({
                                         icon: Phone,
                                     },
                                     {
+                                        value: "email",
+                                        label: "Email",
+                                        icon: Mail,
+                                    },
+                                    {
+                                        value: "whatsapp",
+                                        label: "Whatsapp",
+                                        icon: FaWhatsapp,
+                                    },
+                                    {
                                         value: "wifi",
                                         label: "Wifi",
                                         icon: Wifi,
@@ -171,35 +201,53 @@ export default function HotelButtonsModal({
                             <InputError message={formErrors.text?.[0]} />
                         </div>
 
-                        {/* Button Icon */}
-                        <div>
-                            <InputLabel
-                                htmlFor="icon"
-                                value="Button Icon"
-                                className="text-[#475569] text-xs font-medium"
-                            />
-                            <SelectInput
-                                id="icon"
-                                name="icon"
-                                value={formData.icon}
-                                onChange={handleChange}
-                                className="w-full block"
-                                options={[
-                                    { value: "FileText", icon: FileText },
-                                    { value: "MapPin", icon: MapPin },
-                                    { value: "Globe", icon: Globe },
-                                    { value: "Phone", icon: Phone },
-                                    { value: "Wifi", icon: Wifi },
-                                    { value: "FaFacebook", icon: FaFacebook },
-                                    { value: "FaInstagram", icon: FaInstagram },
-                                    { value: "FaPinterest", icon: FaPinterest },
-                                ]}
-                            />
-                            <InputError message={formErrors.icon?.[0]} />
-                        </div>
-
                         {/* Colors */}
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid md:grid-cols-3 gap-3 md:col-span-2">
+                            {/* Button Icon */}
+                            <div>
+                                <InputLabel
+                                    htmlFor="icon"
+                                    value="Button Icon"
+                                    className="text-[#475569] text-xs font-medium"
+                                />
+                                <SelectInput
+                                    id="icon"
+                                    name="icon"
+                                    value={formData.icon}
+                                    onChange={handleChange}
+                                    className="w-full block"
+                                    options={[
+                                        { value: "FileText", icon: FileText },
+                                        { value: "MapPin", icon: MapPin },
+                                        { value: "Globe", icon: Globe },
+                                        { value: "Phone", icon: Phone },
+                                        { value: "Wifi", icon: Wifi },
+                                        { value: "Utensils", icon: Utensils },
+                                        { value: "Mail", icon: Mail },
+                                        {
+                                            value: "FaSwimmingPool",
+                                            icon: FaSwimmingPool,
+                                        },
+                                        {
+                                            value: "FaFacebook",
+                                            icon: FaFacebook,
+                                        },
+                                        {
+                                            value: "FaWhatsapp",
+                                            icon: FaWhatsapp,
+                                        },
+                                        {
+                                            value: "FaInstagram",
+                                            icon: FaInstagram,
+                                        },
+                                        {
+                                            value: "FaPinterest",
+                                            icon: FaPinterest,
+                                        },
+                                    ]}
+                                />
+                                <InputError message={formErrors.icon?.[0]} />
+                            </div>
                             <div>
                                 <InputLabel
                                     htmlFor="text_color"
@@ -280,6 +328,48 @@ export default function HotelButtonsModal({
                         </div>
                     ) : null}
 
+                    {/* WhatsApp */}
+                    {formData.type === "whatsapp" ? (
+                        <div>
+                            <InputLabel
+                                htmlFor="whatsapp"
+                                value="WhatsApp Number"
+                                className="text-[#475569] text-xs font-medium"
+                            />
+                            <TextInput
+                                id="whatsapp"
+                                name="whatsapp"
+                                value={formData.whatsapp}
+                                onChange={handleChange}
+                                type="tel"
+                                className="block w-full"
+                                placeholder="+1234567890"
+                            />
+                            <InputError message={formErrors.whatsapp?.[0]} />
+                        </div>
+                    ) : null}
+
+                    {/* Email */}
+                    {formData.type === "email" ? (
+                        <div>
+                            <InputLabel
+                                htmlFor="email"
+                                value="Email Address"
+                                className="text-[#475569] text-xs font-medium"
+                            />
+                            <TextInput
+                                id="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                type="email"
+                                className="block w-full"
+                                placeholder="example@email.com"
+                            />
+                            <InputError message={formErrors.email?.[0]} />
+                        </div>
+                    ) : null}
+
                     {formData.type === "wifi" ? (
                         <div className="grid grid-cols-2 gap-3">
                             <div>
@@ -353,7 +443,10 @@ export default function HotelButtonsModal({
                         <InputError message="Fix the errors in the form." />
                     )}
                     <LightButton onClick={handleClose}>Cancel</LightButton>
-                    <PrimaryButton onClick={handleSave} disabled={!selectedHotel}>
+                    <PrimaryButton
+                        onClick={handleSave}
+                        disabled={!selectedHotel}
+                    >
                         {button ? "Save" : "Create"}
                     </PrimaryButton>
                 </div>

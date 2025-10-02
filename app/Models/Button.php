@@ -18,6 +18,8 @@ class Button extends Model
         'background_color',
         'url',
         'phone',
+        'whatsapp',
+        'email',
         'wifi_name',
         'wifi_password',
         'page_id',
@@ -31,5 +33,10 @@ class Button extends Model
     public function page()
     {
         return $this->belongsTo(Page::class);
+    }
+
+    public function views()
+    {
+        return $this->hasMany(ButtonView::class);
     }
 }

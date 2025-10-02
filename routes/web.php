@@ -81,6 +81,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 });
 
+Route::post('/buttons/{button}/view', [ButtonController::class, 'trackView'])
+    ->name('buttons.trackView');
+
 Route::get('/key/{code}', [CodesController::class, 'showByKey'])
     ->name('codes.showByKey');
 Route::get('/pages/{id}', [HotelPageController::class, 'show'])

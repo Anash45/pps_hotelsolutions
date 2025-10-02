@@ -88,13 +88,34 @@ export default function HotelBrandingButtons({}) {
                                 order: index + 1,
                             }));
 
+                            console.log(
+                                "🟡 New local button order:",
+                                updatedList
+                            );
+
                             setBrandingFormData((prev) => {
-                                // detect if order really changed
-                                const hasChanged = updatedList.some(
-                                    (btn, i) =>
-                                        btn.order !== prev.buttons?.[i]?.order
+                                // Compare by IDs, not just order values
+                                const oldIds = (prev.buttons || []).map(
+                                    (b) => b.id || b.button_id
                                 );
+                                const newIds = updatedList.map((b) => b.id);
+
+                                const hasChanged =
+                                    JSON.stringify(oldIds) !==
+                                    JSON.stringify(newIds);
+
+                                console.log("🔍 Order changed?", hasChanged, {
+                                    oldIds,
+                                    newIds,
+                                });
+
                                 if (hasChanged) {
+                                    console.log("📤 Sending reorder payload:", {
+                                        buttons: updatedList.map(
+                                            ({ id, order }) => ({ id, order })
+                                        ),
+                                    });
+
                                     axios
                                         .post("/buttons/reorder", {
                                             buttons: updatedList.map(
@@ -104,18 +125,22 @@ export default function HotelBrandingButtons({}) {
                                                 })
                                             ),
                                         })
-                                        .then((res) =>
+                                        .then((res) => {
                                             console.log(
-                                                "Reorder success",
+                                                "✅ Reorder success:",
                                                 res.data
-                                            )
-                                        )
-                                        .catch((err) =>
+                                            );
+                                        })
+                                        .catch((err) => {
                                             console.error(
-                                                "Reorder failed",
+                                                "❌ Reorder failed:",
                                                 err.response?.data || err
-                                            )
-                                        );
+                                            );
+                                        });
+                                } else {
+                                    console.log(
+                                        "ℹ️ Order unchanged, no request sent."
+                                    );
                                 }
 
                                 return { ...prev, buttons: updatedList };
@@ -191,7 +216,9 @@ export default function HotelBrandingButtons({}) {
                                             </DropdownItem>
                                             <DropdownItem
                                                 onClick={() =>
-                                                    handleDelete(button.button_id)
+                                                    handleDelete(
+                                                        button.button_id
+                                                    )
                                                 }
                                             >
                                                 Delete

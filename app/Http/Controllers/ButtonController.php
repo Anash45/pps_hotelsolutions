@@ -10,18 +10,22 @@ class ButtonController extends Controller
 {
     public function store(Request $request)
     {
-        $user = $request->user();
+        $user = auth()->user();
 
         $validated = $request->validate([
             'hotel_id' => ['required', 'exists:hotels,id'],
-            'type' => ['required', 'string', 'in:page,map,url,phone,wifi'],
+            'type' => ['required', 'string', 'in:page,map,url,phone,wifi,whatsapp,email'],
             'text' => ['required', 'string', 'max:255'],
             'icon' => ['nullable', 'string', 'max:255'],
-            'text_color' => ['required', 'string', 'max:7'], // e.g. #ffffff
-            'background_color' => ['required', 'string', 'max:7'],
+            'text_color' => ['required', 'string', 'max:100'], // e.g. #ffffff
+            'background_color' => ['required', 'string', 'max:100'],
+
             // Conditional fields depending on type
             'url' => ['nullable', 'string', 'max:2048'],
             'phone' => ['nullable', 'string', 'max:50'],
+            'whatsapp' => ['nullable', 'string', 'max:50'], // could also enforce regex like /^\+?[0-9]{6,15}$/
+            'email' => ['nullable', 'email', 'max:255'],
+
             'wifi_name' => ['nullable', 'string', 'max:255'],
             'wifi_password' => ['nullable', 'string', 'max:255'],
             'page_id' => ['nullable', 'exists:pages,id'],
@@ -29,7 +33,7 @@ class ButtonController extends Controller
 
         // ✅ Authorization check
         $hotel = Hotel::findOrFail($validated['hotel_id']);
-        if ($hotel->user_id !== $user->id && !$user->is_admin()) {
+        if (($user->hotel?->id !== $hotel->id) && !$user->is_admin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -49,24 +53,39 @@ class ButtonController extends Controller
 
     public function update(Request $request, Button $button)
     {
-        $user = $request->user();
+
+        $user = auth()->user();
 
         // Authorization check
         $hotel = Hotel::findOrFail($button->hotel_id);
-        if ($hotel->user_id !== $user->id && !$user->is_admin()) {
+        if (($user->hotel?->id !== $hotel->id) && !$user->is_admin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         $validated = $request->validate([
-            'type' => ['required', 'string', 'in:page,map,url,phone,wifi'],
+            'type' => ['required', 'string', 'in:page,map,url,phone,wifi,whatsapp,email'],
             'text' => ['required', 'string', 'max:255'],
             'icon' => ['nullable', 'string', 'max:255'],
-            'text_color' => ['required', 'string', 'max:7'],
-            'background_color' => ['required', 'string', 'max:7'],
+            'text_color' => ['required', 'string', 'max:100'],
+            'background_color' => ['required', 'string', 'max:100'],
+
+            // URL types
             'url' => ['nullable', 'string', 'max:2048'],
+
+            // Phone
             'phone' => ['nullable', 'string', 'max:50'],
+
+            // WhatsApp
+            'whatsapp' => ['nullable', 'string', 'max:50'], // usually number with country code
+
+            // Email
+            'email' => ['nullable', 'email', 'max:255'],
+
+            // WiFi
             'wifi_name' => ['nullable', 'string', 'max:255'],
             'wifi_password' => ['nullable', 'string', 'max:255'],
+
+            // Page
             'page_id' => ['nullable', 'exists:pages,id'],
         ]);
 
@@ -80,11 +99,12 @@ class ButtonController extends Controller
 
     public function destroy(Request $request, Button $button)
     {
-        $user = $request->user();
+
+        $user = auth()->user();
 
         // Authorization check
         $hotel = Hotel::findOrFail($button->hotel_id);
-        if ($hotel->user_id !== $user->id && !$user->is_admin()) {
+        if (($user->hotel?->id !== $hotel->id) && !$user->is_admin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -97,7 +117,8 @@ class ButtonController extends Controller
 
     public function reorder(Request $request)
     {
-        $user = $request->user();
+
+        $user = auth()->user();
 
         $validated = $request->validate([
             'buttons' => 'required|array',
@@ -109,7 +130,7 @@ class ButtonController extends Controller
             $button = Button::find($btnData['id']);
 
             // ✅ Authorization check: must belong to hotel of current user
-            if ($button->hotel->user_id !== $user->id && !$user->is_admin()) {
+            if (($user->hotel?->id !== $button->hotel_id) && !$user->is_admin()) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
 
@@ -119,5 +140,15 @@ class ButtonController extends Controller
         return response()->json([
             'message' => 'Button order updated successfully.',
         ]);
+    }
+
+    public function trackView(Button $button)
+    {
+        $button->views()->create([
+            'ip_address' => request()->ip(),
+            'viewed_at' => now(),
+        ]);
+
+        return response()->json(['message' => 'View tracked']);
     }
 }

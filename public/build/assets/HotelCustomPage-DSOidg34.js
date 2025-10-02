@@ -1,0 +1,1 @@
+import{r as t,h as a,j as e}from"./app-X9s8cHDZ.js";function r({page:s=null}){const{brandingFormData:n}=t.useContext(a);return e.jsx("div",{className:"space-y-4 px-2",children:e.jsx("div",{className:"space-y-3",children:e.jsx("div",{dangerouslySetInnerHTML:{__html:s?.content},className:"custom-page-content"})})})}export{r as H};

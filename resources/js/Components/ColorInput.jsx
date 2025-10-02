@@ -1,108 +1,93 @@
 import React, { useState, useRef, useEffect } from "react";
-import { RgbaColorPicker } from "react-colorful";
+import { HexColorPicker } from "react-colorful";
+
+// Utility: convert rgba() string → hex
+function parseCssToHex(input) {
+  if (!input) return "#000000";
+
+  const ctx = document.createElement("canvas").getContext("2d");
+  ctx.fillStyle = input;
+  const computed = ctx.fillStyle; // browser converts it (always rgb(...))
+
+  const match = computed.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  if (match) {
+    const [_, r, g, b] = match;
+    return (
+      "#" +
+      [r, g, b]
+        .map((x) => {
+          const hex = parseInt(x, 10).toString(16);
+          return hex.length === 1 ? "0" + hex : hex;
+        })
+        .join("")
+    );
+  }
+  return input; // already hex or unknown
+}
 
 export default function ColorInput({ name, value, onChange, className = "" }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [position, setPosition] = useState("bottom"); // "bottom" or "top"
-    const wrapperRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [color, setColor] = useState(value || "#000000");
 
-    // Convert hex → rgba
-    const hexToRgba = (hex) => {
-        let cleanHex = hex.replace("#", "");
-        if (cleanHex.length === 3) {
-            cleanHex = cleanHex
-                .split("")
-                .map((ch) => ch + ch)
-                .join("");
-        }
-        const bigint = parseInt(cleanHex, 16);
-        const r = (bigint >> 16) & 255;
-        const g = (bigint >> 8) & 255;
-        const b = bigint & 255;
-        return { r, g, b, a: 1 };
+  // keep in sync with external value
+  useEffect(() => {
+    if (value) {
+      setColor(parseCssToHex(value));
+    }
+  }, [value]);
+
+  const handleChange = (newColor) => {
+    setColor(newColor);
+    onChange?.({ target: { name, value: newColor } });
+  };
+
+  const handleInputChange = (e) => {
+    const inputVal = e.target.value.trim();
+    const hex = parseCssToHex(inputVal);
+    setColor(hex);
+    onChange?.({ target: { name, value: hex } });
+  };
+
+  // close on outside click
+  useEffect(() => {
+    const close = (e) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
     };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, []);
 
-    // Convert rgba → hex (ignore alpha)
-    const rgbaToHex = ({ r, g, b }) => {
-        return (
-            "#" +
-            [r, g, b]
-                .map((x) => {
-                    const hex = x.toString(16);
-                    return hex.length === 1 ? "0" + hex : hex;
-                })
-                .join("")
-        );
-    };
-
-    const [rgba, setRgba] = useState(hexToRgba(value || "#000000"));
-
-    const handleColorChange = (newColor) => {
-        setRgba(newColor);
-        const hex = rgbaToHex(newColor);
-
-        onChange({
-            target: {
-                name,
-                value: hex, // ✅ always hex
-            },
-        });
-    };
-
-    // Close picker if clicked outside
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
-
-    // Decide whether to open top or bottom
-    useEffect(() => {
-        if (isOpen && wrapperRef.current) {
-            const rect = wrapperRef.current.getBoundingClientRect();
-            const spaceBelow = window.innerHeight - rect.bottom;
-            const pickerHeight = 200;
-            setPosition(spaceBelow < pickerHeight ? "top" : "bottom");
-        }
-    }, [isOpen]);
-
-    return (
+  return (
+    <div ref={wrapperRef} className={`relative flex items-center gap-3 ${className}`}>
+      {/* Color box */}
+      <div
+        className="p-1 rounded-lg border border-[#CCD1D8] bg-white cursor-pointer"
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <div
-            ref={wrapperRef}
-            className={`relative flex items-center gap-3 ${className}`}
-        >
-            {/* Color box (click to toggle picker) */}
-            <div
-                className="p-1 rounded-lg border border-[#CCD1D8] bg-white cursor-pointer"
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                <div
-                    className="w-[34px] h-6 rounded border border-[#CCD1D8]"
-                    style={{ backgroundColor: value }}
-                ></div>
-            </div>
+          className="w-[34px] h-6 rounded border border-[#CCD1D8]"
+          style={{ backgroundColor: color }}
+        />
+      </div>
 
-            {/* Hex code text */}
-            <span className="text-sm text-[#232323]">{value}</span>
+      {/* Input */}
+      <input
+        type="text"
+        className="text-sm text-[#232323] border border-[#c0c0c0] px-2 py-1 rounded w-32"
+        value={color}
+        onChange={handleInputChange}
+        placeholder="#RRGGBB or CSS color"
+      />
 
-            {/* Color picker dropdown */}
-            {isOpen && (
-                <div
-                    className={`absolute ${
-                        position === "bottom"
-                            ? "top-full mt-2"
-                            : "bottom-full mb-2"
-                    } left-0 z-50`}
-                >
-                    <RgbaColorPicker color={rgba} onChange={handleColorChange} />
-                </div>
-            )}
+      {/* Picker */}
+      {isOpen && (
+        <div className="absolute top-full mt-2 left-0 z-50">
+          <HexColorPicker color={color} onChange={handleChange} />
         </div>
-    );
+      )}
+    </div>
+  );
 }
