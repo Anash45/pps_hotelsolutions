@@ -51,11 +51,13 @@ export default function HotelsTitle({ title }) {
     };
 
     function goToTestLanding(userRole, hotelId) {
-        if (userRole === "admin") {
-            window.location = `/test-landing?hotel_id=${hotelId}`;
-        } else {
-            window.location = `/test-landing`;
-        }
+        const url =
+            userRole === "admin"
+                ? `/test-landing?hotel_id=${hotelId}`
+                : `/test-landing`;
+
+        // Open in a new tab
+        window.open(url, "_blank");
     }
 
     return (
@@ -71,7 +73,10 @@ export default function HotelsTitle({ title }) {
                 >
                     Test Landing
                 </LightButton>
-                <PrimaryButton onClick={handleSave} disabled={!selectedHotel || formLoading}>
+                <PrimaryButton
+                    onClick={handleSave}
+                    disabled={!selectedHotel || formLoading}
+                >
                     {formLoading ? "Saving..." : "Save & Publish"}
                 </PrimaryButton>
             </div>
