@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getDomain } from "@/utils/viteConfig";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import LightButton from "@/Components/LightButton";
@@ -11,12 +12,25 @@ import Divider from "@/Components/Divider";
 export default function CodesForm() {
     const { hotels, keyTypes } = usePage().props;
 
+    const [linkDomain, setLinkDomain] = useState(
+        "https://test-app.ppshotelsolutions.de"
+    );
+
+    // fetch domain at component mount
+    useEffect(() => {
+        (async () => {
+            const domain = await getDomain();
+            console.log("Fetched domain:", domain);
+            setLinkDomain(domain); // update local state
+            setData("domain", domain); // update form field
+        })();
+    }, []);
+
     const { data, setData, post, processing, errors } = useForm({
         hotel_id: hotels.length > 0 ? hotels[0].id : "",
         key_type: keyTypes.length > 0 ? keyTypes[0].name : "",
         no_of_codes: "10",
-        domain: import.meta.env.VITE_LINK_URL ||
-            "https://test-app.ppshotelsolutions.de",
+        domain: linkDomain,
     });
 
     const [previewCodes, setPreviewCodes] = useState([]);
@@ -111,7 +125,7 @@ export default function CodesForm() {
                     <TextInput
                         id="domain"
                         name="domain"
-                        value={data.domain}
+                        value={linkDomain}
                         readOnly
                         className="block w-full"
                     />
