@@ -56,10 +56,7 @@ export function ModalProvider({ children }) {
                         />
                     )}
                     {modal?.name === "HotelWifiModal" && (
-                        <HotelWifiModal
-                            {...modal.props}
-                            onClose={closeModal}
-                        />
+                        <HotelWifiModal {...modal.props} onClose={closeModal} />
                     )}
                 </div>
             )}
@@ -67,4 +64,19 @@ export function ModalProvider({ children }) {
     );
 }
 
-export const useModal = () => useContext(ModalContext);
+export const useModal = () => {
+    const context = useContext(ModalContext);
+
+    if (!context) {
+        console.warn("⚠️ useModal() called outside of <ModalProvider>.");
+        // Safe no-op fallbacks prevent runtime crashes
+        return {
+            openModal: () =>
+                console.warn("openModal() called with no provider"),
+            closeModal: () =>
+                console.warn("closeModal() called with no provider"),
+        };
+    }
+
+    return context;
+};

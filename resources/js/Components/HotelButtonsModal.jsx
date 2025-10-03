@@ -13,6 +13,7 @@ import {
     MapPin,
     Phone,
     Utensils,
+    Star,
     Wifi,
 } from "lucide-react";
 import SelectInput from "./SelectInput";
@@ -223,6 +224,7 @@ export default function HotelButtonsModal({
                                         { value: "Phone", icon: Phone },
                                         { value: "Wifi", icon: Wifi },
                                         { value: "Utensils", icon: Utensils },
+                                        { value: "Star", icon: Star },
                                         { value: "Mail", icon: Mail },
                                         {
                                             value: "FaSwimmingPool",

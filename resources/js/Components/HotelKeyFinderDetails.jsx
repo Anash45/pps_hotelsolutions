@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { getIcon } from "@/data/iconMap";
 import PrimaryButton from "./PrimaryButton";
 import LightButton from "./LightButton";
+import { FaWhatsapp } from "react-icons/fa";
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
@@ -64,7 +65,7 @@ const HotelKeyFinderDetails = ({}) => {
                     onClick={() => window.open(`tel:+${codeDetails?.key_assignment?.phone_number}`)}
                     className="border-[#F1F1F1]"
                 >
-                    <span className="text-[#020617]">Phone</span>
+                    <span className="text-[#020617]">Telefon</span>
                 </LightButton>
                 <PrimaryButton
                     onClick={() =>
@@ -77,7 +78,10 @@ const HotelKeyFinderDetails = ({}) => {
                     }
                     className=""
                 >
-                    Whats app
+                    <div className="flex justify-center items-center">
+                        <FaWhatsapp className="h-5" />
+                        <span>Whatsapp</span>
+                    </div>
                 </PrimaryButton>
             </div>
         </div>

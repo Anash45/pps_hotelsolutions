@@ -82,7 +82,7 @@ const HotelLandingDetails = ({}) => {
                 <img
                     src={`${brandingFormData.banner_image_url}`}
                     alt="Hotel"
-                    className="h-[150px] w-full rounded-[12px] object-cover object-center border mx-auto"
+                    className="max-h-[150px] h-auto w-full rounded-[12px] object-cover object-center border mx-auto"
                 />
             ) : (
                 <img
