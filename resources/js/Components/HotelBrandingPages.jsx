@@ -70,10 +70,10 @@ export default function HotelBrandingPages() {
                         brandingFormData.pages.map((page, idx) => (
                             <div
                                 key={idx}
-                                className="border border-gray-400 rounded-lg py-1 px-3.5 md:text-sm text-xs text-[#263238] flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-gray-50 transition"
+                                className="border border-gray-400 rounded-lg relative py-2 px-3.5 md:text-sm text-xs text-[#263238] flex flex-col lg:flex-row lg:items-center lg:justify-between hover:bg-gray-50 transition"
                             >
                                 <div className="lg:w-max w-full shrink-0 grow">
-                                    <div className="flex items-center gap-2 flex-wrap justify-start">
+                                    <div className="flex lg:items-center lg:flex-row flex-col gap-2 flex-wrap justify-start">
                                         <FileText size={20} />
                                         <span className="text-gray900">
                                             <span className="font-bold">
@@ -94,7 +94,7 @@ export default function HotelBrandingPages() {
                                     />
                                 </div>
 
-                                <div className="lg:w-10 w-full flex items-center gap-2">
+                                <div className="lg:w-10 w-fit lg:static absolute top-1 right-1 flex items-center gap-2 ms-auto justify-end">
                                     <Dropdown>
                                         <DropdownItem
                                             onClick={() =>

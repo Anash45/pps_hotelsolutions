@@ -55,4 +55,9 @@ class Page extends Model
     {
         return $this->belongsTo(Hotel::class);
     }
+
+    public function buttons()
+    {
+        return $this->hasMany(Button::class);
+    }
 }

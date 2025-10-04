@@ -5,13 +5,14 @@ import { PageContext } from "@/context/PageProvider";
 import axios from "axios";
 import LightButton from "@/Components/LightButton";
 
-export default function HotelsTitle({ title }) {
+export default function HotelsTitle({ title, setFormErrors }) {
     const { auth, selectedHotel = null } = usePage().props;
     const { brandingFormData, setBrandingFormData } = useContext(PageContext);
     const [formLoading, setFormLoading] = useState(false);
 
     const handleSave = async () => {
         if (!selectedHotel) return;
+        setFormErrors({});
         setFormLoading(true);
 
         const formData = new FormData();
@@ -45,8 +46,15 @@ export default function HotelsTitle({ title }) {
             }
             setFormLoading(false);
         } catch (error) {
-            console.error("Error updating branding:", error);
             setFormLoading(false);
+
+            if (error.response && error.response.status === 422) {
+                console.log("Validation Errors:", error.response.data.errors);
+                // optional: set to state if you want to show them in UI
+                setFormErrors(error.response.data.errors);
+            } else {
+                console.error("Unexpected error updating branding:", error);
+            }
         }
     };
 

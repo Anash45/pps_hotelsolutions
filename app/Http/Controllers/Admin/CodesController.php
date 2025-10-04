@@ -6,6 +6,7 @@ use App\Mail\KeyfinderConsentMail;
 use App\Models\Code;
 use App\Models\CodeGroup;
 use App\Models\Hotel;
+use App\Models\HotelView;
 use App\Models\KeyType;
 use Illuminate\Http\Request;
 use Mail;
@@ -15,6 +16,7 @@ use Validator;
 
 class CodesController extends Controller
 {
+
     public function showByKey($code)
     {
         $codeData = Code::with(['hotel', 'keyAssignment', 'keyType'])
@@ -30,6 +32,22 @@ class CodesController extends Controller
                 },
                 'pages',
             ])->findOrFail($codeData->hotel_id);
+
+            // ---- Record hotel view ----
+            $visitorIp = request()->ip(); // ✅ fixed
+
+            $alreadyViewed = HotelView::where('hotel_id', $selectedHotel->id)
+                ->where('visitor_ip', $visitorIp)
+                ->exists();
+
+            $isUnique = !$alreadyViewed;
+
+            HotelView::create([
+                'hotel_id' => $selectedHotel->id,
+                'visitor_ip' => $visitorIp,
+                'is_unique' => $isUnique,
+            ]);
+            // ---------------------------
         }
 
         return inertia('Codes/Show', [
@@ -37,6 +55,8 @@ class CodesController extends Controller
             'selectedHotel' => $selectedHotel,
         ]);
     }
+
+
 
 
     public function userStore(Request $request)
@@ -116,7 +136,7 @@ class CodesController extends Controller
             $code->keyAssignment->delete();
         }
 
-        return inertia('Codes/Unsubscribe',[
+        return inertia('Codes/Unsubscribe', [
             'codeDetails' => $code,
         ]);
     }

@@ -1,35 +1,34 @@
-import { PageContext } from "@/context/PageProvider";
-import { useContext } from "react";
-import "react-quill/dist/quill.snow.css";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "@inertiajs/react";
 
-export default function HotelCustomPage({ page = null }) {
-    const { brandingFormData } = useContext(PageContext);
+export default function HotelCustomPage({ page = null, guestKey = null }) {
+    console.log("Two: ", page, guestKey);
+
     return (
         <div className="space-y-4 px-2">
-            {/* <div className="space-y-3 text-center">
-                {brandingFormData.logo_image_url ? (
-                    <img
-                        src={`${brandingFormData.logo_image_url}`}
-                        alt="Hotel"
-                        className="h-16 w-16 rounded-[10px] object-contain object-center border border-[#c0c0c0] mx-auto"
-                    />
-                ) : (
-                    <img
-                        src={`/images/building-placeholder.webp`}
-                        alt="Hotel"
-                        className="h-16 w-16 rounded-[10px] object-contain object-center border border-[#c0c0c0] mx-auto"
-                    />
-                )}
+            {guestKey ? (
+                <Link
+                    href={`/key/${guestKey}`}
+                    className="flex items-center justify-start gap-1 text-xs text-dark cursor-pointer"
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                    <span>Zurück</span>
+                </Link>
+            ) : (
+                <a
+                    href="#"
+                    className="flex items-center justify-start gap-1 text-xs text-dark cursor-pointer"
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                    <span>Zurück</span>
+                </a>
+            )}
 
-                <p className="text-[#161616] text-2xl">
-                    {brandingFormData.heading ?? "Hotel Name"}
-                </p>
-            </div> */}
             <div className="space-y-3">
-                {/* <h3 className="text-lg font-medium text-center">
-                    {page?.title}
-                </h3> */}
-                <div dangerouslySetInnerHTML={{ __html: page?.content }} className="custom-page-content" />
+                <div
+                    dangerouslySetInnerHTML={{ __html: page?.content }}
+                    className="custom-page-content"
+                />
             </div>
         </div>
     );

@@ -10,10 +10,12 @@ use Illuminate\Support\Str;
 
 class HotelPageController extends Controller
 {
-    public function show($id)
+    public function show($key, $id)
     {
+        // Find the page by id
         $page = Page::with('hotel')->findOrFail($id);
-        // Fetch selectedHotel with details (using code’s hotel_id)
+
+        // Fetch selectedHotel with details (using page's hotel_id)
         $selectedHotel = null;
         if ($page->hotel_id) {
             $selectedHotel = Hotel::with([
@@ -27,6 +29,7 @@ class HotelPageController extends Controller
         return inertia('HotelPages/Show', [
             'page' => $page,
             'selectedHotel' => $selectedHotel,
+            'key' => $key, // ✅ pass key to frontend too (if needed)
         ]);
     }
 

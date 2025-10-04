@@ -97,6 +97,8 @@ class HotelsController extends Controller
 
         $validated = $request->validate([
             'heading' => 'nullable|string|max:255',
+            'sub_heading' => 'nullable|string|max:255',
+            'keyfinder_heading' => 'nullable|string|max:255',
             'primary_color' => 'nullable|string|max:100',
             'background_color' => 'nullable|string|max:100',
             'text_color' => 'nullable|string|max:100',

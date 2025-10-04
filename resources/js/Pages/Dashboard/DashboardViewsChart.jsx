@@ -52,12 +52,23 @@ const CustomTooltip = ({ active, payload, label }) => {
                 >
                     Views: {payload[0].value}
                 </p>
+                <p
+                    style={{
+                        margin: 0,
+                        color: "#2563EB",
+                        fontWeight: 500,
+                        fontSize: 12,
+                        lineHeight: "16px",
+                    }}
+                >
+                    Unique Views: {payload[1].value}
+                </p>
             </div>
         );
     }
     return null;
 };
-export default function DashboardViewsChart({ selectedDuration }) {
+export default function DashboardViewsChart({ selectedDuration, chartViews }) {
     // Pick dataset based on selected duration
     const chartData =
         selectedDuration === "7 Days"
@@ -65,6 +76,8 @@ export default function DashboardViewsChart({ selectedDuration }) {
             : selectedDuration === "30 Days"
             ? data30Days
             : data90Days;
+
+    console.log("Chart Views: ", chartViews);
 
     return (
         <div className="p-4 rounded-xl bg-white flex flex-col gap-6">
@@ -89,7 +102,7 @@ export default function DashboardViewsChart({ selectedDuration }) {
             <div className="w-full h-72">
                 <ResponsiveContainer>
                     <LineChart
-                        data={chartData}
+                        data={chartViews}
                         margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
                     >
                         {/* Grid */}
@@ -140,41 +153,21 @@ export default function DashboardViewsChart({ selectedDuration }) {
                         {/* Smooth Line */}
                         <Line
                             type="monotone"
-                            dataKey="views"
+                            dataKey="total_views"
                             stroke="#83AF82"
                             strokeWidth={2}
                             dot={false}
                         />
 
-                        {/* Area Shade under Line */}
-                        <Area
+                        {/* Smooth Line */}
+                        <Line
                             type="monotone"
-                            dataKey="views"
-                            stroke="none"
-                            fill="url(#colorViews)"
+                            dataKey="unique_views"
+                            stroke="#ff0000"
+                            strokeWidth={2}
+                            dot={false}
                         />
 
-                        {/* Gradient for Area */}
-                        <defs>
-                            <linearGradient
-                                id="colorViews"
-                                x1="0"
-                                y1="0"
-                                x2="0"
-                                y2="1"
-                            >
-                                <stop
-                                    offset="10%"
-                                    stopColor="#85AF84"
-                                    stopOpacity={0.9}
-                                />
-                                <stop
-                                    offset="95%"
-                                    stopColor="#85AF84"
-                                    stopOpacity={0.5}
-                                />
-                            </linearGradient>
-                        </defs>
                     </LineChart>
                 </ResponsiveContainer>
             </div>

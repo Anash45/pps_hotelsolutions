@@ -2,7 +2,10 @@ import axios from "axios";
 import { getIcon } from "@/data/iconMap";
 import { useModal } from "@/context/ModalProvider";
 
-export default function HotelLandingButtons({ brandingFormData }) {
+export default function HotelLandingButtons({
+    codeDetails = {},
+    brandingFormData,
+}) {
     const { openModal } = useModal();
     const handleView = async (buttonId) => {
         try {
@@ -29,7 +32,9 @@ export default function HotelLandingButtons({ brandingFormData }) {
                 } else if (button.type === "email") {
                     href = `mailto:${button.email}`;
                 } else if (button.type === "page" && button.page_id) {
-                    href = `/pages/${button.page_id}`;
+                    href = codeDetails?.code
+                        ? `/key/${codeDetails.code}/page/${button.page_id}`
+                        : "#";
                 }
 
                 return (
@@ -48,7 +53,13 @@ export default function HotelLandingButtons({ brandingFormData }) {
                                 brandingFormData.primary_color,
                         }}
                         target={
-                            ["url", "map", "phone", "whatsapp", "email"].includes(button.type)
+                            [
+                                "url",
+                                "map",
+                                "phone",
+                                "whatsapp",
+                                "email",
+                            ].includes(button.type)
                                 ? "_blank"
                                 : "_self"
                         }

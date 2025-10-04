@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CodesController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ButtonController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HotelPageController;
 use App\Http\Controllers\HotelsController;
 use App\Http\Controllers\KeyAssignmentController;
@@ -31,12 +32,8 @@ Route::patch('/test-profile-submit', function (Request $request) {
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboard
-    Route::get('/', function () {
-        return redirect()->route('dashboard');
-    });
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard/Index');
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
     // Hotel Configurator
@@ -86,8 +83,8 @@ Route::post('/buttons/{button}/view', [ButtonController::class, 'trackView'])
 
 Route::get('/key/{code}', [CodesController::class, 'showByKey'])
     ->name('codes.showByKey');
-Route::get('/pages/{id}', [HotelPageController::class, 'show'])
-    ->name('pages.show');
+Route::get('/key/{key}/page/{id}', [HotelPageController::class, 'show'])
+    ->name('page.show');
 Route::get('/key/{code}/active', [CodesController::class, 'makeActive'])
     ->name('key.makeActive');
 // Store new key assignment

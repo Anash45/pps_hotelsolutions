@@ -4,6 +4,8 @@ export function mapHotelToBrandingFormData(selectedHotel, options = {}) {
     return {
         user_view: options.user_view ?? false, // ✅ configurable
         heading: selectedHotel.heading || "",
+        sub_heading: selectedHotel.sub_heading || "",
+        keyfinder_heading: selectedHotel.keyfinder_heading || "",
         primary_color: selectedHotel.primary_color || "#000000",
         background_color: selectedHotel.background_color || "#c1c1c1",
         text_color: selectedHotel.text_color || "#1b1b1b",

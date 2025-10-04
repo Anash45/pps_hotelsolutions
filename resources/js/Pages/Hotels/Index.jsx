@@ -8,6 +8,7 @@ import HotelBrandingPreview from "@/Components/HotelBrandingPreview";
 
 export default function Hotels() {
     const { auth, hotels = [], selectedHotel = null } = usePage().props;
+    const [formErrors, setFormErrors] = useState({});
 
     const [selected, setSelected] = useState(
         selectedHotel ? String(selectedHotel.id) : ""
@@ -24,31 +25,33 @@ export default function Hotels() {
             <Head title="Configurator" />
 
             <div className="py-4 md:px-6 px-4 flex flex-col gap-6">
-                <HotelsTitle title={"Configurator"} selectedHotel={selected} />
+                <HotelsTitle
+                    setFormErrors={setFormErrors}
+                    title={"Configurator"}
+                    selectedHotel={selected}
+                />
 
-                <div>
-                    {isAdmin && (
-                        <div className="mb-6 w-64">
-                            <SelectInput
-                                id="hotel_id"
-                                name="hotel_id"
-                                value={selected}
-                                onChange={handleHotelChange}
-                                className="w-full block"
-                                options={[
-                                    { value: "", label: "Select Hotel" },
-                                    ...hotels.map((h) => ({
-                                        value: String(h.id),
-                                        label: h.hotel_name,
-                                    })),
-                                ]}
-                            />
-                        </div>
-                    )}
-                </div>
+                {isAdmin && (
+                    <div className="w-64">
+                        <SelectInput
+                            id="hotel_id"
+                            name="hotel_id"
+                            value={selected}
+                            onChange={handleHotelChange}
+                            className="w-full block"
+                            options={[
+                                { value: "", label: "Select Hotel" },
+                                ...hotels.map((h) => ({
+                                    value: String(h.id),
+                                    label: h.hotel_name,
+                                })),
+                            ]}
+                        />
+                    </div>
+                )}
 
                 <div className="grid xl:grid-cols-[60%,40%] grid-cols-1 gap-[14px] items-start">
-                    <HotelBrandingForm />
+                    <HotelBrandingForm formErrors={formErrors} />
                     <div className="xl:order-2 order-1 sticky top-4">
                         <HotelBrandingPreview />
                     </div>

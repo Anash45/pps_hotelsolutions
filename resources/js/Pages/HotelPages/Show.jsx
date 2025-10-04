@@ -7,20 +7,25 @@ import { mapHotelToBrandingFormData } from "@/utils/mapHotelToBrandingFormData";
 import { Head, usePage } from "@inertiajs/react";
 import { useContext, useEffect } from "react";
 
-function Show({ code }) {
-    const { selectedHotel = null, page } = usePage().props;
-    const { brandingFormData, setBrandingFormData } = useContext(PageContext);
+function Show() {
+    const { selectedHotel = null, page, key } = usePage().props;
+    const { setBrandingFormData } = useContext(PageContext);
+
+    // keep brandingFormData for hotel styles/config only
     useEffect(() => {
         if (selectedHotel) {
             setBrandingFormData(mapHotelToBrandingFormData(selectedHotel));
         }
     }, [selectedHotel]);
 
+    console.log("Three: ", selectedHotel, page, key);
+
     return (
         <>
             <Head title={page?.title ?? "Hotel Page"} />
             <GuestBox realPhone={true}>
-                <HotelCustomPage page={page} />
+                {/* ✅ pass key separately */}
+                <HotelCustomPage page={page} guestKey={key} />
             </GuestBox>
         </>
     );

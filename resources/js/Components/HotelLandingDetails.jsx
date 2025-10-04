@@ -20,6 +20,8 @@ const HotelLandingDetails = ({}) => {
     // ✅ Extract key_assignment into keyDetails (fallback empty object)
     const keyDetails = codeDetails?.key_assignment ?? {};
 
+    console.log("ONE: ", codeDetails, keyDetails);
+
     return (
         <div
             className="space-y-4"
@@ -30,17 +32,17 @@ const HotelLandingDetails = ({}) => {
                 brandingFormData.user_view === false ? (
                     <>
                         <span className="text-sm font-medium">Guest Name</span>
-                        <span className="text-xs">Zimmer 312</span>
+                        <span className="text-sm font-medium">Zimmer 312</span>
                     </>
                 ) : (
                     <>
-                        {keyDetails?.first_name || keyDetails?.last_name && (
-                            <span className="text-sm font-medium">
-                                {keyDetails?.first_name} {keyDetails?.last_name}
-                            </span>
-                        )}
+                        <span className="text-sm font-medium">
+                            {keyDetails?.title} {keyDetails?.first_name}{" "}
+                            {keyDetails?.last_name}
+                        </span>
+
                         {keyDetails?.room_number && (
-                            <span className="text-xs">
+                            <span className="text-sm font-medium">
                                 Zimmer {keyDetails?.room_number}
                             </span>
                         )}
@@ -62,7 +64,7 @@ const HotelLandingDetails = ({}) => {
                     />
                 )}
                 <div className="flex flex-col">
-                    <p className="text-2xl">
+                    <p className="text-2xl font-semibold">
                         {brandingFormData.heading ?? "Hotel Name"}
                     </p>
                     {keyDetails?.stay_from && keyDetails?.stay_till ? (
@@ -77,6 +79,7 @@ const HotelLandingDetails = ({}) => {
                         </span>
                     ) : null}
                 </div>
+                {brandingFormData.sub_heading ? <p className="text-base text-center">{brandingFormData.sub_heading}</p> : null}
             </div>
             {brandingFormData.banner_image_url ? (
                 <img
@@ -91,7 +94,10 @@ const HotelLandingDetails = ({}) => {
                     className="h-[132px] w-full rounded-[12px] object-cover object-center border mx-auto"
                 />
             )}
-            <HotelLandingButtons brandingFormData={brandingFormData} />
+            <HotelLandingButtons
+                codeDetails={codeDetails}
+                brandingFormData={brandingFormData}
+            />
         </div>
     );
 };

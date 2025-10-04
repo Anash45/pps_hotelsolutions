@@ -11,12 +11,15 @@ import {
     Legend,
 } from "recharts";
 import { getButtonDataByDuration } from "@/utils/dummyButtonView";
+import { generateShades } from "@/utils/generateBarsColors";
 
-export default function DashboardButtonsViewsChart({ selectedDuration }) {
+export default function DashboardButtonsViewsChart({ selectedDuration, buttonsViews }) {
     const chartData = getButtonDataByDuration(selectedDuration);
 
     // Colors for each button (left square & bar fill)
-    const barColors = ["#A6DBA5", "#8CC78C", "#74B574", "#649D64", "#5D8C5C"];
+    const barColors = generateShades("#74B574", buttonsViews.length);
+
+    console.log("Views: ",buttonsViews, chartData);
 
     const CustomLegend = ({ data }) => {
     return (
@@ -28,7 +31,7 @@ export default function DashboardButtonsViewsChart({ selectedDuration }) {
                         style={{ backgroundColor: barColors[index % barColors.length] }}
                     ></span>
                     <span className="text-sm font-medium text-gray-700 font-['Arial']">
-                        {entry.name}
+                        {entry.button_text}
                     </span>
                 </div>
             ))}
@@ -52,7 +55,7 @@ export default function DashboardButtonsViewsChart({ selectedDuration }) {
                     textAnchor="start"
                     alignmentBaseline="left"
                 >
-                    {chartData[index].name}
+                    {buttonsViews[index]?.button_text}
                 </text>
             </g>
         );
@@ -71,7 +74,7 @@ export default function DashboardButtonsViewsChart({ selectedDuration }) {
                 textAnchor="start"
                 alignmentBaseline="middle"
             >
-                {value}%
+                {value}
             </text>
         );
     };
@@ -97,13 +100,13 @@ export default function DashboardButtonsViewsChart({ selectedDuration }) {
                 >
                     <BarChart
                         layout="vertical"
-                        data={chartData}
+                        data={buttonsViews}
                         margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
                         barCategoryGap={34} // gap between bars
                     >
                         <XAxis hide type="number" />
 
-                        <YAxis type="category" dataKey="name" hide />
+                        <YAxis type="category" dataKey="button_text" hide />
 
                         <Tooltip
                             formatter={(value) => [`${value}%`, "Percentage"]}
@@ -117,7 +120,7 @@ export default function DashboardButtonsViewsChart({ selectedDuration }) {
                         />
 
                         <Bar
-                            dataKey="percentage"
+                            dataKey="total_views"
                             isAnimationActive={false}
                             barSize={12}
                             fill="#A6DBA5"
@@ -140,12 +143,12 @@ export default function DashboardButtonsViewsChart({ selectedDuration }) {
                         >
                             {/* Custom left labels */}
                             <LabelList
-                                dataKey="name"
+                                dataKey="button_text"
                                 content={<CustomLeftLabel />}
                             />
                             {/* Custom right labels */}
                             <LabelList
-                                dataKey="percentage"
+                                dataKey="total_views"
                                 content={<CustomRightLabel />}
                             />
                         </Bar>
@@ -154,7 +157,7 @@ export default function DashboardButtonsViewsChart({ selectedDuration }) {
                         <Legend
                             verticalAlign="bottom"
                             align="left"
-                            content={<CustomLegend data={chartData} />}
+                            content={<CustomLegend data={buttonsViews} />}
                         />
                     </BarChart>
                 </ResponsiveContainer>

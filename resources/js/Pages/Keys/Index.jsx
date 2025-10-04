@@ -34,7 +34,7 @@ export default function Keys() {
                 />
 
                 {isAdmin && (
-                    <div className="mb-6 w-64">
+                    <div className="w-64">
                         <SelectInput
                             id="hotel_id"
                             name="hotel_id"

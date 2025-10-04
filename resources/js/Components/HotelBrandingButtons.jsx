@@ -156,7 +156,7 @@ export default function HotelBrandingButtons({}) {
                             return (
                                 <div
                                     key={idx}
-                                    className="border border-gray-400 rounded-lg py-2 px-3.5 md:text-sm text:xs text[#263238] flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-gray-50 transition"
+                                    className="border border-gray-400 relative rounded-lg py-2 px-3.5 md:text-sm text:xs text[#263238]  flex flex-wrap flex-row lg:items-center lg:justify-between hover:bg-gray-50 transition"
                                 >
                                     <div className="lg:w-[5%] w-full shrink-0 flex items-center">
                                         <GripVertical
@@ -165,7 +165,7 @@ export default function HotelBrandingButtons({}) {
                                         />
                                     </div>
 
-                                    <div className="lg:w-[15%] w-full flex items-center">
+                                    <div className="lg:w-[15%] w-1/2 flex mt-2 flex-col">
                                         <span className="lg:hidden text-[10px] text-gray-500 mr-1">
                                             Icon:
                                         </span>
@@ -177,28 +177,28 @@ export default function HotelBrandingButtons({}) {
                                         )}
                                     </div>
 
-                                    <div className="lg:w-[15%] w-full flex items-center">
+                                    <div className="lg:w-[15%] w-1/2 flex mt-2 flex-col">
                                         <span className="lg:hidden text-[10px] text-gray-500 mr-1">
                                             No.:
                                         </span>
                                         <span>{button.order}</span>
                                     </div>
 
-                                    <div className="lg:w-[30%] w-full flex items-center">
+                                    <div className="lg:w-[30%] w-1/2 flex mt-2 flex-col">
                                         <span className="lg:hidden text-[10px] text-gray-500 mr-1">
                                             Text:
                                         </span>
                                         <span>{button.text}</span>
                                     </div>
 
-                                    <div className="lg:w-[20%] w-full flex items-center">
+                                    <div className="lg:w-[20%] w-1/2 flex mt-2 flex-col">
                                         <span className="lg:hidden text-[10px] text-gray-500 mr-1">
                                             Type:
                                         </span>
                                         <span>{button.type}</span>
                                     </div>
 
-                                    <div className="lg:w-[15%] w-full flex items-center gap-2">
+                                    <div className="lg:w-[15%] w-fit lg:static absolute top-1 right-1 flex items-center gap-2 ms-auto justify-end">
                                         <Dropdown>
                                             <DropdownItem
                                                 onClick={() =>

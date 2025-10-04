@@ -11,17 +11,15 @@ import HotelBrandingButtons from "./HotelBrandingButtons";
 import HotelBrandingPages from "./HotelBrandingPages";
 import { mapHotelToBrandingFormData } from "@/utils/mapHotelToBrandingFormData";
 
-export default function HotelBrandingForm() {
-    const { auth, selectedHotel = null } = usePage().props;
+export default function HotelBrandingForm({ formErrors }) {
+    const { auth, selectedHotel = null, flash } = usePage().props;
     const { brandingFormData, handleBrandingChange, setBrandingFormData } =
         useContext(PageContext);
-    console.log("Form Data: ", brandingFormData);
+    console.log("Flash: ", flash);
 
     useEffect(() => {
         if (selectedHotel) {
-            setBrandingFormData(
-                mapHotelToBrandingFormData(selectedHotel)
-            );
+            setBrandingFormData(mapHotelToBrandingFormData(selectedHotel));
         }
     }, [selectedHotel]);
 
@@ -35,6 +33,20 @@ export default function HotelBrandingForm() {
                     Description of this graph can land here
                 </p>
             </div>
+            {Object.keys(formErrors).length > 0 && (
+                <div className="rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
+                    <p className="font-bold mb-2">
+                        Please fix the following errors:
+                    </p>
+                    <ul className="list-disc list-inside space-y-1">
+                        {Object.entries(formErrors).map(
+                            ([field, messages], idx) => (
+                                <li key={idx}>{messages.join(", ")}</li>
+                            )
+                        )}
+                    </ul>
+                </div>
+            )}
             <div className="space-y-3">
                 <div className="space-y-1">
                     <InputLabel
@@ -50,6 +62,23 @@ export default function HotelBrandingForm() {
                         onChange={handleBrandingChange}
                         className="block w-full"
                         placeholder="Heading (under logo)"
+                        required
+                    />
+                </div>
+                <div className="space-y-1">
+                    <InputLabel
+                        htmlFor="sub_heading"
+                        value="Sub heading (under heading)"
+                        className="text-[#475569] text-xs font-medium"
+                    />
+                    <TextInput
+                        id="sub_heading"
+                        name="sub_heading"
+                        type="text"
+                        value={brandingFormData.sub_heading}
+                        onChange={handleBrandingChange}
+                        className="block w-full"
+                        placeholder="Sub heading (under heading)"
                         required
                     />
                 </div>
@@ -174,6 +203,23 @@ export default function HotelBrandingForm() {
                         WhatsApp text is fixed: "I found your key. Please
                         contact me."
                     </p>
+                </div>
+                <div className="space-y-1">
+                    <InputLabel
+                        htmlFor="keyfinder_heading"
+                        value="Keyfinder Page Heading"
+                        className="text-[#475569] text-xs font-medium"
+                    />
+                    <TextInput
+                        id="keyfinder_heading"
+                        name="keyfinder_heading"
+                        type="text"
+                        value={brandingFormData.keyfinder_heading}
+                        onChange={handleBrandingChange}
+                        className="block w-full"
+                        placeholder="Keyfinder Page Heading"
+                        required
+                    />
                 </div>
                 <div className="space-y-1">
                     <Textarea

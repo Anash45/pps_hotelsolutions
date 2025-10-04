@@ -13,6 +13,8 @@ class Hotel extends Model
     protected $fillable = [
         'hotel_name',
         'heading',
+        'sub_heading',
+        'keyfinder_heading',
         'logo_image',
         'banner_image',
         'primary_color',
