@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {
     LineChart,
     Line,
@@ -10,15 +11,17 @@ import {
     ResponsiveContainer,
     Area,
 } from "recharts";
-import { data7Days, data30Days, data90Days } from "@/utils/dummyViews";
+
 const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
+    if (active && Array.isArray(payload) && payload.length) {
         const date = new Date(label);
         const dd = String(date.getDate()).padStart(2, "0");
         const mm = String(date.getMonth() + 1).padStart(2, "0");
         const yyyy = date.getFullYear();
-        const formattedDate = `${dd}.${mm}`;
         const formattedDate2 = `${dd}.${mm}.${yyyy}`;
+
+        const totalViews = payload[0]?.value ?? 0;
+        const uniqueViews = payload[1]?.value ?? 0;
 
         return (
             <div
@@ -50,7 +53,7 @@ const CustomTooltip = ({ active, payload, label }) => {
                         lineHeight: "16px",
                     }}
                 >
-                    Views: {payload[0].value}
+                    Views: {totalViews}
                 </p>
                 <p
                     style={{
@@ -61,26 +64,21 @@ const CustomTooltip = ({ active, payload, label }) => {
                         lineHeight: "16px",
                     }}
                 >
-                    Unique Views: {payload[1].value}
+                    Unique Views: {uniqueViews}
                 </p>
             </div>
         );
     }
     return null;
 };
-export default function DashboardViewsChart({ selectedDuration, chartViews }) {
-    // Pick dataset based on selected duration
-    const chartData =
-        selectedDuration === "7 Days"
-            ? data7Days
-            : selectedDuration === "30 Days"
-            ? data30Days
-            : data90Days;
 
-    console.log("Chart Views: ", chartViews);
+export default function DashboardViewsChart({ selectedDuration, chartViews }) {
+    // Ensure chartViews is always an array
+    const safeChartViews = Array.isArray(chartViews) ? chartViews : [];
 
     return (
         <div className="p-4 rounded-xl bg-white flex flex-col gap-6">
+            {/* Header */}
             <div className="flex justify-between">
                 <div className="flex flex-col gap-1">
                     <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
@@ -102,10 +100,9 @@ export default function DashboardViewsChart({ selectedDuration, chartViews }) {
             <div className="w-full h-72">
                 <ResponsiveContainer>
                     <LineChart
-                        data={chartViews}
+                        data={safeChartViews}
                         margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
                     >
-                        {/* Grid */}
                         <CartesianGrid
                             strokeDasharray="0 0"
                             stroke="#929CAB"
@@ -113,10 +110,10 @@ export default function DashboardViewsChart({ selectedDuration, chartViews }) {
                             className="opacity-10"
                         />
 
-                        {/* X Axis */}
                         <XAxis
                             dataKey="date"
                             tickFormatter={(date) => {
+                                if (!date) return "";
                                 const dt = new Date(date);
                                 const dd = String(dt.getDate()).padStart(
                                     2,
@@ -126,7 +123,7 @@ export default function DashboardViewsChart({ selectedDuration, chartViews }) {
                                     2,
                                     "0"
                                 );
-                                return `${dd}.${mm}`; // 09.12 format
+                                return `${dd}.${mm}`;
                             }}
                             tick={{
                                 fill: "#929CAB",
@@ -137,7 +134,6 @@ export default function DashboardViewsChart({ selectedDuration, chartViews }) {
                             tickLine={false}
                         />
 
-                        {/* Y Axis */}
                         <YAxis
                             tick={{
                                 fill: "#929CAB",
@@ -150,24 +146,23 @@ export default function DashboardViewsChart({ selectedDuration, chartViews }) {
 
                         <Tooltip content={<CustomTooltip />} />
 
-                        {/* Smooth Line */}
                         <Line
                             type="monotone"
                             dataKey="total_views"
                             stroke="#83AF82"
                             strokeWidth={2}
                             dot={false}
+                            isAnimationActive={false}
                         />
 
-                        {/* Smooth Line */}
                         <Line
                             type="monotone"
                             dataKey="unique_views"
                             stroke="#ff0000"
                             strokeWidth={2}
                             dot={false}
+                            isAnimationActive={false}
                         />
-
                     </LineChart>
                 </ResponsiveContainer>
             </div>
