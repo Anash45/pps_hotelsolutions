@@ -13,7 +13,7 @@ export default function CodesForm() {
     const { hotels, keyTypes } = usePage().props;
 
     const [linkDomain, setLinkDomain] = useState(
-        "https://test-app.ppshotelsolutions.de"
+        "https://app.ppshotelsolutions.de"
     );
 
     // fetch domain at component mount

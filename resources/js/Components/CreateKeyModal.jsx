@@ -10,6 +10,7 @@ import LightButton from "./LightButton";
 import Divider from "./Divider";
 import axios from "axios";
 import Alert from "./Alert";
+import { getDomain } from "@/utils/viteConfig";
 
 export default function CreateKeyModal({
     onClose,
@@ -31,9 +32,18 @@ export default function CreateKeyModal({
         setTimeout(onClose, 200);
     };
 
-    const LINK_URL =
-        import.meta.env.VITE_LINK_URL ||
-        "https://test-app.ppshotelsolutions.de";
+    const [linkDomain, setLinkDomain] = useState(
+        "https://test-app.ppshotelsolutions.de"
+    );
+
+    // fetch domain at component mount
+    useEffect(() => {
+        (async () => {
+            const domain = await getDomain();
+            console.log("Fetched domain:", domain);
+            setLinkDomain(domain); // update local state
+        })();
+    }, []);
 
     const keyTypesOptions = keyTypes.map((kt) => ({
         value: kt.id,
@@ -260,7 +270,7 @@ export default function CreateKeyModal({
                         </div>
                         {recognized && selectedCode && (
                             <div className="text-green-600 text-sm">
-                                Key recognized: {LINK_URL}/{selectedCode.code}
+                                Key recognized: {linkDomain}/key/{selectedCode.code}
                             </div>
                         )}
                         <InputError message={recognizeError} />

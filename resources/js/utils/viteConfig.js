@@ -9,7 +9,7 @@ export async function loadConfig() {
     } catch (err) {
         console.warn("Could not load config.json, using defaults", err);
         config = {
-            LINK_URL: "https://test-app.ppshotelsolutions.de", // default fallback
+            LINK_URL: "https://app.ppshotelsolutions.de", // default fallback
         };
         return config;
     }
