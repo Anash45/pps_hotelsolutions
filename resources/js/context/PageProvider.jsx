@@ -16,6 +16,7 @@ export const PageProvider = ({ children }) => {
         page_text_color: "#000000",
         buttons: [],
     });
+    const [loadingButton, setLoadingButton] = useState(null);
 
     const handleBrandingChange = (e) => {
         const { name, value } = e.target;
@@ -52,6 +53,8 @@ export const PageProvider = ({ children }) => {
                 brandingFormData,
                 setBrandingFormData,
                 handleBrandingChange,
+                loadingButton,
+                setLoadingButton,
             }}
         >
             {children}

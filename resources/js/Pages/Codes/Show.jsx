@@ -10,13 +10,16 @@ import { mapHotelToBrandingFormData } from "@/utils/mapHotelToBrandingFormData";
 
 function Show() {
     const { selectedHotel = null, codeDetails } = usePage().props;
-    const { brandingFormData, setBrandingFormData } = useContext(PageContext);
+    const { brandingFormData, setBrandingFormData, loadingButton } =
+        useContext(PageContext);
     const [defaultView, setDefaultView] = useState(false);
     const { url } = usePage();
 
     useEffect(() => {
         if (selectedHotel) {
-            setBrandingFormData(mapHotelToBrandingFormData(selectedHotel, { user_view: true }));
+            setBrandingFormData(
+                mapHotelToBrandingFormData(selectedHotel, { user_view: true })
+            );
         }
     }, [selectedHotel, url]);
 
@@ -72,10 +75,20 @@ function Show() {
             <GuestBox realPhone={true} defaultView={defaultView}>
                 <ComponentToShow />
             </GuestBox>
+
+            {loadingButton && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+                    <div className="loader border-t-transparent border-4 border-[#b6ffb5] rounded-full w-10 h-10 animate-spin"></div>
+                </div>
+            )}
         </>
     );
 }
 
-Show.layout = (page) => <GuestKeyLayout children={page} />;
+Show.layout = (page) => (
+    <>
+        <GuestKeyLayout children={page} />
+    </>
+);
 
 export default Show;

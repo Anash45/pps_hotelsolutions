@@ -9,7 +9,7 @@ import { usePage, useForm } from "@inertiajs/react";
 import CodesPreview from "./CodesPreview";
 import Divider from "@/Components/Divider";
 
-export default function CodesForm() {
+export default function CodesForm({previewCodes, setPreviewCodes}) {
     const { hotels, keyTypes } = usePage().props;
 
     const [linkDomain, setLinkDomain] = useState(
@@ -33,7 +33,6 @@ export default function CodesForm() {
         domain: linkDomain,
     });
 
-    const [previewCodes, setPreviewCodes] = useState([]);
 
     const handleSubmit = (e) => {
         e.preventDefault();

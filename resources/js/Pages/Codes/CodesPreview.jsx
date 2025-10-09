@@ -1,6 +1,8 @@
 import { Link } from "@inertiajs/react";
+import dayjs from "dayjs";
 
 export default function CodesPreview({ previewCodes, domain }) {
+    console.log("previewCodes: ", previewCodes);
     return (
         <div>
             <h3 className="text-grey900 font-semibold text-lg mb-3">
@@ -57,7 +59,9 @@ export default function CodesPreview({ previewCodes, domain }) {
                                         Created at:{" "}
                                     </span>
                                     <span className="text-xs text-body">
-                                        {c.generated_at}
+                                        {dayjs(c.generated_at).format(
+                                            "DD.MM.YYYY, HH:mm"
+                                        )}
                                     </span>
                                 </div>
                             </div>

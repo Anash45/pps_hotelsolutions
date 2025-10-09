@@ -5,9 +5,11 @@ import CodesForm from "./CodesForm";
 import CodeGroupsPreview from "./CodeGroupsPreview";
 import Alert from "@/Components/Alert";
 import FlashMessage from "@/Components/FlashMessage";
+import { useState } from "react";
 
 export default function Codes() {
     const { codeGroups, flash } = usePage().props;
+    const [previewCodes, setPreviewCodes] = useState([]);
 
     console.log(codeGroups);
 
@@ -29,7 +31,7 @@ export default function Codes() {
                                 Description of this block
                             </p>
                         </div>
-                        <CodesForm />
+                        <CodesForm previewCodes={previewCodes} setPreviewCodes={setPreviewCodes} />
                     </div>
                     <div className="py-4 md:px-6 px-4 rounded-[14px] main-box bg-white flex flex-col gap-3">
                         <div className="flex flex-col gap-1">
@@ -40,7 +42,7 @@ export default function Codes() {
                                 Description of this block
                             </p>
                         </div>
-                        <CodeGroupsPreview previewGroups={codeGroups} />
+                        <CodeGroupsPreview previewGroups={codeGroups} setPreviewCodes={setPreviewCodes} />
                     </div>
                 </div>
             </div>

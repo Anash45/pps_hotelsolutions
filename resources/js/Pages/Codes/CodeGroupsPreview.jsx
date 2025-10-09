@@ -1,13 +1,35 @@
 import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
-import { Download, Trash2 } from "lucide-react";
+import { Download, Eye, Trash2 } from "lucide-react";
 
-export default function CodeGroupsPreview({ previewGroups, domain }) {
+export default function CodeGroupsPreview({
+    previewGroups,
+    domain,
+    setPreviewCodes,
+}) {
+    function handlePreviewCodes(
+        codes = [],
+        hotel_name = "",
+        key_type_name = ""
+    ) {
+        if (!Array.isArray(codes) || codes.length === 0) {
+            console.warn("No codes to preview");
+            return;
+        }
+
+        // Add hotel_name and key_type_name to each code
+        const updatedCodes = codes.map((code) => ({
+            ...code,
+            hotel_name,
+            key_type_name,
+        }));
+
+        setPreviewCodes(updatedCodes);
+    }
+
+    console.log("previewGroups:", previewGroups);
     return (
         <div>
-            <h3 className="text-grey900 font-semibold text-lg mb-3">
-                Preview: generated URLs
-            </h3>
             <div className="overflow-auto w-full max-h-[730px]">
                 <div className="xl:w-max min-w-full space-y-3">
                     {/* Header */}
@@ -18,7 +40,7 @@ export default function CodeGroupsPreview({ previewGroups, domain }) {
                         </div>
                         <div className="w-24 shrink-0">Type</div>
                         <div className="w-14">Number</div>
-                        <div className="w-10 text-center shrink-0">Action</div>
+                        <div className="w-16 text-center shrink-0">Action</div>
                     </div>
 
                     {/* Rows */}
@@ -64,11 +86,27 @@ export default function CodeGroupsPreview({ previewGroups, domain }) {
                                         <span>{cg.count}</span>
                                     </span>
                                 </div>
-                                <div className="lg:w-10 flex items-center gap-2 shrink-0">
+                                <div className="lg:w-16 flex items-center gap-2 shrink-0">
                                     <span className="lg:hidden text-[10px] text-gray-500">
                                         Action:{" "}
                                     </span>
-                                    <span className="text-xs text-body flex gap-1">
+                                    <span className="text-xs text-blue-500 flex gap-1">
+                                        <button
+                                            className="text-center"
+                                            onClick={() =>
+                                                handlePreviewCodes(
+                                                    cg?.codes ?? [],
+                                                    cg?.hotel?.hotel_name ?? "",
+                                                    cg?.key_type?.name ?? ""
+                                                )
+                                            }
+                                        >
+                                            <Eye
+                                                size={16}
+                                                className="text-body mx-auto"
+                                                strokeWidth={2}
+                                            />
+                                        </button>
                                         <a
                                             target="_blank"
                                             href={route(
@@ -84,7 +122,11 @@ export default function CodeGroupsPreview({ previewGroups, domain }) {
                                             />
                                         </a>
                                         <a
-                                            onClick={() => confirm('Are you sure? It will only be deleted if there are no key assignments')}
+                                            onClick={() =>
+                                                confirm(
+                                                    "Are you sure? It will only be deleted if there are no key assignments"
+                                                )
+                                            }
                                             href={route(
                                                 "codes.group.delete",
                                                 cg.id

@@ -161,7 +161,7 @@ class CodesController extends Controller
     {
         $hotels = Hotel::get();
         $keyTypes = KeyType::get();
-        $codeGroups = CodeGroup::with(['hotel', 'keyType'])->orderByDesc('created_at')->get();
+        $codeGroups = CodeGroup::with(['hotel', 'keyType', 'codes'])->orderByDesc('created_at')->get();
         return inertia('Codes/Index', [
             'hotels' => $hotels,
             'keyTypes' => $keyTypes,
