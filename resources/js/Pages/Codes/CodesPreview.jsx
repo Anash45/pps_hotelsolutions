@@ -39,7 +39,7 @@ export default function CodesPreview({ previewCodes, domain }) {
                                     </span>
                                     <span className="text-xs text-body">
                                         <Link
-                                            href={`${domain}/${c.code}`}
+                                            href={`${domain}/key/${c.code}`}
                                             className="underline break-all"
                                         >
                                             {domain}/key/{c.code}

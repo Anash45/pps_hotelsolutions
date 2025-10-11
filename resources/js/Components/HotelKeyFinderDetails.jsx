@@ -6,6 +6,7 @@ import { getIcon } from "@/data/iconMap";
 import PrimaryButton from "./PrimaryButton";
 import LightButton from "./LightButton";
 import { FaWhatsapp } from "react-icons/fa";
+import { Phone } from "lucide-react";
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
@@ -62,10 +63,17 @@ const HotelKeyFinderDetails = ({}) => {
             </p>
             <div className="grid grid-cols-2 gap-2">
                 <LightButton
-                    onClick={() => window.open(`tel:+${codeDetails?.key_assignment?.phone_number}`)}
+                    onClick={() =>
+                        window.open(
+                            `tel:+${codeDetails?.key_assignment?.phone_number}`
+                        )
+                    }
                     className="border-[#F1F1F1]"
                 >
-                    <span className="text-[#020617]">Telefon</span>
+                    <span className="text-[#020617] flex items-center justify-center gap-2">
+                        <Phone className="h-4" />
+                        <span>Telefon</span>
+                    </span>
                 </LightButton>
                 <PrimaryButton
                     onClick={() =>
@@ -78,7 +86,7 @@ const HotelKeyFinderDetails = ({}) => {
                     }
                     className=""
                 >
-                    <div className="flex justify-center items-center">
+                    <div className="flex justify-center items-center gap-2">
                         <FaWhatsapp className="h-5" />
                         <span>Whatsapp</span>
                     </div>
