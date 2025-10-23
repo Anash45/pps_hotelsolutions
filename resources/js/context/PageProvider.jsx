@@ -43,6 +43,15 @@ export const PageProvider = ({ children }) => {
                     : null;
             }
 
+            // Special case: banner_image
+            if (name === "section_banner_image") {
+                updates.section_banner_image_url = value
+                    ? typeof value === "string"
+                        ? `/storage/${value}`
+                        : URL.createObjectURL(value)
+                    : null;
+            }
+
             return { ...prev, ...updates };
         });
     };

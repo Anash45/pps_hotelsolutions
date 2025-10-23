@@ -270,6 +270,144 @@ export default function HotelBrandingForm({ formErrors }) {
                         />
                     </div>
                 </div>
+                <div className="py-2">
+                    <Divider />
+                </div>
+                <div className="flex flex-col gap-1">
+                    <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
+                        Keyfinder bottom section
+                    </h5>
+                    <p className="text-xs text-[#544854]">
+                        Edit the details for keyfinder bottom section
+                    </p>
+                </div>
+                <div className="space-y-1">
+                    <InputLabel
+                        htmlFor="key_finder_bottom_heading"
+                        value="Section heading"
+                        className="text-[#475569] text-xs font-medium"
+                    />
+                    <TextInput
+                        id="key_finder_bottom_heading"
+                        name="key_finder_bottom_heading"
+                        type="text"
+                        value={brandingFormData.key_finder_bottom_heading}
+                        onChange={handleBrandingChange}
+                        className="block w-full"
+                        placeholder=""
+                        required
+                    />
+                </div>
+
+                <div className="space-y-1">
+                    <InputLabel
+                        htmlFor="key_finder_bottom_description"
+                        value="Section description"
+                        className="text-[#475569] text-xs font-medium"
+                    />
+                    <Textarea
+                        id="key_finder_bottom_description"
+                        name="key_finder_bottom_description"
+                        type="text"
+                        rows={5}
+                        value={brandingFormData.key_finder_bottom_description}
+                        onChange={handleBrandingChange}
+                        className="block w-full"
+                        placeholder=""
+                        required
+                    />
+                </div>
+                <div className="space-y-1">
+                    <InputLabel
+                        value="Upload section banner"
+                        className="text-[#475569] text-xs font-medium"
+                    />
+                    <BrandingImageUploader
+                        name="section_banner_image"
+                        value={
+                            brandingFormData.section_banner_image ??
+                            brandingFormData.section_banner_image_url
+                        }
+                        onChange={handleBrandingChange}
+                        label="Section Banner Image"
+                    />
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 grid-cols-1">
+                    <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="key_finder_bottom_btn_text"
+                            value="Telephone (Preview, read-only)"
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <TextInput
+                            id="key_finder_bottom_btn_text"
+                            name="key_finder_bottom_btn_text"
+                            type="text"
+                            value={brandingFormData.key_finder_bottom_btn_text}
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder="eg: jetzt buchen"
+                            required
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="key_finder_bottom_btn_url"
+                            value="Telephone (Preview, read-only)"
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <TextInput
+                            id="key_finder_bottom_btn_url"
+                            name="key_finder_bottom_btn_url"
+                            type="text"
+                            value={brandingFormData.key_finder_bottom_btn_url}
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder="eg: https://www.hotelname.com/booking"
+                            required
+                        />
+                    </div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 grid-cols-1">
+                    <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="key_finder_bottom_btn_text_color"
+                            value="Section button text color"
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <ColorInput
+                            id="key_finder_bottom_btn_text_color"
+                            name="key_finder_bottom_btn_text_color"
+                            value={
+                                brandingFormData?.key_finder_bottom_btn_text_color ??
+                                brandingFormData.button_text_color
+                            }
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder="Color"
+                            required
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="key_finder_bottom_btn_bg_color"
+                            value="Section button BG color"
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <ColorInput
+                            id="key_finder_bottom_btn_bg_color"
+                            name="key_finder_bottom_btn_bg_color"
+                            value={
+                                brandingFormData?.key_finder_bottom_btn_bg_color ??
+                                brandingFormData.primary_color
+                            }
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder="Color"
+                            required
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     );

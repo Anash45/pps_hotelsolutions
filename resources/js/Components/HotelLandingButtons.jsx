@@ -60,7 +60,7 @@ export default function HotelLandingButtons({
                 return (
                     <a
                         key={idx}
-                        className={`block w-full px-4 py-3 rounded-xl border text-sm hotel-button relative ${
+                        className={`block w-full px-4 py-3 rounded-xl border text-base hotel-button relative ${
                             isLoading ? "opacity-75 pointer-events-none" : ""
                         }`}
                         style={{

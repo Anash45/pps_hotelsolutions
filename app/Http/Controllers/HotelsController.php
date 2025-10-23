@@ -107,23 +107,64 @@ class HotelsController extends Controller
             'key_finder_page_text' => 'nullable|string',
             'logo_image' => 'nullable|image|max:10240', // 10 MB
             'banner_image' => 'nullable|image|max:10240',
+            'key_finder_bottom_heading' => 'nullable|string|max:100',
+            'key_finder_bottom_description' => 'nullable|string|max:100',
+            'key_finder_bottom_btn_text' => 'nullable|string|max:100',
+            'key_finder_bottom_btn_url' => 'nullable|string|max:100',
+            'key_finder_bottom_btn_text_color' => 'nullable|string|max:100',
+            'key_finder_bottom_btn_bg_color' => 'nullable|string|max:100',
+            'section_banner_image' => 'nullable|image|max:10240',
         ]);
 
-        // ✅ Handle logo upload
-        if ($request->hasFile('logo_image')) {
+        // ✅ Handle logo removal
+        if ($request->boolean('logo_image_removed')) {
             if ($hotel->logo_image && Storage::disk('public')->exists($hotel->logo_image)) {
                 Storage::disk('public')->delete($hotel->logo_image);
             }
+            $validated['logo_image'] = null;
+        }
+
+        // ✅ Handle logo upload
+        if ($request->hasFile('logo_image')) {
+            // Delete old logo if exists
+            if ($hotel->logo_image && Storage::disk('public')->exists($hotel->logo_image)) {
+                Storage::disk('public')->delete($hotel->logo_image);
+            }
+
+            // Store new logo
             $validated['logo_image'] = $request->file('logo_image')
                 ->store('hotels', 'public');
         }
 
+        // ✅ Handle logo removal
+        if ($request->boolean('banner_image_removed')) {
+            if ($hotel->banner_image && Storage::disk('public')->exists($hotel->banner_image)) {
+                Storage::disk('public')->delete($hotel->banner_image);
+            }
+            $validated['banner_image'] = null;
+        }
         // ✅ Handle banner upload
         if ($request->hasFile('banner_image')) {
             if ($hotel->banner_image && Storage::disk('public')->exists($hotel->banner_image)) {
                 Storage::disk('public')->delete($hotel->banner_image);
             }
             $validated['banner_image'] = $request->file('banner_image')
+                ->store('hotels', 'public');
+        }
+
+        // ✅ Handle logo removal
+        if ($request->boolean('section_banner_image_removed')) {
+            if ($hotel->section_banner_image && Storage::disk('public')->exists($hotel->section_banner_image)) {
+                Storage::disk('public')->delete($hotel->section_banner_image);
+            }
+            $validated['section_banner_image'] = null;
+        }
+        // ✅ Handle banner upload
+        if ($request->hasFile('section_banner_image')) {
+            if ($hotel->section_banner_image && Storage::disk('public')->exists($hotel->section_banner_image)) {
+                Storage::disk('public')->delete($hotel->section_banner_image);
+            }
+            $validated['section_banner_image'] = $request->file('section_banner_image')
                 ->store('hotels', 'public');
         }
 

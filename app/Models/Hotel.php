@@ -23,6 +23,13 @@ class Hotel extends Model
         'button_text_color',
         'page_text_color',
         'key_finder_page_text',
+        'key_finder_bottom_heading',
+        'key_finder_bottom_description',
+        'key_finder_bottom_btn_text',
+        'key_finder_bottom_btn_url',
+        'key_finder_bottom_btn_text_color',
+        'key_finder_bottom_btn_bg_color',
+        'section_banner_image',
     ];
 
     // Relationship: Hotel has many users

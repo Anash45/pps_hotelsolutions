@@ -21,6 +21,17 @@ export default function HotelsTitle({ title, setFormErrors }) {
                 formData.append(key, value);
             }
         });
+
+        if (brandingFormData.logo_image_url == null) {
+            formData.append("logo_image_removed", true);
+        }
+        if (brandingFormData.banner_image_url == null) {
+            formData.append("banner_image_removed", true);
+        }
+        if (brandingFormData.section_banner_image_url == null) {
+            formData.append("section_banner_image_removed", true);
+        }
+
         console.log("Sending Form Data: ", brandingFormData);
 
         try {
@@ -41,6 +52,10 @@ export default function HotelsTitle({ title, setFormErrors }) {
                     banner_image: null,
                     banner_image_url: data.hotel.banner_image
                         ? `/storage/${data.hotel.banner_image}`
+                        : null,
+                    section_banner_image: null,
+                    section_banner_image_url: data.hotel.section_banner_image
+                        ? `/storage/${data.hotel.section_banner_image}`
                         : null,
                 }));
             }

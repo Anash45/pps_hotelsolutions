@@ -1,3 +1,5 @@
+import { se } from "date-fns/locale";
+
 export function mapHotelToBrandingFormData(selectedHotel, options = {}) {
     if (!selectedHotel) return {};
 
@@ -18,8 +20,20 @@ export function mapHotelToBrandingFormData(selectedHotel, options = {}) {
         banner_image_url: selectedHotel.banner_image
             ? `/storage/${selectedHotel.banner_image}`
             : null,
+        section_banner_image: null,
+        section_banner_image_url: selectedHotel.section_banner_image
+            ? `/storage/${selectedHotel.section_banner_image}`
+            : null,
         key_finder_page_text: selectedHotel.key_finder_page_text || "",
         page_text_color: selectedHotel.page_text_color || "#000000",
+
+        key_finder_bottom_heading: selectedHotel.key_finder_bottom_heading,
+        key_finder_bottom_description: selectedHotel.key_finder_bottom_description,
+        key_finder_bottom_btn_text: selectedHotel.key_finder_bottom_btn_text,
+        key_finder_bottom_btn_url: selectedHotel.key_finder_bottom_btn_url,
+        key_finder_bottom_btn_text_color: selectedHotel.key_finder_bottom_btn_text_color,
+        key_finder_bottom_btn_bg_color: selectedHotel.key_finder_bottom_btn_bg_color,
+
         pages: selectedHotel?.pages,
         buttons: (selectedHotel?.buttons || []).map((btn) => ({
             button_id: btn.id ?? null,

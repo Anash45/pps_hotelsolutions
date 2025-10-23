@@ -4,9 +4,11 @@ import "datatables.net-dt/css/dataTables.dataTables.css";
 import { createRoot } from "react-dom/client";
 import { Dropdown, DropdownItem } from "@/Components/DropdownUi";
 import { useModal } from "@/context/ModalProvider";
-import { usePage } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { format, parseISO } from "date-fns";
 import { router } from "@inertiajs/react";
+import { useEffect, useState } from "react";
+import { getDomain } from "@/utils/viteConfig";
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
@@ -23,6 +25,19 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
     const { openModal } = useModal();
     const { keyTypes = [] } = usePage().props;
 
+    const [linkDomain, setLinkDomain] = useState(
+        "https://app.ppshotelsolutions.de"
+    );
+
+    // fetch domain at component mount
+    useEffect(() => {
+        (async () => {
+            const domain = await getDomain();
+            console.log("Fetched domain:", domain);
+            setLinkDomain(domain); // update local state
+        })();
+    }, []);
+
     // Keep both tableData (for DataTable) and original mapping
     const tableData = codes.map((c) => ({
         name: c.key_assignment?.first_name
@@ -36,6 +51,7 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
             c.key_assignment?.stay_till
         )}`,
         room: c.key_assignment?.room_number ?? "-",
+        code: c.code,
         status: c.status,
         keyType: c.key_type?.display_name ?? "-",
         id: c.id, // useful for actions
@@ -44,6 +60,24 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
 
     const columns = [
         { title: "Name", data: "name" },
+        {
+            title: "Code",
+            data: "code",
+            createdCell: (td, cellData, rowData) => {
+                const root = createRoot(td);
+                root.render(
+                    <div>
+                        <a
+                            href={`${linkDomain}/key/${rowData.code}`}
+                            target="_blank"
+                            className="underline text-primary"
+                        >
+                            {rowData.code}
+                        </a>
+                    </div>
+                );
+            },
+        },
         { title: "Stay", data: "stay" },
         { title: "Room", data: "room" },
         {
@@ -118,9 +152,12 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
         },
     ];
 
+    console.log(codes);
+
     return (
         <div className="p-3 rounded-[14px] main-box bg-white">
             <DataTable
+                key={linkDomain}
                 className="keys-datatable"
                 data={tableData}
                 columns={columns}

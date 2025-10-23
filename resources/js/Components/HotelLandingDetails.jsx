@@ -31,18 +31,18 @@ const HotelLandingDetails = ({}) => {
                 {!brandingFormData.user_view ||
                 brandingFormData.user_view === false ? (
                     <>
-                        <span className="text-sm font-medium">Guest Name</span>
-                        <span className="text-sm font-medium">Zimmer 312</span>
+                        <span className="text-base font-medium">Guest Name</span>
+                        <span className="text-base font-medium">Zimmer 312</span>
                     </>
                 ) : (
                     <>
-                        <span className="text-sm font-medium">
+                        <span className="text-base font-medium">
                             {keyDetails?.title} {keyDetails?.first_name}{" "}
                             {keyDetails?.last_name}
                         </span>
 
                         {keyDetails?.room_number && (
-                            <span className="text-sm font-medium">
+                            <span className="text-base font-medium">
                                 Zimmer {keyDetails?.room_number}
                             </span>
                         )}
@@ -68,7 +68,7 @@ const HotelLandingDetails = ({}) => {
                         {brandingFormData.heading ?? "Hotel Name"}
                     </p>
                     {keyDetails?.stay_from && keyDetails?.stay_till ? (
-                        <span className="text-xs font-montserrat">
+                        <span className="text-sm font-montserrat">
                             {keyDetails?.stay_from
                                 ? formatDate(keyDetails?.stay_from)
                                 : ""}{" "}
@@ -79,7 +79,7 @@ const HotelLandingDetails = ({}) => {
                         </span>
                     ) : null}
                 </div>
-                {brandingFormData.sub_heading ? <p className="text-base text-center">{brandingFormData.sub_heading}</p> : null}
+                {brandingFormData.sub_heading ? <p className="text-lg text-center">{brandingFormData.sub_heading}</p> : null}
             </div>
             {brandingFormData.banner_image_url ? (
                 <img

@@ -59,7 +59,9 @@ export default function HotelBrandingPreview() {
             </div>
 
             <MobileFrame>
-                <GuestBox>{tabs[activeTab].component}</GuestBox>
+                <GuestBox showNextBox={tabs.length - 1 == activeTab}>
+                    {tabs[activeTab].component}
+                </GuestBox>
             </MobileFrame>
         </div>
     );

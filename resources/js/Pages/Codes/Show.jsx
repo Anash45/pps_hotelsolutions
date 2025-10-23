@@ -4,7 +4,7 @@ import HotelLanding from "@/Components/HotelLanding";
 import AskDetails from "@/Components/AskDetails";
 import { PageContext } from "@/context/PageProvider";
 import GuestKeyLayout from "@/Layouts/GuestKeyLayout";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { useContext, useEffect, useState } from "react";
 import { mapHotelToBrandingFormData } from "@/utils/mapHotelToBrandingFormData";
 
@@ -137,7 +137,7 @@ function Show() {
                     }
                 />
             </Head>
-            <GuestBox realPhone={true} defaultView={defaultView}>
+            <GuestBox realPhone={true} defaultView={defaultView} showNextBox={ComponentToShow === HotelKeyFinder}>
                 <ComponentToShow />
             </GuestBox>
 
