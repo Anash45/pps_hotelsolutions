@@ -23,37 +23,43 @@ class CodesController extends Controller
             ->where('code', $code)
             ->firstOrFail();
 
-        // Fetch selectedHotel with details (using code’s hotel_id)
         $selectedHotel = null;
+
         if ($codeData->hotel_id) {
             $selectedHotel = Hotel::with([
-                'buttons' => function ($q) {
-                    $q->orderBy('order'); // ascending
-                },
+                'buttons' => fn($q) => $q->orderBy('order'),
                 'pages',
             ])->findOrFail($codeData->hotel_id);
 
-            // ---- Record hotel view ----
-            $visitorIp = request()->ip(); // ✅ fixed
-
+            // ✅ Record view
+            $visitorIp = request()->ip();
             $alreadyViewed = HotelView::where('hotel_id', $selectedHotel->id)
                 ->where('visitor_ip', $visitorIp)
                 ->exists();
 
-            $isUnique = !$alreadyViewed;
-
             HotelView::create([
                 'hotel_id' => $selectedHotel->id,
                 'visitor_ip' => $visitorIp,
-                'is_unique' => $isUnique,
+                'is_unique' => !$alreadyViewed,
             ]);
-            // ---------------------------
         }
+
+        // ✅ Prepare meta info
+        $meta = [
+            'title' => $selectedHotel->heading ?? 'Hotel Information',
+            'description' => $selectedHotel->sub_heading
+                ? strip_tags($selectedHotel->sub_heading)
+                : 'Explore your hotel details and services.',
+            'image' => $selectedHotel->logo_image
+                ? asset($selectedHotel->logo_image)
+                : asset('images/building-placeholder.webp'),
+            'url' => request()->fullUrl(),
+        ];
 
         return inertia('Codes/Show', [
             'codeDetails' => $codeData,
             'selectedHotel' => $selectedHotel,
-        ]);
+        ])->withViewData(['meta' => $meta]);
     }
 
 

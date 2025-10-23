@@ -72,11 +72,69 @@ function Show() {
     return (
         <>
             <Head>
+                {/* ✅ Page Title */}
                 <title>{brandingFormData?.heading ?? "Hotel"}</title>
+
+                {/* ✅ Favicon / Browser Tab Icon */}
                 <link
                     rel="icon"
                     type="image/png"
-                    href={brandingFormData.logo_image_url ?? "/images/building-placeholder.webp"}
+                    href={
+                        brandingFormData?.logo_image_url ??
+                        "/images/building-placeholder.webp"
+                    }
+                />
+
+                {/* ✅ Open Graph (Facebook, WhatsApp, LinkedIn, etc.) */}
+                <meta
+                    property="og:title"
+                    content={brandingFormData?.heading ?? "Hotel"}
+                />
+                <meta
+                    property="og:description"
+                    content={
+                        brandingFormData?.meta_description ??
+                        brandingFormData?.description ??
+                        "Book your perfect stay with us!"
+                    }
+                />
+                <meta
+                    property="og:image"
+                    content={
+                        brandingFormData?.logo_image_url ??
+                        "/images/building-placeholder.webp"
+                    }
+                />
+                <meta property="og:type" content="website" />
+                <meta
+                    property="og:url"
+                    content={
+                        typeof window !== "undefined"
+                            ? window.location.href
+                            : ""
+                    }
+                />
+
+                {/* ✅ Twitter / X Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta
+                    name="twitter:title"
+                    content={brandingFormData?.heading ?? "Hotel"}
+                />
+                <meta
+                    name="twitter:description"
+                    content={
+                        brandingFormData?.meta_description ??
+                        brandingFormData?.description ??
+                        "Book your perfect stay with us!"
+                    }
+                />
+                <meta
+                    name="twitter:image"
+                    content={
+                        brandingFormData?.logo_image_url ??
+                        "/images/building-placeholder.webp"
+                    }
                 />
             </Head>
             <GuestBox realPhone={true} defaultView={defaultView}>

@@ -1,1 +1,0 @@
-import{j as e}from"./app-C_y4s6Gg.js";function r(){return e.jsx("div",{className:"flex items-center gap-3 flex-wrap justify-between",children:e.jsx("h5",{className:"font-bold text-xl text-grey900",children:"Profile"})})}export{r as default};
