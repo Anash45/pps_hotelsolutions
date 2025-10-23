@@ -15,13 +15,22 @@ import {
     Utensils,
     Star,
     Wifi,
+    Stars,
+    Bed,
+    Beer,
+    Beef,
+    Clock,
 } from "lucide-react";
 import SelectInput from "./SelectInput";
 import ColorInput from "./ColorInput";
 import {
+    FaDumbbell,
     FaFacebook,
     FaInstagram,
     FaPinterest,
+    FaSkiing,
+    FaSnowflake,
+    FaSun,
     FaSwimmingPool,
     FaWhatsapp,
 } from "react-icons/fa";
@@ -52,8 +61,14 @@ export default function HotelButtonsModal({
         type: button?.type ?? "",
         text: button?.text ?? "",
         icon: button?.icon ?? "",
-        text_color: button?.text_color ?? brandingFormData?.button_text_color ?? "#ffffff",
-        background_color: button?.background_color ?? brandingFormData?.primary_color ?? "#84af83",
+        text_color:
+            button?.text_color ??
+            brandingFormData?.button_text_color ??
+            "#ffffff",
+        background_color:
+            button?.background_color ??
+            brandingFormData?.primary_color ??
+            "#84af83",
         url: button?.url ?? "",
         phone: button?.phone ?? "",
         whatsapp: button?.whatsapp ?? "",
@@ -245,6 +260,42 @@ export default function HotelButtonsModal({
                                         {
                                             value: "FaPinterest",
                                             icon: FaPinterest,
+                                        },
+                                        {
+                                            value: "Stars",
+                                            icon: Stars,
+                                        },
+                                        {
+                                            value: "FaSun",
+                                            icon: FaSun,
+                                        },
+                                        {
+                                            value: "FaSnowflake",
+                                            icon: FaSnowflake,
+                                        },
+                                        {
+                                            value: "Bed",
+                                            icon: Bed,
+                                        },
+                                        {
+                                            value: "FaSkiing",
+                                            icon: FaSkiing,
+                                        },
+                                        {
+                                            value: "FaDumbbell",
+                                            icon: FaDumbbell,
+                                        },
+                                        {
+                                            value: "Beer",
+                                            icon: Beer,
+                                        },
+                                        {
+                                            value: "Beef",
+                                            icon: Beef,
+                                        },
+                                        {
+                                            value: "Clock",
+                                            icon: Clock,
                                         },
                                     ]}
                                 />

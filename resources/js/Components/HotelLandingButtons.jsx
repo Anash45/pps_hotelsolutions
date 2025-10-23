@@ -78,7 +78,6 @@ export default function HotelLandingButtons({
                             [
                                 "url",
                                 "map",
-                                "phone",
                                 "whatsapp",
                                 "email",
                             ].includes(button.type)

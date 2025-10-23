@@ -71,7 +71,14 @@ function Show() {
 
     return (
         <>
-            <Head title={brandingFormData?.heading ?? "Hotel"} />
+            <Head>
+                <title>{brandingFormData?.heading ?? "Hotel"}</title>
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href={brandingFormData.logo_image_url ?? "/images/building-placeholder.webp"}
+                />
+            </Head>
             <GuestBox realPhone={true} defaultView={defaultView}>
                 <ComponentToShow />
             </GuestBox>

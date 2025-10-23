@@ -24,10 +24,13 @@ const menuItems = [
 
 const SidebarMenu = () => {
     const page = usePage(); // get the current Inertia page
-    const { props } = usePage();
+    const { props, url } = usePage();
     const user = props.auth?.user;
 
     const currentUrl = page.url || window.location.pathname; // fallback if url not present
+    const currentHotelId = new URLSearchParams(url.split("?")[1]).get(
+        "hotel_id"
+    );
 
     const isActive = (routeName) => {
         const routeUrl = new URL(route(routeName)).pathname; // extract only path
@@ -48,10 +51,15 @@ const SidebarMenu = () => {
                     const Icon = item.icon;
                     const active = isActive(item.route);
 
+                    // 🔹 Build full href
+                    const href = currentHotelId
+                        ? `${route(item.route)}?hotel_id=${currentHotelId}`
+                        : route(item.route);
+
                     return (
                         <li key={index}>
                             <Link
-                                href={route(item.route)}
+                                href={href}
                                 className={`p-2 flex items-center gap-3 text-base leading-[23px] rounded-lg ${
                                     active ? "bg-[#F1F5F9]" : "text-[#09090B]"
                                 }`}

@@ -1,6 +1,16 @@
 // resources/js/config/iconMap.js
 import * as LucideIcons from "lucide-react";
-import { FaFacebook, FaInstagram, FaPinterest, FaSwimmingPool, FaWhatsapp } from "react-icons/fa";
+import {
+    FaDumbbell,
+    FaFacebook,
+    FaInstagram,
+    FaPinterest,
+    FaSkiing,
+    FaSnowflake,
+    FaSun,
+    FaSwimmingPool,
+    FaWhatsapp,
+} from "react-icons/fa";
 
 // Map of allowed icons (use clean names as keys)
 export const iconMap = {
@@ -13,6 +23,11 @@ export const iconMap = {
     Wifi: LucideIcons.Wifi,
     Utensils: LucideIcons.Utensils,
     Mail: LucideIcons.Mail,
+    Stars: LucideIcons.Stars,
+    Bed: LucideIcons.BedIcon,
+    Beer: LucideIcons.Beer,
+    Beef: LucideIcons.Beef,
+    Clock: LucideIcons.Clock,
 
     // Social icons (react-icons/fa)
     FaFacebook: FaFacebook,
@@ -20,6 +35,10 @@ export const iconMap = {
     FaPinterest: FaPinterest,
     FaWhatsapp: FaWhatsapp,
     FaSwimmingPool: FaSwimmingPool,
+    FaSun: FaSun,
+    FaSnowflake: FaSnowflake,
+    FaSkiing: FaSkiing,
+    FaDumbbell: FaDumbbell,
 };
 
 // ✅ Helper: safely get icon by name with debug logging

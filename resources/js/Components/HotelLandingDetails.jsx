@@ -54,13 +54,13 @@ const HotelLandingDetails = ({}) => {
                     <img
                         src={`${brandingFormData.logo_image_url}`}
                         alt="Hotel"
-                        className="max-h-24 max-w-36 h-auto w-auto object-contain object-center mx-auto"
+                        className="max-h-32 max-w-48 h-auto w-auto object-contain object-center mx-auto"
                     />
                 ) : (
                     <img
                         src={`/images/building-placeholder.webp`}
                         alt="Hotel"
-                        className="max-h-24 max-w-36 h-auto w-auto object-contain object-center mx-auto"
+                        className="max-h-32 max-w-48 h-auto w-auto object-contain object-center mx-auto"
                     />
                 )}
                 <div className="flex flex-col">
