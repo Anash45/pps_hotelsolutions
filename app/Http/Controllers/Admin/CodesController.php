@@ -51,7 +51,7 @@ class CodesController extends Controller
                 ? strip_tags($selectedHotel->sub_heading)
                 : 'Explore your hotel details and services.',
             'image' => $selectedHotel->logo_image
-                ? asset($selectedHotel->logo_image)
+                ? storage_path($selectedHotel->logo_image)
                 : asset('images/building-placeholder.webp'),
             'url' => request()->fullUrl(),
         ];
