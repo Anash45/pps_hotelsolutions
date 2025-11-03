@@ -52,7 +52,7 @@ export default function Hotels() {
 
                 <div className="grid xl:grid-cols-[60%,40%] grid-cols-1 gap-[14px] items-start">
                     <HotelBrandingForm formErrors={formErrors} />
-                    <div className="xl:order-2 order-1 sticky top-4">
+                    <div className="xl:order-2 order-1 xl:sticky static top-4">
                         <HotelBrandingPreview />
                     </div>
                 </div>
