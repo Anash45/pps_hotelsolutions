@@ -11,6 +11,7 @@ import AskDetails from "./AskDetails";
 import axios from "axios";
 import FlashMessage from "./FlashMessage";
 import { useLang } from "@/context/TranslationProvider";
+import AutoTranslate from "./AutoTranslate";
 
 export default function UserSelfEdit() {
     const [showAskDetails, setShowAskDetails] = useState(false);
@@ -74,7 +75,9 @@ export default function UserSelfEdit() {
                 const data = error.response.data;
                 setFormErrors(data.errors || { general: [data.message] });
             } else {
-                setFormErrors({ general: [t("genericError")] });
+                setFormErrors({
+                    general: [<AutoTranslate text={"Something went wrong."} />],
+                });
             }
         }
     };
@@ -83,10 +86,10 @@ export default function UserSelfEdit() {
         <form onSubmit={handleSubmit} className="space-y-3">
             <div className="space-y-1">
                 <h2 className="text-lg text-[#201A20] font-semibold">
-                    {t("title")}
+                    {<AutoTranslate text={"Register Key Finder"} />}
                 </h2>
                 <p className="text-xs font-medium text-[#475569]">
-                    {t("subtitle")}
+                    {<AutoTranslate text={"Setup key finder"} />}
                 </p>
             </div>
 
@@ -96,7 +99,7 @@ export default function UserSelfEdit() {
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="stay_from"
-                            value={t("stayFrom")}
+                            value={<AutoTranslate text={"Stay from"} />}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -114,7 +117,7 @@ export default function UserSelfEdit() {
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="stay_till"
-                            value={t("stayTill")}
+                            value={<AutoTranslate text={"Stay till"} />}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -138,7 +141,7 @@ export default function UserSelfEdit() {
                         <div className="space-y-1">
                             <InputLabel
                                 htmlFor="salutation"
-                                value={t("salutation")}
+                                value={<AutoTranslate text={"Salutation"} />}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <SelectInput
@@ -150,15 +153,15 @@ export default function UserSelfEdit() {
                                 options={[
                                     {
                                         value: "Mr",
-                                        label: t("mr"),
+                                        label: <AutoTranslate text={"Mr."} />,
                                     },
                                     {
                                         value: "Mrs",
-                                        label: t("mrs"),
+                                        label: <AutoTranslate text={"Mrs."} />,
                                     },
                                     {
                                         value: "Ms",
-                                        label: t("ms"),
+                                        label: <AutoTranslate text={"Ms."} />,
                                     },
                                 ]}
                             />
@@ -171,7 +174,7 @@ export default function UserSelfEdit() {
                         <div className="space-y-1">
                             <InputLabel
                                 htmlFor="title"
-                                value={t("titleLabel")}
+                                value={<AutoTranslate text={"Title"} />}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -181,7 +184,7 @@ export default function UserSelfEdit() {
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
-                                placeholder={t("titlePlaceholder")}
+                                placeholder={'e.g. Dr.'}
                             />
                             <InputError message={formErrors.title} />
                         </div>
@@ -192,7 +195,7 @@ export default function UserSelfEdit() {
                         <div className="space-y-1">
                             <InputLabel
                                 htmlFor="first_name"
-                                value={t("firstName")}
+                                value={<AutoTranslate text={`First Name`} />}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -202,9 +205,7 @@ export default function UserSelfEdit() {
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
-                                placeholder={t(
-                                    "firstNamePlaceholder"
-                                )}
+                                placeholder={'e.g. John'}
                             />
                             <InputError message={formErrors.first_name} />
                         </div>
@@ -215,7 +216,7 @@ export default function UserSelfEdit() {
                         <div className="space-y-1">
                             <InputLabel
                                 htmlFor="last_name"
-                                value={t("lastName")}
+                                value={<AutoTranslate text={`Last Name`} />}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -225,9 +226,7 @@ export default function UserSelfEdit() {
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
-                                placeholder={t(
-                                    "lastNamePlaceholder"
-                                )}
+                                placeholder={'e.g. Doe'}
                             />
                             <InputError message={formErrors.last_name} />
                         </div>
@@ -237,7 +236,7 @@ export default function UserSelfEdit() {
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="room_number"
-                            value={t("roomNumber")}
+                            value={<AutoTranslate text={`Room Number`} />}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -247,9 +246,7 @@ export default function UserSelfEdit() {
                             onChange={handleChange}
                             type="text"
                             className="block w-full"
-                            placeholder={t(
-                                "roomNumberPlaceholder"
-                            )}
+                            placeholder={'e.g. 321'}
                         />
                         <InputError message={formErrors.room_number} />
                     </div>
@@ -258,7 +255,7 @@ export default function UserSelfEdit() {
                     <div>
                         <InputLabel
                             htmlFor="phone_number"
-                            value={t("phoneNumber")}
+                            value={<AutoTranslate text={`Mobile Phone Number (for Key Finder only)`} />}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -268,9 +265,7 @@ export default function UserSelfEdit() {
                             onChange={handleChange}
                             type="tel"
                             className="block w-full"
-                            placeholder={t(
-                                "phoneNumberPlaceholder"
-                            )}
+                            placeholder={'e.g. +49 123 456789'}
                         />
                         <InputError message={formErrors.phone_number} />
                     </div>
@@ -280,7 +275,7 @@ export default function UserSelfEdit() {
                         <div className="space-y-1">
                             <InputLabel
                                 htmlFor="email"
-                                value={t("email")}
+                                value={<AutoTranslate text={`Email Address`} />}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -290,7 +285,7 @@ export default function UserSelfEdit() {
                                 onChange={handleChange}
                                 type="email"
                                 className="block w-full"
-                                placeholder={t("emailPlaceholder")}
+                                placeholder={'e.g. example@xyz.com'}
                             />
                             <InputError message={formErrors.email} />
                         </div>
@@ -300,22 +295,30 @@ export default function UserSelfEdit() {
 
             <FlashMessage message={formSuccess} />
             <div className="flex items-center gap-2 justify-end flex-wrap">
-                {loading && (
-                    <p className="text-sm">{t("loading")}</p>
-                )}
-                {Object.keys(formErrors).length > 0 && (
-                    <InputError
-                        message={
-                            formErrors?.general ?? t("formError")
-                        }
-                    />
-                )}
-                <LightButton onClick={() => setShowAskDetails(true)}>
-                    {t("cancel")}
-                </LightButton>
-                <PrimaryButton disabled={loading} type="submit">
-                    {t("save")}
-                </PrimaryButton>
+                <div className="flex gap-2">
+                    {loading && (
+                        <p className="text-sm">
+                            {<AutoTranslate text={`Loading...`} />}
+                        </p>
+                    )}
+                    {Object.keys(formErrors).length > 0 && (
+                        <InputError
+                            message={
+                                formErrors?.general ?? (
+                                    <AutoTranslate text={`Fix the errors in the form.`} />
+                                )
+                            }
+                        />
+                    )}
+                </div>
+                <div className="flex gap-2">
+                    <LightButton onClick={() => setShowAskDetails(true)}>
+                        {<AutoTranslate text={`Cancel`} />}
+                    </LightButton>
+                    <PrimaryButton disabled={loading} type="submit">
+                        {<AutoTranslate text={`Save`} />}
+                    </PrimaryButton>
+                </div>
             </div>
         </form>
     );

@@ -46,11 +46,11 @@ function Show() {
     let shouldSetDefaultView = false;
 
     if (keyTypeName === "key_finder") {
-        if (status === "inactive" || !phoneNumber) {
+        if (status === "inactive") {
             ComponentToShow = AskDetails;
             shouldSetDefaultView = true;
             console.log("1");
-        } else if (stayTill && stayTill > now) {
+        } else if (stayTill && stayTill > now || !phoneNumber) {
             // stay_till not expired
             ComponentToShow = HotelLanding;
             console.log("3");

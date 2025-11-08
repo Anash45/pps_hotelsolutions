@@ -2,10 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { useAutoTranslate } from "@/context/AutoTranslateProvider";
 
 export default function AutoTranslate({ text }) {
-    const context = useAutoTranslate(); // always call the hook
+    const context = useAutoTranslate();
     const lang = context?.lang || null; // null if provider missing
-
-    console.log("Lang, text: ",lang, text);
 
     const [translated, setTranslated] = useState(text);
     const [loading, setLoading] = useState(false);
@@ -15,10 +13,7 @@ export default function AutoTranslate({ text }) {
 
     useEffect(() => {
         originalText.current = text;
-        // if no provider, show original text only
-        if (!lang) {
-            setTranslated(text);
-        }
+        if (!lang) setTranslated(text); // failsafe
     }, [text, lang]);
 
     const detectLanguage = async (line) => {
@@ -55,22 +50,38 @@ export default function AutoTranslate({ text }) {
         }
     };
 
+    const translateHTML = async (html) => {
+        // Regex to match text nodes but skip tags and attributes
+        const regex = />([^<]+)</g;
+        const matches = [...html.matchAll(regex)];
+        let result = html;
+
+        for (let match of matches) {
+            const originalText = match[1].trim();
+            if (!originalText) continue;
+
+            const detectedLang = await detectLanguage(originalText);
+            let translatedText = originalText;
+            if (detectedLang !== lang) {
+                translatedText = await translateLine(
+                    originalText,
+                    detectedLang,
+                    lang
+                );
+            }
+            // Replace original text in HTML with translated
+            result = result.replace(originalText, translatedText);
+        }
+        return result;
+    };
+
     useEffect(() => {
-        if (!lang) return; // <-- skip translation if provider missing
+        if (!lang) return;
 
         const processText = async () => {
-            const lines = originalText.current.split("\n");
             setLoading(true);
-
-            const translatedLines = await Promise.all(
-                lines.map(async (line) => {
-                    const detectedLang = await detectLanguage(line);
-                    if (detectedLang === lang) return line;
-                    return translateLine(line, detectedLang, lang);
-                })
-            );
-
-            setTranslated(translatedLines.join("\n"));
+            const translatedHTML = await translateHTML(originalText.current);
+            setTranslated(translatedHTML);
             setLoading(false);
         };
 
