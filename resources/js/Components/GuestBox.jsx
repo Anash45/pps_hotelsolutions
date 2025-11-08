@@ -2,6 +2,7 @@ import { PageContext } from "@/context/PageProvider";
 import { useContext } from "react";
 import { useLang } from "@/context/TranslationProvider";
 import { Link } from "@inertiajs/react";
+import AutoTranslate from "./AutoTranslate";
 
 const GuestBox = ({
     realPhone = false,
@@ -13,18 +14,20 @@ const GuestBox = ({
     const { t } = useLang("Components.GuestBox"); // 🔥 translations for this component
     const { brandingFormData } = useContext(PageContext);
 
+    console.log("brandingFormData: ", brandingFormData);
+
     const bgColor =
         noBranding || defaultView
             ? "#ffffff"
             : brandingFormData?.background_color ?? "#ffffff";
 
     const bottomHeading =
-        brandingFormData?.key_finder_bottom_heading ?? t("defaultHeading");
+        brandingFormData?.key_finder_bottom_heading ?? "Next Booking?";
     const bottomDescription =
         brandingFormData?.key_finder_bottom_description ??
-        t("defaultDescription");
+        "If you want to book us next time, click the button.";
     const bottomBtnText =
-        brandingFormData?.key_finder_bottom_btn_text ?? t("defaultButtonText");
+        brandingFormData?.key_finder_bottom_btn_text ?? "Enter button text";
 
     return (
         <div
@@ -52,17 +55,14 @@ const GuestBox = ({
                         <div>
                             {bottomHeading && (
                                 <h4 className="text-[#161616] text-[22px] font-semibold">
-                                    {bottomHeading}
+                                    <AutoTranslate text={bottomHeading} />
                                 </h4>
                             )}
 
                             {bottomDescription && (
-                                <p
-                                    className="text-base leading-tight"
-                                    dangerouslySetInnerHTML={{
-                                        __html: bottomDescription,
-                                    }}
-                                />
+                                <p className="text-base leading-tight">
+                                    <AutoTranslate text={bottomDescription} />
+                                </p>
                             )}
                         </div>
                     )}
@@ -73,7 +73,7 @@ const GuestBox = ({
                                 brandingFormData?.section_banner_image_url ??
                                 "/images/building-placeholder.webp"
                             }
-                            alt={t("sectionBannerAlt")}
+                            alt={"Section Banner"}
                             className="w-full bg-white relative h-full object-cover"
                         />
 
@@ -95,7 +95,7 @@ const GuestBox = ({
                                     brandingFormData.primary_color,
                             }}
                         >
-                            {bottomBtnText}
+                            <AutoTranslate text={bottomBtnText} />
                         </a>
                     </div>
                 </div>

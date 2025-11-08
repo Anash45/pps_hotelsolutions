@@ -7,6 +7,7 @@ import LightButton from "./LightButton";
 import { FaWhatsapp } from "react-icons/fa";
 import { Phone } from "lucide-react";
 import { useLang } from "@/context/TranslationProvider";
+import AutoTranslate from "./AutoTranslate";
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
@@ -51,14 +52,17 @@ const HotelKeyFinderDetails = () => {
                         whiteSpace: "pre-wrap",
                     }}
                     className="text-center text-base"
-                    dangerouslySetInnerHTML={{
-                        __html: brandingFormData.key_finder_page_text,
-                    }}
-                />
+                >
+                    <AutoTranslate
+                        text={brandingFormData.key_finder_page_text}
+                    />
+                </p>
             )}
 
             <p
-                style={{ color: brandingFormData?.page_text_color ?? "#020617" }}
+                style={{
+                    color: brandingFormData?.page_text_color ?? "#020617",
+                }}
                 className="text-center text-base font-bold"
             >
                 {codeDetails?.key_assignment?.phone_number ?? ""}
@@ -73,7 +77,9 @@ const HotelKeyFinderDetails = () => {
                 >
                     <span className="text-[#020617] text-base flex items-center justify-center gap-2">
                         <Phone className="h-5 w-5" />
-                        <span>{t("phone")}</span>
+                        <span>
+                            <AutoTranslate text={`Phone`} />
+                        </span>
                     </span>
                 </LightButton>
 
@@ -81,16 +87,16 @@ const HotelKeyFinderDetails = () => {
                     onClick={() =>
                         window.open(
                             `https://wa.me/${codeDetails?.key_assignment?.phone_number}?text=` +
-                                encodeURIComponent(
-                                    t("whatsappMessage")
-                                )
+                                encodeURIComponent(t("whatsappMessage"))
                         )
                     }
                     className="text-base"
                 >
                     <div className="flex text-base justify-center items-center gap-2">
                         <FaWhatsapp className="h-6 w-6" />
-                        <span>{t("whatsapp")}</span>
+                        <span>
+                            <AutoTranslate text={`WhatsApp`} />
+                        </span>
                     </div>
                 </PrimaryButton>
             </div>

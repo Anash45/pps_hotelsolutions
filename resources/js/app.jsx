@@ -25,33 +25,11 @@ createInertiaApp({
         // Get current locale (if shared from Laravel middleware)
         const currentLocale = props.initialPage.props.locale || "en";
 
-        const handleLangChange = async (lang) => {
-            console.log("Switching language to:", lang);
-
-            try {
-                const response = await axios.post("/language", {
-                    locale: lang,
-                });
-                console.log("Language API response:", response.data);
-            } catch (error) {
-                console.error(
-                    "Error switching language:",
-                    error.response?.data || error.message
-                );
-            }
-
-            // Reload to apply new locale
-            window.location.reload();
-        };
 
         root.render(
             <TranslationProvider locale={currentLocale}>
                 <PageProvider>
                     <ModalProvider>
-                        <LanguageSwitcher
-                            currentLocale={currentLocale}
-                            onChange={handleLangChange}
-                        />
                         <App {...props} />
                     </ModalProvider>
                 </PageProvider>

@@ -4,6 +4,7 @@ import UserSelfEdit from "./UserSelfEdit";
 import { usePage, router } from "@inertiajs/react";
 import { useState } from "react";
 import { useLang } from "@/context/TranslationProvider";
+import AutoTranslate from "./AutoTranslate";
 
 export default function AskDetails() {
     const { codeDetails, flash } = usePage().props;
@@ -31,14 +32,24 @@ export default function AskDetails() {
                     className="h-16 w-16"
                 />
             </div>
-            <p dangerouslySetInnerHTML={{ __html: t("description1") }} />
-            <p dangerouslySetInnerHTML={{ __html: t("description2") }} />
-            <p>{t("question")}</p>
+            <p>
+                <AutoTranslate text="This key can serve as a key finder after your stay." />
+            </p>
+            <p>
+                <AutoTranslate text='To do so, you must enter your mobile number along with other details in the next dialog so that a finder can <span class="font-bold">contact you</span>.' />
+            </p>
+            <p>
+                <AutoTranslate
+                    text={`Would you like to use the key finder function?`}
+                />
+            </p>
             <div className="flex flex-col gap-2">
                 <PrimaryButton onClick={handleYesClick}>
-                    {t("yes")}
+                    <AutoTranslate text={`Yes`} />
                 </PrimaryButton>
-                <LightButton onClick={handleNoClick}>{t("no")}</LightButton>
+                <LightButton onClick={handleNoClick}>
+                    <AutoTranslate text={`No`} />
+                </LightButton>
             </div>
         </div>
     );

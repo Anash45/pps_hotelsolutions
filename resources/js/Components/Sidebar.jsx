@@ -1,12 +1,35 @@
 import React, { useEffect, useState } from "react";
 import ApplicationLogo from "./ApplicationLogo";
 import SidebarMenu from "./SidebarMenu";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import SidebarUserDrop from "./SidebarUserDrop";
 import { Menu, X } from "lucide-react";
+import LanguageSwitcher from "./LanguageSwitcher";
+import axios from "axios";
 
 const Sidebar = () => {
     const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
+    const { locale } = usePage().props;
+
+    console.log(locale);
+    const handleLangChange = async (lang) => {
+        console.log("Switching language to:", lang);
+
+        try {
+            const response = await axios.post("/language", {
+                locale: lang,
+            });
+            console.log("Language API response:", response.data);
+        } catch (error) {
+            console.error(
+                "Error switching language:",
+                error.response?.data || error.message
+            );
+        }
+
+        // Reload to apply new locale
+        window.location.reload();
+    };
 
     return (
         <aside className="lg:w-[290px] w-full bg-white">
@@ -33,10 +56,12 @@ const Sidebar = () => {
                     setIsMobileMenuOpened(false);
                 }}
             >
-                <div className="flex flex-col pt-4 gap-[22px] h-full lg:w-full w-[290px] bg-white lg:shadow-none shadow-lg"
-                onClick={(e) => {
-                    e.stopPropagation();
-                }}>
+                <div
+                    className="flex flex-col pt-4 gap-[22px] h-full lg:w-full w-[290px] bg-white lg:shadow-none shadow-lg"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                >
                     <div className="py-4 flex items-center gap-3 justify-between pe-4">
                         <Link href={route("dashboard")}>
                             <ApplicationLogo className="md:h-[30.77px] h-6 w-auto" />
@@ -62,6 +87,10 @@ const Sidebar = () => {
                             <div className="py-1">
                                 <div className="border-b border-b-[#E4E4E7]"></div>
                             </div>
+
+                            <LanguageSwitcher currentLocale={locale}
+                                onChange={handleLangChange}
+                            />
                             <SidebarUserDrop />
                         </div>
                     </div>

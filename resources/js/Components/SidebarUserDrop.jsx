@@ -27,7 +27,7 @@ const SidebarUserDrop = () => {
     }, []);
 
     return (
-        <div ref={wrapperRef} className="drop-wrapper p-4 relative">
+        <div ref={wrapperRef} className="drop-wrapper px-4 relative">
             {/* Trigger */}
             <div
                 onClick={() => setOpen(!open)}

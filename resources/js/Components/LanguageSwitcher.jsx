@@ -31,12 +31,12 @@ export default function LanguageSwitcher({ currentLocale = "en", onChange }) {
     }, []);
 
     return (
-        <div className="fixed bottom-6 right-6 z-50" ref={ref}>
+        <div className="px-4" ref={ref}>
             <div className="relative">
                 {/* Drop-up menu */}
                 {open && (
                     <div
-                        className="absolute bottom-12 right-0 mb-2 w-36 rounded-2xl shadow-lg bg-white border border-gray-200 transition-all duration-150"
+                        className="absolute bottom-12 left-0 right-0 mb-2 w-full rounded-lg shadow-lg bg-white border border-gray-200 transition-all duration-150"
                     >
                         {languages.map((lang) => (
                             <button
@@ -62,7 +62,7 @@ export default function LanguageSwitcher({ currentLocale = "en", onChange }) {
                 {/* Floating trigger button with current flag */}
                 <button
                     onClick={() => setOpen(!open)}
-                    className="w-12 h-12 rounded-full shadow-md bg-primary text-white flex items-center justify-center text-xl hover:bg-primary focus:outline-none"
+                    className="w-full rounded-lg text-base p-3 bg-primary text-white flex justify-start gap-3 items-center hover:bg-primary focus:outline-none"
                     title="Change language"
                 >
                     <img
@@ -70,6 +70,7 @@ export default function LanguageSwitcher({ currentLocale = "en", onChange }) {
                         alt={currentLang.label}
                         className="h-6 w-6 rounded-full"
                     />
+                    <span>{currentLang.label}</span>
                 </button>
             </div>
         </div>
