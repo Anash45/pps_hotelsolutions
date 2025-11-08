@@ -5,8 +5,10 @@ import SelectInput from "@/Components/SelectInput";
 import HotelsTitle from "./HotelsTitle";
 import HotelBrandingForm from "@/Components/HotelBrandingForm";
 import HotelBrandingPreview from "@/Components/HotelBrandingPreview";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function Hotels() {
+    const { t } = useLang();
     const { auth, hotels = [], selectedHotel = null } = usePage().props;
     const [formErrors, setFormErrors] = useState({});
 
@@ -22,12 +24,12 @@ export default function Hotels() {
 
     return (
         <AuthenticatedLayout>
-            <Head title="Configurator" />
+            <Head title={t("hotels.title")} />
 
             <div className="py-4 md:px-6 px-4 flex flex-col gap-6">
                 <HotelsTitle
                     setFormErrors={setFormErrors}
-                    title={"Configurator"}
+                    title={t("hotels.title")}
                     selectedHotel={selected}
                 />
 
@@ -40,7 +42,10 @@ export default function Hotels() {
                             onChange={handleHotelChange}
                             className="w-full block"
                             options={[
-                                { value: "", label: "Select Hotel" },
+                                {
+                                    value: "",
+                                    label: t("hotels.SelectInput.placeholder"),
+                                },
                                 ...hotels.map((h) => ({
                                     value: String(h.id),
                                     label: h.hotel_name,

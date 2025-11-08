@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { X } from "lucide-react";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function BrandingImageUploader({
     name,
@@ -10,6 +11,7 @@ export default function BrandingImageUploader({
     maxSizeMB = 10,
 }) {
     const [preview, setPreview] = useState(null);
+    const { t } = useLang("Components.BrandingImageUploader");
 
     // Update preview whenever value changes
     useEffect(() => {
@@ -23,7 +25,6 @@ export default function BrandingImageUploader({
         } else {
             const objectUrl = URL.createObjectURL(value);
             setPreview(objectUrl);
-
             return () => URL.revokeObjectURL(objectUrl); // cleanup
         }
     }, [value]);
@@ -96,11 +97,11 @@ export default function BrandingImageUploader({
 
                 <div className="space-y-1">
                     <p className="text-slate600 text-sm">
-                        <span className="font-bold">Click to upload</span> or
-                        drag and drop
+                        <span className="font-bold">{t("clickToUpload")}</span>{" "}
+                        {t("orDragAndDrop")}
                     </p>
                     <p className="text-slate600 text-xs">
-                        File size should be less than {maxSizeMB}MB
+                        {t("fileSize", { maxSizeMB })}
                     </p>
                 </div>
             </div>

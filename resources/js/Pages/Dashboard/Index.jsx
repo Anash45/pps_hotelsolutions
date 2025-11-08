@@ -6,8 +6,11 @@ import DashboardStats from "./DashboardStats";
 import DashboardViewsChart from "./DashboardViewsChart";
 import DashboardButtonsViewsChart from "./DashboardButtonsViewsChart";
 import SelectInput from "@/Components/SelectInput";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function Dashboard() {
+    const { t } = useLang();
+
     const {
         auth,
         hotels = [],
@@ -33,7 +36,6 @@ export default function Dashboard() {
         router.get(route("dashboard"), { hotel_id: e.target.value });
     };
 
-    // 🔥 Update currentViews whenever duration or viewsData changes
     useEffect(() => {
         if (viewsData && selectedDuration && viewsData[selectedDuration]) {
             setCurrentViews(viewsData[selectedDuration] || []);
@@ -42,13 +44,9 @@ export default function Dashboard() {
         }
     }, [viewsData, selectedDuration]);
 
-    console.log("Hotels:", selectedHotel);
-    console.log("Views Data:", viewsData);
-    console.log("Current Views:", currentViews);
-
     return (
         <AuthenticatedLayout>
-            <Head title="Dashboard" />
+            <Head title={t("dashboard.title")} />
 
             <div className="py-4 md:px-6 px-4 flex flex-col gap-6">
                 <DashboardTitle
@@ -66,7 +64,10 @@ export default function Dashboard() {
                             onChange={handleHotelChange}
                             className="w-full block"
                             options={[
-                                { value: "", label: "Select Hotel" },
+                                {
+                                    value: "",
+                                    label: t("dashboard.selectHotel"),
+                                },
                                 ...hotels.map((h) => ({
                                     value: String(h.id),
                                     label: h.hotel_name,
@@ -75,12 +76,20 @@ export default function Dashboard() {
                         />
                     </div>
                 )}
+
                 <div className="flex flex-col gap-3.5">
-                    <DashboardStats dashboardStats={viewsData?.all_time ?? {}} />
-                    <DashboardViewsChart selectedDuration={selectedDuration} chartViews={currentViews?.chart_data ?? {}} />
+                    <DashboardStats
+                        dashboardStats={viewsData?.all_time ?? {}}
+                    />
+                    <DashboardViewsChart
+                        selectedDuration={selectedDuration}
+                        chartViews={currentViews?.chart_data ?? {}}
+                        noDataMessage={t("dashboard.chartDataUnavailable")}
+                    />
                     <DashboardButtonsViewsChart
                         buttonsViews={currentViews?.buttons ?? {}}
                         selectedDuration={selectedDuration}
+                        noDataMessage={t("dashboard.viewsDataUnavailable")}
                     />
                 </div>
             </div>

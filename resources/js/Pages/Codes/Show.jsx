@@ -46,13 +46,10 @@ function Show() {
     let shouldSetDefaultView = false;
 
     if (keyTypeName === "key_finder") {
-        if (status === "inactive") {
+        if (status === "inactive" || !phoneNumber) {
             ComponentToShow = AskDetails;
             shouldSetDefaultView = true;
             console.log("1");
-        } else if (!phoneNumber) {
-            ComponentToShow = HotelLanding;
-            console.log("2");
         } else if (stayTill && stayTill > now) {
             // stay_till not expired
             ComponentToShow = HotelLanding;
@@ -137,7 +134,11 @@ function Show() {
                     }
                 />
             </Head>
-            <GuestBox realPhone={true} defaultView={defaultView} showNextBox={ComponentToShow === HotelKeyFinder}>
+            <GuestBox
+                realPhone={true}
+                defaultView={defaultView}
+                showNextBox={ComponentToShow === HotelKeyFinder}
+            >
                 <ComponentToShow />
             </GuestBox>
 

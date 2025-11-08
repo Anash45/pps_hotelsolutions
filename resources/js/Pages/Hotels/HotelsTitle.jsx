@@ -4,8 +4,10 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import { PageContext } from "@/context/PageProvider";
 import axios from "axios";
 import LightButton from "@/Components/LightButton";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function HotelsTitle({ title, setFormErrors }) {
+    const { t } = useLang();
     const { auth, selectedHotel = null } = usePage().props;
     const { brandingFormData, setBrandingFormData } = useContext(PageContext);
     const [formLoading, setFormLoading] = useState(false);
@@ -32,8 +34,6 @@ export default function HotelsTitle({ title, setFormErrors }) {
             formData.append("section_banner_image_removed", true);
         }
 
-        console.log("Sending Form Data: ", brandingFormData);
-
         try {
             const { data } = await axios.post(
                 route("hotels.updateBranding", selectedHotel.id),
@@ -45,7 +45,7 @@ export default function HotelsTitle({ title, setFormErrors }) {
                 setBrandingFormData((prev) => ({
                     ...prev,
                     ...data.hotel,
-                    logo_image: null, // reset file input
+                    logo_image: null,
                     logo_image_url: data.hotel.logo_image
                         ? `/storage/${data.hotel.logo_image}`
                         : null,
@@ -64,8 +64,6 @@ export default function HotelsTitle({ title, setFormErrors }) {
             setFormLoading(false);
 
             if (error.response && error.response.status === 422) {
-                console.log("Validation Errors:", error.response.data.errors);
-                // optional: set to state if you want to show them in UI
                 setFormErrors(error.response.data.errors);
             } else {
                 console.error("Unexpected error updating branding:", error);
@@ -79,7 +77,6 @@ export default function HotelsTitle({ title, setFormErrors }) {
                 ? `/test-landing?hotel_id=${hotelId}`
                 : `/test-landing`;
 
-        // Open in a new tab
         window.open(url, "_blank");
     }
 
@@ -94,13 +91,15 @@ export default function HotelsTitle({ title, setFormErrors }) {
                         goToTestLanding(auth.user.role, selectedHotel.id)
                     }
                 >
-                    Test Landing
+                    {t("hotels.HotelsTitle.testLanding")}
                 </LightButton>
                 <PrimaryButton
                     onClick={handleSave}
                     disabled={!selectedHotel || formLoading}
                 >
-                    {formLoading ? "Saving..." : "Save & Publish"}
+                    {formLoading
+                        ? t("hotels.HotelsTitle.saving")
+                        : t("hotels.HotelsTitle.savePublish")}
                 </PrimaryButton>
             </div>
         </div>

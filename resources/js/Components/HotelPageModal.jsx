@@ -7,27 +7,30 @@ import InputLabel from "./InputLabel";
 import TextInput from "./TextInput";
 import HotelPageEditor from "./HotelPageEditor";
 import { router } from "@inertiajs/react";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function HotelPageModal({
     onClose,
-    page = null, // null = create, object = edit
+    page = null,
     selectedHotel = null,
-    title = page ? "Edit page" : "Create page",
-    description = page
-        ? "Edit individual pages here."
-        : "Create individual pages for the hotel.",
 }) {
+    const { t } = useLang("Components.hotel_page_modal");
+
+    const title = page
+        ? t("edit_title")
+        : t("create_title");
+
+    const description = page
+        ? t("edit_description")
+        : t("create_description");
+
     const [show, setShow] = useState(false);
     const [formErrors, setFormErrors] = useState({});
-
-    // Initialize formData based on existing page or new page
     const [formData, setFormData] = useState({
         hotel_id: selectedHotel?.id ?? null,
         title: page?.title ?? "",
         content: page?.content ?? "",
     });
-
-    console.log("Page data:", formData);
 
     useEffect(() => {
         requestAnimationFrame(() => setShow(true));
@@ -38,40 +41,23 @@ export default function HotelPageModal({
         setTimeout(onClose, 200);
     };
 
-    // Handles input field changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Save or update page
     const handleSave = async (e) => {
         e.preventDefault();
-        setFormErrors({}); // reset errors
-
+        setFormErrors({});
         try {
-            let response;
-            if (page) {
-                // Editing existing page
-                response = await axios.put(`/hotel-pages/${page.id}`, formData);
-            } else {
-                // Creating new page
-                response = await axios.post("/hotel-pages", formData);
-            }
+            const response = page
+                ? await axios.put(`/hotel-pages/${page.id}`, formData)
+                : await axios.post("/hotel-pages", formData);
 
-            console.log("Saved:", response.data);
-
-            // Optionally reload the selectedHotel segment to refresh page list
             router.reload({ only: ["selectedHotel"] });
-
-            // Close modal after success
-            setTimeout(() => handleClose(), 500);
+            setTimeout(handleClose, 500);
         } catch (err) {
-            if (err.response && err.response.status === 422) {
-                // Validation errors
+            if (err.response?.status === 422) {
                 setFormErrors(err.response.data.errors);
             } else {
                 console.error("Unexpected error:", err);
@@ -82,7 +68,7 @@ export default function HotelPageModal({
     return (
         <div
             className={`transform rounded-xl bg-white py-4 px-6 shadow-xl transition-all duration-200 w-[624px] max-w-full 
-        ${show ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+            ${show ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
         >
             <div className="space-y-3">
                 <div className="space-y-1">
@@ -100,7 +86,7 @@ export default function HotelPageModal({
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="title"
-                            value="Page name"
+                            value={t("page_name")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -110,7 +96,9 @@ export default function HotelPageModal({
                             onChange={handleChange}
                             type="text"
                             className="date-inp block w-full"
-                            placeholder="Page name"
+                            placeholder={t(
+                                "placeholder_page_name"
+                            )}
                             required
                         />
                         <InputError message={formErrors.title?.[0]} />
@@ -127,14 +115,20 @@ export default function HotelPageModal({
 
                 <div className="flex items-center gap-2 justify-end flex-wrap">
                     {Object.keys(formErrors).length > 0 && (
-                        <InputError message="Fix the errors in the form." />
+                        <InputError
+                            message={t("form_error")}
+                        />
                     )}
-                    <LightButton onClick={handleClose}>Cancel</LightButton>
+                    <LightButton onClick={handleClose}>
+                        {t("cancel")}
+                    </LightButton>
                     <PrimaryButton
                         disabled={!selectedHotel}
                         onClick={handleSave}
                     >
-                        {page ? "Update" : "Create"}
+                        {page
+                            ? t("update")
+                            : t("create")}
                     </PrimaryButton>
                 </div>
             </div>

@@ -46,13 +46,13 @@ class CodesController extends Controller
 
         // ✅ Prepare meta info
         $meta = [
-            'title' => $selectedHotel->heading ?? 'Hotel Information',
+            'title' => $selectedHotel->heading ?? __('messages.adminCodeController.showByKey.default_title'),
             'description' => $selectedHotel->sub_heading
                 ? strip_tags($selectedHotel->sub_heading)
-                : 'Explore your hotel details and services.',
+                : __('messages.adminCodeController.showByKey.default_description'),
             'image' => $selectedHotel->logo_image
-                ? '/storage/'.$selectedHotel->logo_image
-                : '/images/building-placeholder.webp',
+                ? '/storage/' . $selectedHotel->logo_image
+                : __('messages.adminCodeController.showByKey.default_image'),
             'url' => request()->fullUrl(),
         ];
 
@@ -61,9 +61,6 @@ class CodesController extends Controller
             'selectedHotel' => $selectedHotel,
         ])->withViewData(['meta' => $meta]);
     }
-
-
-
 
     public function userStore(Request $request)
     {
@@ -75,7 +72,7 @@ class CodesController extends Controller
         if ($code->keyAssignment) {
             return response()->json([
                 'success' => false,
-                'message' => 'This key\'s data is already saved.',
+                'message' => __('messages.adminCodeController.userStore.already_assigned'),
             ], 422);
         }
 
@@ -99,7 +96,7 @@ class CodesController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation failed.',
+                'message' => __('messages.adminCodeController.userStore.validation_failed'),
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -121,21 +118,22 @@ class CodesController extends Controller
         // ✅ Mark the code itself as active
         $code->status = 'active';
         $code->save();
+
         Mail::to($request->input('email'))
             ->send(new KeyfinderConsentMail($code));
 
         return response()->json([
             'success' => true,
-            'message' => 'Key assignment saved successfully.',
+            'message' => __('messages.adminCodeController.userStore.success'),
             'assignment' => $assignment,
             'code' => $code,
         ]);
     }
 
+
     public function unsubscribe($code)
     {
         $code = Code::with('keyAssignment')->where('code', $code)->firstOrFail();
-
 
         // Delete assignment if exists
         if ($code->keyAssignment) {
@@ -147,7 +145,6 @@ class CodesController extends Controller
         ]);
     }
 
-
     public function makeActive($code)
     {
         $code = Code::where('code', $code)->firstOrFail();
@@ -158,10 +155,9 @@ class CodesController extends Controller
         }
 
         return redirect()->back()->with([
-            'success' => 'Key has been activated successfully.'
+            'success' => __('messages.adminCodeController.makeActive.success_activated')
         ]);
     }
-
 
     public function index()
     {
@@ -238,7 +234,7 @@ class CodesController extends Controller
         Code::insert($codes);
 
         return redirect()->back()->with([
-            'success' => "{$count} codes generated and CSV downloaded.",
+            'success' => __('messages.adminCodeController.store.success_generated', ['count' => $count]),
             'generatedCodes' => $generatedCodes,
         ]);
     }
@@ -254,7 +250,7 @@ class CodesController extends Controller
 
         if ($hasAssignments) {
             return redirect()->back()->with([
-                'error' => 'This code group cannot be deleted because one or more codes are already assigned.',
+                'error' => __('messages.adminCodeController.deleteGroup.error_assigned'),
             ]);
         }
 
@@ -267,9 +263,10 @@ class CodesController extends Controller
         $group->delete();
 
         return redirect()->back()->with([
-            'success' => "{$count} codes and the group were deleted successfully.",
+            'success' => __('messages.adminCodeController.deleteGroup.success_deleted', ['count' => $count]),
         ]);
     }
+
 
 
     public function downloadCsv(CodeGroup $group)

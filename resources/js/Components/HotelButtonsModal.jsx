@@ -4,27 +4,27 @@ import LightButton from "./LightButton";
 import PrimaryButton from "./PrimaryButton";
 import InputLabel from "./InputLabel";
 import TextInput from "./TextInput";
+import SelectInput from "./SelectInput";
+import ColorInput from "./ColorInput";
 import { PageContext } from "@/context/PageProvider";
+import { useLang } from "@/context/TranslationProvider";
+import { router } from "@inertiajs/react";
 import {
     FileText,
     Globe,
-    Hotel,
-    Mail,
     MapPin,
     Phone,
+    Mail,
+    Wifi,
     Utensils,
     Star,
-    Wifi,
     Stars,
     Bed,
     Beer,
     Beef,
     Clock,
 } from "lucide-react";
-import SelectInput from "./SelectInput";
-import ColorInput from "./ColorInput";
 import {
-    FaDumbbell,
     FaFacebook,
     FaInstagram,
     FaPinterest,
@@ -33,16 +33,15 @@ import {
     FaSun,
     FaSwimmingPool,
     FaWhatsapp,
+    FaDumbbell,
 } from "react-icons/fa";
-import { router } from "@inertiajs/react";
 
 export default function HotelButtonsModal({
     onClose,
-    button = null, // null = create, object = edit
+    button = null,
     selectedHotel = null,
-    title = button ? "Edit button" : "Create button",
-    description = "",
 }) {
+    const { t } = useLang("Components.HotelButtonsModal");
     const [show, setShow] = useState(false);
     const [formErrors, setFormErrors] = useState({});
     const { brandingFormData } = useContext(PageContext);
@@ -56,7 +55,6 @@ export default function HotelButtonsModal({
         setTimeout(onClose, 200);
     };
 
-    // Initialize formData
     const [formData, setFormData] = useState({
         type: button?.type ?? "",
         text: button?.text ?? "",
@@ -78,81 +76,55 @@ export default function HotelButtonsModal({
         page_id: button?.page_id ?? "",
     });
 
-    // Handle field changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-
-        console.log(name, value);
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSave = async (e) => {
         e.preventDefault();
-        setFormErrors({}); // reset errors
-
+        setFormErrors({});
         try {
             let response;
-            console.log(formData);
             if (button) {
-                // Editing existing button
                 response = await axios.put(`/buttons/${button.button_id}`, {
                     ...formData,
                     hotel_id: selectedHotel?.id,
                 });
             } else {
-                // Creating new button
                 response = await axios.post("/buttons", {
                     ...formData,
                     hotel_id: selectedHotel?.id,
                 });
             }
-
-            console.log("Saved:", response.data);
-
-            // Refresh the hotel with its buttons
             router.reload({ only: ["selectedHotel"] });
-
-            // // Close modal after success
             setTimeout(() => handleClose(), 500);
         } catch (err) {
-            if (err.response && err.response.status === 422) {
-                // Validation errors
+            if (err.response?.status === 422)
                 setFormErrors(err.response.data.errors);
-            } else {
-                console.error("Unexpected error:", err);
-            }
+            else console.error(err);
         }
     };
 
-    console.log("Selected btn: ", button);
-
     return (
         <div
-            className={`transform rounded-xl bg-white py-4 px-6 shadow-xl transition-all duration-200 w-[624px] max-w-full 
-        ${show ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+            className={`transform rounded-xl bg-white py-4 px-6 shadow-xl transition-all duration-200 w-[624px] max-w-full ${
+                show ? "scale-100 opacity-100" : "scale-95 opacity-0"
+            }`}
         >
             <div className="space-y-3">
                 <div className="space-y-1">
                     <h2 className="text-lg text-[#201A20] font-semibold">
-                        {title}
+                        {button ? t("editButtonTitle") : t("createButtonTitle")}
                     </h2>
-                    {description && (
-                        <p className="text-xs font-medium text-[#475569]">
-                            {description}
-                        </p>
-                    )}
                 </div>
 
                 <div className="space-y-3">
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
-                        {/* Button Type */}
                         <div>
                             <InputLabel
                                 htmlFor="type"
-                                value="Button Type"
+                                value={t("buttonTypeLabel")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <SelectInput
@@ -164,33 +136,37 @@ export default function HotelButtonsModal({
                                 options={[
                                     {
                                         value: "page",
-                                        label: "Page",
+                                        label: t("selectPageLabel"),
                                         icon: FileText,
                                     },
                                     {
                                         value: "map",
-                                        label: "Map",
+                                        label: t("selectMapLabel"),
                                         icon: MapPin,
                                     },
-                                    { value: "url", label: "URL", icon: Globe },
+                                    {
+                                        value: "url",
+                                        label: t("urlLabel"),
+                                        icon: Globe,
+                                    },
                                     {
                                         value: "phone",
-                                        label: "Phone",
+                                        label: t("phoneLabel"),
                                         icon: Phone,
                                     },
                                     {
                                         value: "email",
-                                        label: "Email",
+                                        label: t("emailLabel"),
                                         icon: Mail,
                                     },
                                     {
                                         value: "whatsapp",
-                                        label: "Whatsapp",
+                                        label: t("whatsappLabel"),
                                         icon: FaWhatsapp,
                                     },
                                     {
                                         value: "wifi",
-                                        label: "Wifi",
+                                        label: t("wifiNameLabel"),
                                         icon: Wifi,
                                     },
                                 ]}
@@ -198,11 +174,10 @@ export default function HotelButtonsModal({
                             <InputError message={formErrors.type?.[0]} />
                         </div>
 
-                        {/* Button Text */}
                         <div>
                             <InputLabel
                                 htmlFor="text"
-                                value="Button Text"
+                                value={t("buttonTextLabel")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -212,18 +187,17 @@ export default function HotelButtonsModal({
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
-                                placeholder="Button Text"
+                                placeholder={t("buttonTextLabel")}
                             />
                             <InputError message={formErrors.text?.[0]} />
                         </div>
 
                         {/* Colors */}
                         <div className="grid md:grid-cols-3 gap-3 md:col-span-2">
-                            {/* Button Icon */}
                             <div>
                                 <InputLabel
                                     htmlFor="icon"
-                                    value="Button Icon"
+                                    value={t("buttonIconLabel")}
                                     className="text-[#475569] text-xs font-medium"
                                 />
                                 <SelectInput
@@ -261,58 +235,36 @@ export default function HotelButtonsModal({
                                             value: "FaPinterest",
                                             icon: FaPinterest,
                                         },
-                                        {
-                                            value: "Stars",
-                                            icon: Stars,
-                                        },
-                                        {
-                                            value: "FaSun",
-                                            icon: FaSun,
-                                        },
+                                        { value: "Stars", icon: Stars },
+                                        { value: "FaSun", icon: FaSun },
                                         {
                                             value: "FaSnowflake",
                                             icon: FaSnowflake,
                                         },
-                                        {
-                                            value: "Bed",
-                                            icon: Bed,
-                                        },
-                                        {
-                                            value: "FaSkiing",
-                                            icon: FaSkiing,
-                                        },
+                                        { value: "Bed", icon: Bed },
+                                        { value: "FaSkiing", icon: FaSkiing },
                                         {
                                             value: "FaDumbbell",
                                             icon: FaDumbbell,
                                         },
-                                        {
-                                            value: "Beer",
-                                            icon: Beer,
-                                        },
-                                        {
-                                            value: "Beef",
-                                            icon: Beef,
-                                        },
-                                        {
-                                            value: "Clock",
-                                            icon: Clock,
-                                        },
+                                        { value: "Beer", icon: Beer },
+                                        { value: "Beef", icon: Beef },
+                                        { value: "Clock", icon: Clock },
                                     ]}
                                 />
                                 <InputError message={formErrors.icon?.[0]} />
                             </div>
                             <div>
                                 <InputLabel
-                                    htmlFor="text_color"
-                                    value="Button Text Color"
+                                    htmlFor="btn_text_color"
+                                    value={t("buttonTextColorLabel")}
                                     className="text-[#475569] text-xs font-medium"
                                 />
                                 <ColorInput
-                                    id="text_color"
+                                    id="btn_text_color"
                                     name="text_color"
                                     value={formData.text_color}
                                     onChange={handleChange}
-                                    type="text"
                                     className="block w-full"
                                 />
                                 <InputError
@@ -321,16 +273,15 @@ export default function HotelButtonsModal({
                             </div>
                             <div>
                                 <InputLabel
-                                    htmlFor="background_color"
-                                    value="Button BG Color"
+                                    htmlFor="btn_background_color"
+                                    value={t("buttonBgColorLabel")}
                                     className="text-[#475569] text-xs font-medium"
                                 />
                                 <ColorInput
-                                    id="background_color"
+                                    id="btn_background_color"
                                     name="background_color"
                                     value={formData.background_color}
                                     onChange={handleChange}
-                                    type="text"
                                     className="block w-full"
                                 />
                                 <InputError
@@ -345,7 +296,7 @@ export default function HotelButtonsModal({
                         <div>
                             <InputLabel
                                 htmlFor="url"
-                                value="URL"
+                                value={t("urlLabel")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -355,7 +306,7 @@ export default function HotelButtonsModal({
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
-                                placeholder="https://example.com"
+                                placeholder={t("urlPlaceholder")}
                             />
                             <InputError message={formErrors.url?.[0]} />
                         </div>
@@ -365,7 +316,7 @@ export default function HotelButtonsModal({
                         <div>
                             <InputLabel
                                 htmlFor="phone"
-                                value="Phone Number"
+                                value={t("phoneLabel")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -375,18 +326,17 @@ export default function HotelButtonsModal({
                                 onChange={handleChange}
                                 type="tel"
                                 className="block w-full"
-                                placeholder="+1234567890"
+                                placeholder={t("phonePlaceholder")}
                             />
                             <InputError message={formErrors.phone?.[0]} />
                         </div>
                     ) : null}
 
-                    {/* WhatsApp */}
                     {formData.type === "whatsapp" ? (
                         <div>
                             <InputLabel
                                 htmlFor="whatsapp"
-                                value="WhatsApp Number"
+                                value={t("whatsappLabel")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -396,18 +346,17 @@ export default function HotelButtonsModal({
                                 onChange={handleChange}
                                 type="tel"
                                 className="block w-full"
-                                placeholder="+1234567890"
+                                placeholder={t("whatsappPlaceholder")}
                             />
                             <InputError message={formErrors.whatsapp?.[0]} />
                         </div>
                     ) : null}
 
-                    {/* Email */}
                     {formData.type === "email" ? (
                         <div>
                             <InputLabel
                                 htmlFor="email"
-                                value="Email Address"
+                                value={t("emailLabel")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -417,7 +366,7 @@ export default function HotelButtonsModal({
                                 onChange={handleChange}
                                 type="email"
                                 className="block w-full"
-                                placeholder="example@email.com"
+                                placeholder={t("emailPlaceholder")}
                             />
                             <InputError message={formErrors.email?.[0]} />
                         </div>
@@ -428,7 +377,7 @@ export default function HotelButtonsModal({
                             <div>
                                 <InputLabel
                                     htmlFor="wifi_name"
-                                    value="WiFi Name"
+                                    value={t("wifiNameLabel")}
                                     className="text-[#475569] text-xs font-medium"
                                 />
                                 <TextInput
@@ -438,7 +387,7 @@ export default function HotelButtonsModal({
                                     onChange={handleChange}
                                     type="text"
                                     className="block w-full"
-                                    placeholder="Network SSID"
+                                    placeholder={t("wifiNamePlaceholder")}
                                 />
                                 <InputError
                                     message={formErrors.wifi_name?.[0]}
@@ -447,7 +396,7 @@ export default function HotelButtonsModal({
                             <div>
                                 <InputLabel
                                     htmlFor="wifi_password"
-                                    value="WiFi Password"
+                                    value={t("wifiPasswordLabel")}
                                     className="text-[#475569] text-xs font-medium"
                                 />
                                 <TextInput
@@ -457,7 +406,7 @@ export default function HotelButtonsModal({
                                     onChange={handleChange}
                                     type="text"
                                     className="block w-full"
-                                    placeholder="Password"
+                                    placeholder={t("wifiPasswordPlaceholder")}
                                 />
                                 <InputError
                                     message={formErrors.wifi_password?.[0]}
@@ -470,7 +419,7 @@ export default function HotelButtonsModal({
                         <div>
                             <InputLabel
                                 htmlFor="page_id"
-                                value="Select Page"
+                                value={t("selectPageLabel")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <SelectInput
@@ -493,14 +442,16 @@ export default function HotelButtonsModal({
 
                 <div className="flex items-center gap-2 justify-end flex-wrap">
                     {Object.keys(formErrors).length > 0 && (
-                        <InputError message="Fix the errors in the form." />
+                        <InputError message={t("fixFormErrors")} />
                     )}
-                    <LightButton onClick={handleClose}>Cancel</LightButton>
+                    <LightButton onClick={handleClose}>
+                        {t("cancelButton")}
+                    </LightButton>
                     <PrimaryButton
                         onClick={handleSave}
                         disabled={!selectedHotel}
                     >
-                        {button ? "Save" : "Create"}
+                        {button ? t("saveButton") : t("createButton")}
                     </PrimaryButton>
                 </div>
             </div>

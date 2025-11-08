@@ -24,7 +24,13 @@ class DashboardController extends Controller
             $viewsData = [];
 
             if ($hotelId) {
-                $selectedHotel = Hotel::findOrFail($hotelId);
+                $selectedHotel = Hotel::find($hotelId);
+
+                if (!$selectedHotel) {
+                    return response()->json([
+                        'message' => __('messages.dashboardController.index.hotel_not_found')
+                    ], 404);
+                }
 
                 $viewsData = $this->getViewsForHotel($hotelId);
             }
@@ -37,6 +43,12 @@ class DashboardController extends Controller
             ]);
         } else {
             $hotel = Hotel::find($user->hotel_id);
+
+            if (!$hotel) {
+                return response()->json([
+                    'message' => __('messages.dashboardController.index.no_hotel_selected')
+                ], 404);
+            }
 
             $viewsData = [];
             if ($hotel) {
@@ -75,7 +87,7 @@ class DashboardController extends Controller
             $groupedButtons = $views->groupBy('button_id')->map(function ($items, $buttonId) {
                 return [
                     'button_id' => $buttonId,
-                    'button_text' => $items->first()->button->text ?? 'N/A',
+                    'button_text' => $items->first()->button->text ?? __('messages.dashboardController.getViewsForHotel.button_text_na'),
                     'total_views' => $items->count(),
                     'unique_views' => $items->unique('ip_address')->count(),
                     'views' => $items->map(fn($v) => [

@@ -11,6 +11,7 @@ import Divider from "./Divider";
 import axios from "axios";
 import Alert from "./Alert";
 import { getDomain } from "@/utils/viteConfig";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function CreateKeyModal({
     onClose,
@@ -18,15 +19,18 @@ export default function CreateKeyModal({
     selectedHotel,
     onSuccess,
     code = null,
-    title = "Register new key",
-    description = "Scan QR code (barcode scanner input line) - or insert code/URL",
+    title,
+    description,
 }) {
-    const [existingCode, setexistingCode] = useState(code);
+    const { t } = useLang("Components.CreateKeyModal");
 
+    const [existingCode, setexistingCode] = useState(code);
     const [show, setShow] = useState(false);
+
     useEffect(() => {
         requestAnimationFrame(() => setShow(true));
     }, []);
+
     const handleClose = () => {
         setShow(false);
         setTimeout(onClose, 200);
@@ -36,12 +40,10 @@ export default function CreateKeyModal({
         "https://test-app.ppshotelsolutions.de"
     );
 
-    // fetch domain at component mount
     useEffect(() => {
         (async () => {
             const domain = await getDomain();
-            console.log("Fetched domain:", domain);
-            setLinkDomain(domain); // update local state
+            setLinkDomain(domain);
         })();
     }, []);
 
@@ -58,7 +60,7 @@ export default function CreateKeyModal({
     );
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        hotel_id: selectedHotel ?? null, // ✅ include here
+        hotel_id: selectedHotel ?? null,
         salutation: existingCode?.key_assignment?.salutation ?? "",
         title: existingCode?.key_assignment?.title ?? "",
         first_name: existingCode?.key_assignment?.first_name ?? "",
@@ -68,12 +70,10 @@ export default function CreateKeyModal({
         email: existingCode?.key_assignment?.email ?? "",
         stay_from: existingCode?.key_assignment?.stay_from ?? "",
         stay_till: existingCode?.key_assignment?.stay_till ?? "",
-        gdpr_consent: existingCode?.key_assignment?.gdpr_consent ?? gdprConsent, // keep inside formData
+        gdpr_consent: existingCode?.key_assignment?.gdpr_consent ?? gdprConsent,
         code_id: existingCode?.id ?? null,
         ...(existingCode ? { id: existingCode.key_assignment.id } : {}),
     });
-
-    console.log(selectedHotel, keyTypes, keyTypeId, existingCode);
 
     const [formErrors, setFormErrors] = useState({});
     const [barcodeInput, setBarcodeInput] = useState(existingCode?.code ?? "");
@@ -84,32 +84,18 @@ export default function CreateKeyModal({
     const [recognizeError, setRecognizeError] = useState("");
     const [submitSuccess, setSubmitSuccess] = useState("");
 
-    // Sync gdprConsent when changed (if you add a checkbox)
     const handleGdprChange = (e) => {
-        setFormData((prev) => ({
-            ...prev,
-            gdpr_consent: e.target.checked,
-        }));
-
+        setFormData((prev) => ({ ...prev, gdpr_consent: e.target.checked }));
         setGdprConsent(e.target.checked);
     };
 
-    // Sync hotel_id when hotel changes
     useEffect(() => {
-        setFormData((prev) => ({
-            ...prev,
-            hotel_id: selectedHotel, // ✅ always in sync
-        }));
+        setFormData((prev) => ({ ...prev, hotel_id: selectedHotel }));
     }, [selectedHotel]);
 
-    // When a code is selected
     useEffect(() => {
-        if (selectedCode) {
-            setFormData((prev) => ({
-                ...prev,
-                code_id: selectedCode.id,
-            }));
-        }
+        if (selectedCode)
+            setFormData((prev) => ({ ...prev, code_id: selectedCode.id }));
     }, [selectedCode]);
 
     useEffect(() => {
@@ -121,18 +107,11 @@ export default function CreateKeyModal({
         setRecognizeError("");
     }, [barcodeInput, selectedHotel]);
 
-    // Handles field changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-
-        console.log(name, value);
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Handles form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -144,33 +123,17 @@ export default function CreateKeyModal({
 
         try {
             const res = await axios[method](url, formData);
-
-            console.log(formData);
-
-            console.log("✅ Success response:", res.data);
             setFormErrors({});
-
-            setTimeout(() => {
-                handleClose();
-            }, 2000);
+            setTimeout(() => handleClose(), 2000);
             onSuccess();
             setLoading(false);
-            if (existingCode !== null) {
-                setSubmitSuccess("Key has been updated!");
-            } else {
-                setSubmitSuccess("Key has been created!");
-            }
+            setSubmitSuccess(
+                existingCode !== null ? t("updateKey") : t("registerNewKey")
+            );
         } catch (err) {
             setLoading(false);
-            if (err.response?.data?.errors) {
-                console.log("❌ Validation errors:", err.response.data.errors);
+            if (err.response?.data?.errors)
                 setFormErrors(err.response.data.errors);
-            } else {
-                console.error("❌ Unexpected error:", err);
-            }
-        } finally {
-            setLoading(false);
-            console.log("📌 Request finished");
         }
     };
 
@@ -180,7 +143,7 @@ export default function CreateKeyModal({
         setSelectedCode(null);
 
         if (!barcodeInput.trim() || !selectedHotel) {
-            setRecognizeError("Please enter barcode/URL and select a hotel.");
+            setRecognizeError(t("barcodeAndHotelRequired"));
             return;
         }
 
@@ -194,52 +157,44 @@ export default function CreateKeyModal({
                 setRecognized(true);
                 setSelectedCode(res.data.code);
                 setKeyTypeId(res.data.code.key_type_id);
-                console.log("✅ Recognized:", res.data.code);
             } else {
-                setRecognizeError("Key not recognized or already assigned.");
+                setRecognizeError(t("keyNotRecognized"));
             }
         } catch (e) {
             if (e.response) {
-                if (e.response.status === 404) {
-                    setRecognizeError("Code not found.");
-                } else if (e.response.status === 422) {
-                    setRecognizeError(
-                        e.response.data.error || "Code already active/assigned."
-                    );
-                } else {
-                    setRecognizeError("Unexpected error occurred.");
-                }
-                console.error("❌ Error response:", e.response.data);
-            } else {
-                setRecognizeError("Network error.");
-                console.error("❌ Network/Unknown error:", e);
-            }
+                if (e.response.status === 404)
+                    setRecognizeError(t("codeNotFound"));
+                else if (e.response.status === 422)
+                    setRecognizeError(t("codeAlreadyAssigned"));
+                else setRecognizeError(t("unexpectedError"));
+            } else setRecognizeError(t("networkError"));
         }
     };
 
     return (
         <div
             className={`transform rounded-xl bg-white py-4 px-6 shadow-xl transition-all duration-200 w-[624px] max-w-full 
-        ${show ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+            ${show ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
         >
             <div className="space-y-3">
                 <div className="space-y-1">
                     <h2 className="text-lg text-[#201A20] font-semibold">
-                        {title}
+                        {title || t("title")}
                     </h2>
                     {description && (
                         <p className="text-xs font-medium text-[#475569]">
-                            {description}
+                            {description || t("description")}
                         </p>
                     )}
                 </div>
+
                 <div className="space-y-3">
                     <div className="space-y-1">
                         <div className="flex md:flex-row flex-col gap-3 items-end">
                             <div className="space-y-1 grow">
                                 <InputLabel
                                     htmlFor="barcode"
-                                    value="Barcode / URL"
+                                    value={t("barcode")}
                                     className="text-[#475569] text-xs font-medium"
                                 />
                                 <TextInput
@@ -247,54 +202,54 @@ export default function CreateKeyModal({
                                     name="barcode"
                                     type="text"
                                     className="block w-full"
-                                    placeholder="Barcode or URL"
+                                    placeholder={t("barcode")}
                                     value={barcodeInput}
                                     onChange={(e) =>
                                         setBarcodeInput(e.target.value)
                                     }
                                     required
-                                    readOnly={!!existingCode} // ✅ lock field if existingCode is set
+                                    readOnly={!!existingCode}
                                 />
                             </div>
-
-                            {/* ✅ Show button only when creating new (existingCode is null) */}
                             {!existingCode && (
                                 <div>
                                     <PrimaryButton onClick={handleRecognize}>
                                         <div className="py-[1px]">
-                                            Recognize
+                                            {t("recognize")}
                                         </div>
                                     </PrimaryButton>
                                 </div>
                             )}
                         </div>
+
                         {recognized && selectedCode && (
                             <div className="text-green-600 text-sm">
-                                Key recognized: {linkDomain}/key/{selectedCode.code}
+                                {t("keyRecognized", {
+                                    link: `${linkDomain}/key/${selectedCode.code}`,
+                                })}
                             </div>
                         )}
+
                         <InputError message={recognizeError} />
                     </div>
-                    {submitSuccess !== "" && (
+
+                    {submitSuccess && (
                         <Alert type="success" message={submitSuccess} />
                     )}
 
                     <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3">
-                        {/* Disable all inputs if not recognized */}
                         <div className="space-y-1">
                             <InputLabel
                                 htmlFor="key_type"
-                                value="Key Type"
+                                value={t("keyType")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <SelectInput
                                 id="key_type"
                                 value={keyTypeId}
-                                onChange={() => {
-                                    console.log("Readonly!");
-                                }}
+                                onChange={() => {}}
                                 className="w-full block"
-                                placeholder="Key Type"
+                                placeholder={t("keyType")}
                                 options={keyTypesOptions}
                             />
                             <InputError message={formErrors.key_type?.[0]} />
@@ -302,7 +257,7 @@ export default function CreateKeyModal({
                         <div className="space-y-1">
                             <InputLabel
                                 htmlFor="stay_from"
-                                value="Stay from"
+                                value={t("stayFrom")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -320,7 +275,7 @@ export default function CreateKeyModal({
                         <div className="space-y-1">
                             <InputLabel
                                 htmlFor="stay_till"
-                                value="Stay till"
+                                value={t("stayTill")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -336,6 +291,7 @@ export default function CreateKeyModal({
                             <InputError message={formErrors.stay_till?.[0]} />
                         </div>
                     </div>
+
                     <label
                         htmlFor="gdpr_consent"
                         className="flex p-3 rounded-lg items-center gap-3 border border-[#9CAADE]"
@@ -350,18 +306,17 @@ export default function CreateKeyModal({
                         />
                         <div className="flex flex-col gap-1">
                             <span className="text-sm font-medium text-slate600">
-                                Enter guest data (name, title, salutation, email
-                                etc.)
+                                {t("gdprConsentLabel")}
                             </span>
                             <span className="text-xs text-slate600">
-                                If disabled, no person names will be saved for
-                                new keys.
+                                {t("gdprConsentDescription")}
                             </span>
                         </div>
                     </label>
+
                     <Divider />
+
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
-                        {/* Salutation */}
                         <div
                             className={`space-y-1 ${
                                 gdprConsent ? "block" : "hidden"
@@ -369,7 +324,7 @@ export default function CreateKeyModal({
                         >
                             <InputLabel
                                 htmlFor="salutation"
-                                value="Salutation"
+                                value={t("salutation")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <SelectInput
@@ -387,7 +342,6 @@ export default function CreateKeyModal({
                             <InputError message={formErrors.salutation?.[0]} />
                         </div>
 
-                        {/* Title */}
                         <div
                             className={`space-y-1 ${
                                 gdprConsent ? "block" : "hidden"
@@ -395,7 +349,7 @@ export default function CreateKeyModal({
                         >
                             <InputLabel
                                 htmlFor="title"
-                                value="Title"
+                                value={t("titleField")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -410,7 +364,6 @@ export default function CreateKeyModal({
                             <InputError message={formErrors.title?.[0]} />
                         </div>
 
-                        {/* First name */}
                         <div
                             className={`space-y-1 ${
                                 gdprConsent ? "block" : "hidden"
@@ -418,7 +371,7 @@ export default function CreateKeyModal({
                         >
                             <InputLabel
                                 htmlFor="first_name"
-                                value="First Name"
+                                value={t("firstName")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -428,13 +381,12 @@ export default function CreateKeyModal({
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
-                                placeholder="First name"
+                                placeholder={t("firstName")}
                                 required
                             />
                             <InputError message={formErrors.first_name?.[0]} />
                         </div>
 
-                        {/* Last name */}
                         <div
                             className={`space-y-1 ${
                                 gdprConsent ? "block" : "hidden"
@@ -442,7 +394,7 @@ export default function CreateKeyModal({
                         >
                             <InputLabel
                                 htmlFor="last_name"
-                                value="Last Name"
+                                value={t("lastName")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -452,17 +404,16 @@ export default function CreateKeyModal({
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
-                                placeholder="Last name"
+                                placeholder={t("lastName")}
                                 required
                             />
                             <InputError message={formErrors.last_name?.[0]} />
                         </div>
 
-                        {/* Room number */}
-                        <div className={`space-y-1`}>
+                        <div className="space-y-1">
                             <InputLabel
                                 htmlFor="room_number"
-                                value="Room Number"
+                                value={t("roomNumber")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -472,12 +423,11 @@ export default function CreateKeyModal({
                                 onChange={handleChange}
                                 type="text"
                                 className="block w-full"
-                                placeholder="Room #"
+                                placeholder={t("roomNumber")}
                             />
                             <InputError message={formErrors.room_number?.[0]} />
                         </div>
 
-                        {/* Mobile phone number */}
                         <div
                             className={`space-y-1 ${
                                 keyTypeId == 2 ? "block" : "hidden"
@@ -485,7 +435,7 @@ export default function CreateKeyModal({
                         >
                             <InputLabel
                                 htmlFor="phone_number"
-                                value="Mobile Phone Number (for Key finder only)"
+                                value={t("mobilePhone")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -502,7 +452,6 @@ export default function CreateKeyModal({
                             />
                         </div>
 
-                        {/* Email (full width) */}
                         <div
                             className={`space-y-1 ${
                                 gdprConsent ? "block" : "hidden"
@@ -510,7 +459,7 @@ export default function CreateKeyModal({
                         >
                             <InputLabel
                                 htmlFor="email"
-                                value="Email Address"
+                                value={t("emailAddress")}
                                 className="text-[#475569] text-xs font-medium"
                             />
                             <TextInput
@@ -526,19 +475,22 @@ export default function CreateKeyModal({
                             <InputError message={formErrors.email?.[0]} />
                         </div>
                     </div>
+
                     <div className="flex items-center gap-2 justify-end flex-wrap">
-                        {loading ? <p className="text-sm">Loading...</p> : ""}
+                        {loading && <p className="text-sm">{t("loading")}</p>}
                         {Object.keys(formErrors).length > 0 && (
-                            <InputError message="Fix the errors in the form." />
+                            <InputError message={t("fixErrors")} />
                         )}
-                        <LightButton onClick={handleClose}>Cancel</LightButton>
+                        <LightButton onClick={handleClose}>
+                            {t("cancel")}
+                        </LightButton>
                         <PrimaryButton
                             disabled={!recognized || loading}
                             onClick={handleSubmit}
                         >
                             {existingCode === null
-                                ? "Register new Key"
-                                : "Update Key"}
+                                ? t("registerNewKey")
+                                : t("updateKey")}
                         </PrimaryButton>
                     </div>
                 </div>

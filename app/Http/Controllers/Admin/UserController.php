@@ -62,7 +62,8 @@ class UserController extends Controller
 
         return redirect()
             ->route('users.index')
-            ->with('success', 'User created successfully.');
+            ->with('success', __('messages.adminUserController.store.success'));
+
     }
 
 
@@ -144,7 +145,7 @@ class UserController extends Controller
 
         return redirect()
             ->route('users.index')
-            ->with('success', 'User updated.');
+            ->with('success', __('messages.adminUserController.update.success'));
     }
 
 
@@ -154,14 +155,15 @@ class UserController extends Controller
         if ($user->id === auth()->id()) {
             return redirect()
                 ->route('users.index')
-                ->with('error', 'You cannot delete your own account.');
+                ->with('error', __('messages.adminUserController.destroy.cannot_delete_self'));
         }
 
         $user->delete();
 
         return redirect()
             ->route('users.index')
-            ->with('success', 'User deleted (soft).');
+            ->with('success', __('messages.adminUserController.destroy.success_deleted'));
+
     }
 
 }

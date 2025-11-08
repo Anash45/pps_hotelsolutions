@@ -1,11 +1,14 @@
+import { useLang } from "@/context/TranslationProvider";
+
 export default function DashboardTitle({
     durations,
     selectedDuration,
     setSelectedDuration,
 }) {
+    const { t } = useLang();
     return (
         <div className="flex items-center gap-3 flex-wrap justify-between">
-            <h5 className="font-bold text-xl text-grey900">Dashboard</h5>
+            <h5 className="font-bold text-xl text-grey900">{t('dashboard.title')}</h5>
             <div className="flex items-center p-1 rounded-lg text-sm font-medium bg-[#F1F5F9]">
                 {durations.map((duration, index) => (
                     <button

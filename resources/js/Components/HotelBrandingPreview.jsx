@@ -6,14 +6,19 @@ import HotelLanding from "./HotelLanding";
 import PrimaryButton from "./PrimaryButton";
 import HotelKeyFinder from "./HotelKeyFinder";
 import HotelCustomPage from "./HotelCustomPage";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function HotelBrandingPreview() {
     const { brandingFormData } = useContext(PageContext);
+    const { t } = useLang("Components.HotelBrandingPreview");
 
     const tabs = useMemo(() => {
-        const landingTab = { button: "Landing", component: <HotelLanding /> };
+        const landingTab = {
+            button: t("landingTab"),
+            component: <HotelLanding />,
+        };
         const keyFinderTab = {
-            button: "Key Finder",
+            button: t("keyFinderTab"),
             component: <HotelKeyFinder />,
         };
 
@@ -23,9 +28,8 @@ export default function HotelBrandingPreview() {
                 component: <HotelCustomPage page={page} />,
             })) || [];
 
-        // Order: Landing → Custom Pages → Key Finder
         return [landingTab, ...customTabs, keyFinderTab];
-    }, [brandingFormData]);
+    }, [brandingFormData, t]);
 
     const [activeTab, setActiveTab] = useState(0);
 
@@ -34,10 +38,10 @@ export default function HotelBrandingPreview() {
             <div className="space-y-2 mb-6">
                 <div className="flex flex-col gap-1">
                     <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
-                        Live Preview
+                        {t("livePreviewTitle")}
                     </h5>
                     <p className="text-xs text-[#544854]">
-                        Preview is mobile (fixed width).
+                        {t("livePreviewDescription")}
                     </p>
                 </div>
 
@@ -59,7 +63,7 @@ export default function HotelBrandingPreview() {
             </div>
 
             <MobileFrame>
-                <GuestBox showNextBox={tabs.length - 1 == activeTab}>
+                <GuestBox showNextBox={tabs.length - 1 === activeTab}>
                     {tabs[activeTab].component}
                 </GuestBox>
             </MobileFrame>

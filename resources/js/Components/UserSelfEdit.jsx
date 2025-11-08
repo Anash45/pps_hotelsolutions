@@ -1,7 +1,7 @@
 import { useState } from "react";
 import LightButton from "./LightButton";
 import PrimaryButton from "./PrimaryButton";
-import { usePage, router } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 import InputLabel from "./InputLabel";
 import TextInput from "./TextInput";
 import InputError from "./InputError";
@@ -10,9 +10,11 @@ import SelectInput from "./SelectInput";
 import AskDetails from "./AskDetails";
 import axios from "axios";
 import FlashMessage from "./FlashMessage";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function UserSelfEdit() {
     const [showAskDetails, setShowAskDetails] = useState(false);
+    const { t } = useLang("Components.userSelfEdit");
 
     if (showAskDetails) {
         return <AskDetails />;
@@ -60,53 +62,41 @@ export default function UserSelfEdit() {
 
             if (response.data.success) {
                 setLoading(false);
-                // ✅ show success popup/box
-                console.log("✅ Saved:", response.data.message);
                 setFormSuccess(response.data.message);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
-                // you can also set some success state to trigger a UI message
+                setTimeout(() => window.location.reload(), 2000);
             } else {
                 setLoading(false);
-                // ❌ backend returned failure (e.g. duplicate assignment)
-                console.log("⚠️ Error:", response.data.message);
                 setFormErrors({ general: [response.data.message] });
             }
         } catch (error) {
             setLoading(false);
             if (error.response?.status === 422) {
-                // Laravel validation or custom error
                 const data = error.response.data;
-                console.log("⚠️ Validation failed:", data);
-
                 setFormErrors(data.errors || { general: [data.message] });
             } else {
-                console.error("Unexpected error:", error);
-                setFormErrors({ general: ["Something went wrong."] });
+                setFormErrors({ general: [t("genericError")] });
             }
         }
     };
-
-    console.log(formErrors);
 
     return (
         <form onSubmit={handleSubmit} className="space-y-3">
             <div className="space-y-1">
                 <h2 className="text-lg text-[#201A20] font-semibold">
-                    Register Key Finder
+                    {t("title")}
                 </h2>
                 <p className="text-xs font-medium text-[#475569]">
-                    Setup key finder
+                    {t("subtitle")}
                 </p>
             </div>
 
             <div className="space-y-3">
+                {/* Stay Dates */}
                 <div className="grid grid-cols-1 gap-3">
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="stay_from"
-                            value="Stay from"
+                            value={t("stayFrom")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -120,10 +110,11 @@ export default function UserSelfEdit() {
                         />
                         <InputError message={formErrors.stay_from} />
                     </div>
+
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="stay_till"
-                            value="Stay till"
+                            value={t("stayTill")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -138,108 +129,115 @@ export default function UserSelfEdit() {
                         <InputError message={formErrors.stay_till} />
                     </div>
                 </div>
+
                 <Divider />
+
                 <div className="grid grid-cols-1 gap-3">
                     {/* Salutation */}
-                    <div
-                        className={`space-y-1 ${
-                            gdprConsent ? "block" : "hidden"
-                        }`}
-                    >
-                        <InputLabel
-                            htmlFor="salutation"
-                            value="Salutation"
-                            className="text-[#475569] text-xs font-medium"
-                        />
-                        <SelectInput
-                            id="salutation"
-                            name="salutation"
-                            value={formData.salutation}
-                            onChange={handleChange}
-                            className="w-full block"
-                            options={[
-                                { value: "Mr", label: "Mr." },
-                                { value: "Mrs", label: "Mrs." },
-                                { value: "Ms", label: "Ms." },
-                            ]}
-                        />
-                        <InputError message={formErrors.salutation} />
-                    </div>
+                    {gdprConsent && (
+                        <div className="space-y-1">
+                            <InputLabel
+                                htmlFor="salutation"
+                                value={t("salutation")}
+                                className="text-[#475569] text-xs font-medium"
+                            />
+                            <SelectInput
+                                id="salutation"
+                                name="salutation"
+                                value={formData.salutation}
+                                onChange={handleChange}
+                                className="w-full block"
+                                options={[
+                                    {
+                                        value: "Mr",
+                                        label: t("mr"),
+                                    },
+                                    {
+                                        value: "Mrs",
+                                        label: t("mrs"),
+                                    },
+                                    {
+                                        value: "Ms",
+                                        label: t("ms"),
+                                    },
+                                ]}
+                            />
+                            <InputError message={formErrors.salutation} />
+                        </div>
+                    )}
 
                     {/* Title */}
-                    <div
-                        className={`space-y-1 ${
-                            gdprConsent ? "block" : "hidden"
-                        }`}
-                    >
-                        <InputLabel
-                            htmlFor="title"
-                            value="Title"
-                            className="text-[#475569] text-xs font-medium"
-                        />
-                        <TextInput
-                            id="title"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleChange}
-                            type="text"
-                            className="block w-full"
-                            placeholder="e.g. Dr."
-                        />
-                        <InputError message={formErrors.title} />
-                    </div>
+                    {gdprConsent && (
+                        <div className="space-y-1">
+                            <InputLabel
+                                htmlFor="title"
+                                value={t("titleLabel")}
+                                className="text-[#475569] text-xs font-medium"
+                            />
+                            <TextInput
+                                id="title"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                                type="text"
+                                className="block w-full"
+                                placeholder={t("titlePlaceholder")}
+                            />
+                            <InputError message={formErrors.title} />
+                        </div>
+                    )}
 
                     {/* First name */}
-                    <div
-                        className={`space-y-1 ${
-                            gdprConsent ? "block" : "hidden"
-                        }`}
-                    >
-                        <InputLabel
-                            htmlFor="first_name"
-                            value="First Name"
-                            className="text-[#475569] text-xs font-medium"
-                        />
-                        <TextInput
-                            id="first_name"
-                            name="first_name"
-                            value={formData.first_name}
-                            onChange={handleChange}
-                            type="text"
-                            className="block w-full"
-                            placeholder="First name"
-                        />
-                        <InputError message={formErrors.first_name} />
-                    </div>
+                    {gdprConsent && (
+                        <div className="space-y-1">
+                            <InputLabel
+                                htmlFor="first_name"
+                                value={t("firstName")}
+                                className="text-[#475569] text-xs font-medium"
+                            />
+                            <TextInput
+                                id="first_name"
+                                name="first_name"
+                                value={formData.first_name}
+                                onChange={handleChange}
+                                type="text"
+                                className="block w-full"
+                                placeholder={t(
+                                    "firstNamePlaceholder"
+                                )}
+                            />
+                            <InputError message={formErrors.first_name} />
+                        </div>
+                    )}
 
                     {/* Last name */}
-                    <div
-                        className={`space-y-1 ${
-                            gdprConsent ? "block" : "hidden"
-                        }`}
-                    >
-                        <InputLabel
-                            htmlFor="last_name"
-                            value="Last Name"
-                            className="text-[#475569] text-xs font-medium"
-                        />
-                        <TextInput
-                            id="last_name"
-                            name="last_name"
-                            value={formData.last_name}
-                            onChange={handleChange}
-                            type="text"
-                            className="block w-full"
-                            placeholder="Last name"
-                        />
-                        <InputError message={formErrors.last_name} />
-                    </div>
+                    {gdprConsent && (
+                        <div className="space-y-1">
+                            <InputLabel
+                                htmlFor="last_name"
+                                value={t("lastName")}
+                                className="text-[#475569] text-xs font-medium"
+                            />
+                            <TextInput
+                                id="last_name"
+                                name="last_name"
+                                value={formData.last_name}
+                                onChange={handleChange}
+                                type="text"
+                                className="block w-full"
+                                placeholder={t(
+                                    "lastNamePlaceholder"
+                                )}
+                            />
+                            <InputError message={formErrors.last_name} />
+                        </div>
+                    )}
 
                     {/* Room number */}
-                    <div className={`space-y-1`}>
+                    <div className="space-y-1">
                         <InputLabel
                             htmlFor="room_number"
-                            value="Room Number"
+                            value={t("roomNumber")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -249,16 +247,18 @@ export default function UserSelfEdit() {
                             onChange={handleChange}
                             type="text"
                             className="block w-full"
-                            placeholder="Room #"
+                            placeholder={t(
+                                "roomNumberPlaceholder"
+                            )}
                         />
                         <InputError message={formErrors.room_number} />
                     </div>
 
-                    {/* Mobile phone number */}
+                    {/* Mobile phone */}
                     <div>
                         <InputLabel
                             htmlFor="phone_number"
-                            value="Mobile Phone Number (for Key finder only)"
+                            value={t("phoneNumber")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -268,50 +268,54 @@ export default function UserSelfEdit() {
                             onChange={handleChange}
                             type="tel"
                             className="block w-full"
-                            placeholder="+49 123 456789"
+                            placeholder={t(
+                                "phoneNumberPlaceholder"
+                            )}
                         />
                         <InputError message={formErrors.phone_number} />
                     </div>
 
-                    {/* Email (full width) */}
-                    <div
-                        className={`space-y-1 ${
-                            gdprConsent ? "block" : "hidden"
-                        }`}
-                    >
-                        <InputLabel
-                            htmlFor="email"
-                            value="Email Address"
-                            className="text-[#475569] text-xs font-medium"
-                        />
-                        <TextInput
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            type="email"
-                            className="block w-full"
-                            placeholder="example@email.com"
-                        />
-                        <InputError message={formErrors.email} />
-                    </div>
+                    {/* Email */}
+                    {gdprConsent && (
+                        <div className="space-y-1">
+                            <InputLabel
+                                htmlFor="email"
+                                value={t("email")}
+                                className="text-[#475569] text-xs font-medium"
+                            />
+                            <TextInput
+                                id="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                type="email"
+                                className="block w-full"
+                                placeholder={t("emailPlaceholder")}
+                            />
+                            <InputError message={formErrors.email} />
+                        </div>
+                    )}
                 </div>
             </div>
 
             <FlashMessage message={formSuccess} />
             <div className="flex items-center gap-2 justify-end flex-wrap">
-                {loading ? <p className="text-sm">Loading...</p> : ""}
+                {loading && (
+                    <p className="text-sm">{t("loading")}</p>
+                )}
                 {Object.keys(formErrors).length > 0 && (
                     <InputError
-                        message={`${
-                            formErrors?.general ?? "Fix the errors in the form."
-                        }`}
+                        message={
+                            formErrors?.general ?? t("formError")
+                        }
                     />
                 )}
                 <LightButton onClick={() => setShowAskDetails(true)}>
-                    Cancel
+                    {t("cancel")}
                 </LightButton>
-                <PrimaryButton disabled={loading} type="submit">Save</PrimaryButton>
+                <PrimaryButton disabled={loading} type="submit">
+                    {t("save")}
+                </PrimaryButton>
             </div>
         </form>
     );

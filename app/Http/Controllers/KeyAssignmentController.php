@@ -84,6 +84,24 @@ class KeyAssignmentController extends Controller
             'gdpr_consent' => 'boolean',
         ];
 
+        // Temporarily validate only hotel_id and code_id to fetch the code
+        $partialValidated = $request->validate([
+            'hotel_id' => $rules['hotel_id'],
+            'code_id' => $rules['code_id'],
+        ]);
+
+        // Extra check: ensure code belongs to hotel
+        $code = Code::where('id', $partialValidated['code_id'])
+            ->where('hotel_id', $partialValidated['hotel_id'])
+            ->first();
+
+        if (!$code) {
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.keyAssignmentController.store.code_not_belong_hotel'),
+            ], 422);
+        }
+
         // If GDPR consent is true → tighten rules
         if ($request->boolean('gdpr_consent')) {
             $rules['first_name'] = 'required|string';
@@ -92,27 +110,21 @@ class KeyAssignmentController extends Controller
             $rules['salutation'] = 'required|string';
         }
 
-        // Validate request
+        // If key type is "key_finder", require phone number
+        if ($code->keyType->name === 'key_finder') {
+            $rules['phone_number'] = 'required|string';
+        }
+
+        // Final validation
         $validated = $request->validate($rules);
 
-
-        // 🔎 Extra check: ensure code belongs to hotel
-        $code = Code::where('id', $validated['code_id'])
-            ->where('hotel_id', $validated['hotel_id'])
-            ->first();
-
-        if (!$code) {
-            return response()->json([
-                'success' => false,
-                'message' => 'The selected code does not belong to the given hotel.',
-            ], 422);
-        }
+        Log::warning('Code assignment', ['key_type' => $code->keyType->name]);
 
         // 🔎 Check if this code already has an assignment
         if ($code->keyAssignment) {
             return response()->json([
                 'success' => false,
-                'message' => 'This key is already assigned.',
+                'message' => __('messages.keyAssignmentController.store.code_already_assigned'),
             ], 422);
         }
 
@@ -139,16 +151,14 @@ class KeyAssignmentController extends Controller
             'assignment' => $assignment,
         ]);
 
-
         if ($request->boolean('gdpr_consent')) {
-
             Mail::to($request->input('email'))
                 ->send(new KeyfinderConsentMail($code));
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Key assignment created successfully.',
+            'message' => __('messages.keyAssignmentController.store.success'),
             'assignment' => $assignment,
         ], 201);
     }
@@ -165,13 +175,10 @@ class KeyAssignmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "Key status updated to {$validated['status']}.",
+            'message' => __('messages.keyAssignmentController.updateStatus.success') . " {$validated['status']}.",
             'code' => $code,
         ]);
     }
-
-
-
 
     public function recognize(Request $request)
     {
@@ -207,23 +214,23 @@ class KeyAssignmentController extends Controller
             Log::warning('Code not found', ['hotel_id' => $hotelId, 'input' => $input]);
             return response()->json([
                 'recognized' => false,
-                'error' => 'Code not found',
+                'error' => __('messages.keyAssignmentController.recognize.code_not_found'),
             ], 404);
         }
 
-        if ($code->status !== 'inactive') {
-            Log::warning('Code already active', ['code_id' => $code->id]);
-            return response()->json([
-                'recognized' => false,
-                'error' => 'Code already active',
-            ], 422);
-        }
+        // if ($code->status !== 'inactive') {
+        //     Log::warning('Code already active', ['code_id' => $code->id]);
+        //     return response()->json([
+        //         'recognized' => false,
+        //         'error' => __('messages.keyAssignmentController.recognize.code_already_active'),
+        //     ], 422);
+        // }
 
         if ($code->keyAssignment) {
             Log::warning('Code already assigned', ['code_id' => $code->id]);
             return response()->json([
                 'recognized' => false,
-                'error' => 'Code already assigned',
+                'error' => __('messages.keyAssignmentController.recognize.code_already_assigned'),
             ], 422);
         }
 
@@ -233,7 +240,6 @@ class KeyAssignmentController extends Controller
             'code' => $code,
         ]);
     }
-
 
     public function show(KeyAssignment $keyAssignment)
     {
@@ -252,7 +258,6 @@ class KeyAssignmentController extends Controller
             'code_id' => [
                 'required',
                 'exists:codes,id',
-                // ✅ allow current code_id but unique otherwise
                 Rule::unique('key_assignments', 'code_id')->ignore($assignment->id),
             ],
             'salutation' => 'nullable|string',
@@ -286,7 +291,7 @@ class KeyAssignmentController extends Controller
         if (!$belongs) {
             return response()->json([
                 'success' => false,
-                'message' => 'The selected code does not belong to the given hotel.',
+                'message' => __('messages.keyAssignmentController.update.code_not_belong_hotel'),
             ], 422);
         }
 
@@ -314,11 +319,10 @@ class KeyAssignmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Key assignment updated successfully.',
+            'message' => __('messages.keyAssignmentController.update.success'),
             'assignment' => $assignment,
         ]);
     }
-
 
     public function destroy(KeyAssignment $keyAssignment)
     {
@@ -326,7 +330,7 @@ class KeyAssignmentController extends Controller
 
         $keyAssignment->delete();
 
-        return redirect()->back()->with('success', 'Key assignment deleted successfully.');
+        return redirect()->back()->with('success', __('messages.keyAssignmentController.destroy.success'));
     }
 
     private function authorizeAccess(KeyAssignment $assignment)

@@ -1,9 +1,12 @@
 import { Link, router } from "@inertiajs/react";
 import { Edit, Trash2 } from "lucide-react";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function UserTable({ users }) {
+    const { t } = useLang("users.UserTable");
+
     const handleDelete = (id) => {
-        if (confirm("Are you sure you want to delete this user?")) {
+        if (confirm(t("deleteConfirm"))) {
             router.delete(route("users.destroy", id));
         }
     };
@@ -13,11 +16,11 @@ export default function UserTable({ users }) {
             <div className="space-y-3">
                 {/* Header */}
                 <div className="hidden sm:flex border-b border-gray-200 pb-2 px-4 text-sm font-semibold text-[#263238]">
-                    <div className="w-16">ID</div>
-                    <div className="flex-1">Name</div>
-                    <div className="flex-1">Email</div>
-                    <div className="w-24">Role</div>
-                    <div className="w-28 text-right">Actions</div>
+                    <div className="w-16">{t("id")}</div>
+                    <div className="flex-1">{t("name")}</div>
+                    <div className="flex-1">{t("email")}</div>
+                    <div className="w-24">{t("role")}</div>
+                    <div className="w-28 text-right">{t("actions")}</div>
                 </div>
 
                 {/* Rows */}
@@ -29,7 +32,7 @@ export default function UserTable({ users }) {
                         <div className="flex flex-col sm:flex-row sm:items-center sm:flex-1 sm:gap-4">
                             <div className="sm:w-16">
                                 <span className="sm:hidden text-xs text-gray-500">
-                                    ID:{" "}
+                                    {t("id")}:{" "}
                                 </span>
                                 <span className="text-sm text-body">
                                     {user.id}
@@ -37,7 +40,7 @@ export default function UserTable({ users }) {
                             </div>
                             <div className="sm:flex-1">
                                 <span className="sm:hidden text-xs text-gray-500">
-                                    Name:{" "}
+                                    {t("name")}:{" "}
                                 </span>
                                 <span className="text-sm text-body">
                                     {user.first_name} {user.last_name}
@@ -45,7 +48,7 @@ export default function UserTable({ users }) {
                             </div>
                             <div className="sm:flex-1">
                                 <span className="sm:hidden text-xs text-gray-500">
-                                    Email:{" "}
+                                    {t("email")}:{" "}
                                 </span>
                                 <span className="text-sm text-body">
                                     {user.email}
@@ -53,7 +56,7 @@ export default function UserTable({ users }) {
                             </div>
                             <div className="sm:w-24">
                                 <span className="sm:hidden text-xs text-gray-500">
-                                    Role:{" "}
+                                    {t("role")}:{" "}
                                 </span>
                                 <span className="text-sm text-body">
                                     {user.role}

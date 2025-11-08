@@ -1,6 +1,7 @@
 import { PageContext } from "@/context/PageProvider";
-import { Link } from "@inertiajs/react";
 import { useContext } from "react";
+import { useLang } from "@/context/TranslationProvider";
+import { Link } from "@inertiajs/react";
 
 const GuestBox = ({
     realPhone = false,
@@ -9,8 +10,22 @@ const GuestBox = ({
     children,
     showNextBox = false,
 }) => {
-    console.log(defaultView, noBranding);
+    const { t } = useLang("Components.GuestBox"); // 🔥 translations for this component
     const { brandingFormData } = useContext(PageContext);
+
+    const bgColor =
+        noBranding || defaultView
+            ? "#ffffff"
+            : brandingFormData?.background_color ?? "#ffffff";
+
+    const bottomHeading =
+        brandingFormData?.key_finder_bottom_heading ?? t("defaultHeading");
+    const bottomDescription =
+        brandingFormData?.key_finder_bottom_description ??
+        t("defaultDescription");
+    const bottomBtnText =
+        brandingFormData?.key_finder_bottom_btn_text ?? t("defaultButtonText");
+
     return (
         <div
             className={`${
@@ -21,61 +36,53 @@ const GuestBox = ({
                 className={`rounded-2xl p-3 guest-box ${
                     realPhone ? "scale-[1]" : "scale-[0.9]"
                 } origin-top max-w-[430px] w-full mx-auto`}
-                style={{
-                    backgroundColor: `${
-                        noBranding || defaultView
-                            ? "#ffffff"
-                            : brandingFormData?.background_color ?? "#ffffff"
-                    }`,
-                }}
+                style={{ backgroundColor: bgColor }}
             >
                 {children}
             </div>
+
             {showNextBox && (
                 <div
                     className={`p-3 max-w-[430px] mx-auto w-full rounded-xl space-y-3 relative mt-auto ${
                         realPhone ? "scale-[1]" : "scale-[0.9]"
                     } origin-top`}
-                    style={{
-                        backgroundColor: `${
-                            brandingFormData?.background_color ?? "#ffffff"
-                        }`,
-                    }}
+                    style={{ backgroundColor: bgColor }}
                 >
-                    {(brandingFormData.key_finder_bottom_heading ||
-                        brandingFormData.key_finder_bottom_description) && (
+                    {(bottomHeading || bottomDescription) && (
                         <div>
-                            {brandingFormData.key_finder_bottom_heading && (
+                            {bottomHeading && (
                                 <h4 className="text-[#161616] text-[22px] font-semibold">
-                                    {brandingFormData.key_finder_bottom_heading}
+                                    {bottomHeading}
                                 </h4>
                             )}
 
-                            {brandingFormData.key_finder_bottom_description && (
+                            {bottomDescription && (
                                 <p
                                     className="text-base leading-tight"
                                     dangerouslySetInnerHTML={{
-                                        __html: brandingFormData.key_finder_bottom_description,
+                                        __html: bottomDescription,
                                     }}
                                 />
                             )}
                         </div>
                     )}
+
                     <div className="relative rounded-lg overflow-hidden h-[100px]">
                         <img
-                            src={`${
+                            src={
                                 brandingFormData?.section_banner_image_url ??
                                 "/images/building-placeholder.webp"
-                            }`}
-                            alt="Next"
+                            }
+                            alt={t("sectionBannerAlt")}
                             className="w-full bg-white relative h-full object-cover"
                         />
+
                         <a
                             href={
                                 brandingFormData?.key_finder_bottom_btn_url ??
                                 "#"
                             }
-                            className={`block px-4 py-1.5 rounded-lg border font-medium text-base absolute bottom-2 right-2 w-fit`}
+                            className="block px-4 py-1.5 rounded-lg border font-medium text-base absolute bottom-2 right-2 w-fit"
                             style={{
                                 color:
                                     brandingFormData?.key_finder_bottom_btn_text_color ??
@@ -88,8 +95,7 @@ const GuestBox = ({
                                     brandingFormData.primary_color,
                             }}
                         >
-                            {brandingFormData?.key_finder_bottom_btn_text ??
-                                "Enter button text"}
+                            {bottomBtnText}
                         </a>
                     </div>
                 </div>
@@ -97,4 +103,5 @@ const GuestBox = ({
         </div>
     );
 };
+
 export default GuestBox;

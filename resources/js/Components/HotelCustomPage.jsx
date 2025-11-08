@@ -1,8 +1,9 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@inertiajs/react";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function HotelCustomPage({ page = null, guestKey = null }) {
-    console.log("Two: ", page, guestKey);
+    const { t } = useLang("Components.HotelCustomPage");
 
     return (
         <div className="space-y-4 px-2">
@@ -12,7 +13,7 @@ export default function HotelCustomPage({ page = null, guestKey = null }) {
                     className="flex items-center justify-start gap-1 text-xs text-dark cursor-pointer"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    <span>Zurück</span>
+                    <span>{t("back")}</span>
                 </Link>
             ) : (
                 <a
@@ -20,7 +21,7 @@ export default function HotelCustomPage({ page = null, guestKey = null }) {
                     className="flex items-center justify-start gap-1 text-xs text-dark cursor-pointer"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    <span>Zurück</span>
+                    <span>{t("back")}</span>
                 </a>
             )}
 

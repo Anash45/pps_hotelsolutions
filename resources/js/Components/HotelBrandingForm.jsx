@@ -1,3 +1,4 @@
+import { useLang } from "@/context/TranslationProvider";
 import { useContext, useEffect } from "react";
 import ColorInput from "./ColorInput";
 import InputLabel from "./InputLabel";
@@ -12,10 +13,10 @@ import HotelBrandingPages from "./HotelBrandingPages";
 import { mapHotelToBrandingFormData } from "@/utils/mapHotelToBrandingFormData";
 
 export default function HotelBrandingForm({ formErrors }) {
+    const { t } = useLang("Components.HotelBrandingForm");
     const { auth, selectedHotel = null, flash } = usePage().props;
     const { brandingFormData, handleBrandingChange, setBrandingFormData } =
         useContext(PageContext);
-    console.log("Flash: ", flash);
 
     useEffect(() => {
         if (selectedHotel) {
@@ -25,19 +26,19 @@ export default function HotelBrandingForm({ formErrors }) {
 
     return (
         <div className="py-4 md:px-6 px-4 rounded-[14px] main-box bg-white flex flex-col gap-3 xl:order-1 order-2">
+            {/* Branding Section */}
             <div className="flex flex-col gap-1">
                 <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
-                    Branding
+                    {t("brandingTitle")}
                 </h5>
                 <p className="text-xs text-[#544854]">
-                    Description of this graph can land here
+                    {t("brandingDescription")}
                 </p>
             </div>
+
             {Object.keys(formErrors).length > 0 && (
                 <div className="rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-                    <p className="font-bold mb-2">
-                        Please fix the following errors:
-                    </p>
+                    <p className="font-bold mb-2">{t("fixErrorsMessage")}</p>
                     <ul className="list-disc list-inside space-y-1">
                         {Object.entries(formErrors).map(
                             ([field, messages], idx) => (
@@ -47,11 +48,13 @@ export default function HotelBrandingForm({ formErrors }) {
                     </ul>
                 </div>
             )}
+
             <div className="space-y-3">
+                {/* Heading */}
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="heading"
-                        value="Heading (under logo)"
+                        value={t("headingUnderLogo")}
                         className="text-[#475569] text-xs font-medium"
                     />
                     <TextInput
@@ -61,14 +64,16 @@ export default function HotelBrandingForm({ formErrors }) {
                         value={brandingFormData.heading}
                         onChange={handleBrandingChange}
                         className="block w-full"
-                        placeholder="Heading (under logo)"
+                        placeholder={t("headingUnderLogo")}
                         required
                     />
                 </div>
+
+                {/* Sub Heading */}
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="sub_heading"
-                        value="Sub heading (under heading)"
+                        value={t("subHeadingUnderHeading")}
                         className="text-[#475569] text-xs font-medium"
                     />
                     <TextInput
@@ -78,15 +83,17 @@ export default function HotelBrandingForm({ formErrors }) {
                         value={brandingFormData.sub_heading}
                         onChange={handleBrandingChange}
                         className="block w-full"
-                        placeholder="Sub heading (under heading)"
+                        placeholder={t("subHeadingUnderHeading")}
                         required
                     />
                 </div>
+
+                {/* Colors */}
                 <div className="grid gap-3 sm:grid-cols-2 grid-cols-1">
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="primary_color"
-                            value="Primary color (buttons)"
+                            value={t("primaryColorButtons")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <ColorInput
@@ -96,14 +103,15 @@ export default function HotelBrandingForm({ formErrors }) {
                             value={brandingFormData.primary_color}
                             onChange={handleBrandingChange}
                             className="block w-full"
-                            placeholder="Heading (under logo)"
+                            placeholder={t("primaryColorButtons")}
                             required
                         />
                     </div>
+
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="background_color"
-                            value="Background color (page)"
+                            value={t("backgroundColorPage")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <ColorInput
@@ -113,14 +121,15 @@ export default function HotelBrandingForm({ formErrors }) {
                             value={brandingFormData.background_color}
                             onChange={handleBrandingChange}
                             className="block w-full"
-                            placeholder="Heading (under logo)"
+                            placeholder={t("backgroundColorPage")}
                             required
                         />
                     </div>
+
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="text_color"
-                            value="Text color (main text)"
+                            value={t("textColorMainText")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <ColorInput
@@ -130,14 +139,15 @@ export default function HotelBrandingForm({ formErrors }) {
                             value={brandingFormData.text_color}
                             onChange={handleBrandingChange}
                             className="block w-full"
-                            placeholder="Heading (under logo)"
+                            placeholder={t("textColorMainText")}
                             required
                         />
                     </div>
+
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="button_text_color"
-                            value="Button text color"
+                            value={t("buttonTextColor")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <ColorInput
@@ -147,16 +157,17 @@ export default function HotelBrandingForm({ formErrors }) {
                             value={brandingFormData.button_text_color}
                             onChange={handleBrandingChange}
                             className="block w-full"
-                            placeholder="Heading (under logo)"
+                            placeholder={t("buttonTextColor")}
                             required
                         />
                     </div>
                 </div>
 
+                {/* Upload Images */}
                 <div className="space-y-3">
                     <div className="space-y-1">
                         <InputLabel
-                            value="Upload logo"
+                            value={t("uploadLogo")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <BrandingImageUploader
@@ -166,12 +177,13 @@ export default function HotelBrandingForm({ formErrors }) {
                                 brandingFormData.logo_image_url
                             }
                             onChange={handleBrandingChange}
-                            label="Logo Image"
+                            label={t("uploadLogo")}
                         />
                     </div>
+
                     <div className="space-y-1">
                         <InputLabel
-                            value="Upload banner"
+                            value={t("uploadBanner")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <BrandingImageUploader
@@ -181,33 +193,31 @@ export default function HotelBrandingForm({ formErrors }) {
                                 brandingFormData.banner_image_url
                             }
                             onChange={handleBrandingChange}
-                            label="Logo Image"
+                            label={t("uploadBanner")}
                         />
                     </div>
                 </div>
-                <Divider />
 
+                <Divider />
                 <HotelBrandingButtons />
-
                 <Divider />
-
                 <HotelBrandingPages />
-
                 <Divider />
 
+                {/* Keyfinder Page */}
                 <div className="flex flex-col gap-1">
                     <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
-                        Keyfinder page
+                        {t("keyfinderPageTitle")}
                     </h5>
                     <p className="text-xs text-[#544854]">
-                        WhatsApp text is fixed: "I found your key. Please
-                        contact me."
+                        {t("keyfinderWhatsAppText")}
                     </p>
                 </div>
+
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="keyfinder_heading"
-                        value="Keyfinder Page Heading"
+                        value={t("keyfinderPageHeading")}
                         className="text-[#475569] text-xs font-medium"
                     />
                     <TextInput
@@ -217,10 +227,11 @@ export default function HotelBrandingForm({ formErrors }) {
                         value={brandingFormData.keyfinder_heading}
                         onChange={handleBrandingChange}
                         className="block w-full"
-                        placeholder="Keyfinder Page Heading"
+                        placeholder={t("keyfinderPageHeading")}
                         required
                     />
                 </div>
+
                 <div className="space-y-1">
                     <Textarea
                         id="key_finder_page_text"
@@ -230,16 +241,17 @@ export default function HotelBrandingForm({ formErrors }) {
                         value={brandingFormData.key_finder_page_text}
                         onChange={handleBrandingChange}
                         className="block w-full"
-                        placeholder="Sie haben diesen Schlüssel gefunden? Bitte kontaktieren Sie den Eigentümer unter:"
+                        placeholder={t("keyfinderPageTextPlaceholder")}
                         required
                     />
                 </div>
 
+                {/* Keyfinder Preview */}
                 <div className="grid gap-3 sm:grid-cols-2 grid-cols-1">
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="primary_color"
-                            value="Telephone (Preview, read-only)"
+                            value={t("telephonePreviewReadOnly")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -248,7 +260,7 @@ export default function HotelBrandingForm({ formErrors }) {
                             type="text"
                             defaultValue={"+49 170 1234567"}
                             className="block w-full"
-                            placeholder="+49 170 1234567"
+                            placeholder={"+49 170 1234567"}
                             readOnly
                             required
                         />
@@ -256,7 +268,7 @@ export default function HotelBrandingForm({ formErrors }) {
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="button_text_color"
-                            value="Colors (Preview)"
+                            value={t("colorsPreview")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <ColorInput
@@ -265,26 +277,30 @@ export default function HotelBrandingForm({ formErrors }) {
                             value={brandingFormData.page_text_color}
                             onChange={handleBrandingChange}
                             className="block w-full"
-                            placeholder="Color"
+                            placeholder={t("colorPlaceholder")}
                             required
                         />
                     </div>
                 </div>
+
                 <div className="py-2">
                     <Divider />
                 </div>
+
+                {/* Keyfinder Bottom Section */}
                 <div className="flex flex-col gap-1">
                     <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
-                        Keyfinder bottom section
+                        {t("keyfinderBottomSectionTitle")}
                     </h5>
                     <p className="text-xs text-[#544854]">
-                        Edit the details for keyfinder bottom section
+                        {t("keyfinderBottomSectionDescription")}
                     </p>
                 </div>
+
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="key_finder_bottom_heading"
-                        value="Section heading"
+                        value={t("sectionHeading")}
                         className="text-[#475569] text-xs font-medium"
                     />
                     <TextInput
@@ -302,7 +318,7 @@ export default function HotelBrandingForm({ formErrors }) {
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="key_finder_bottom_description"
-                        value="Section description"
+                        value={t("sectionDescription")}
                         className="text-[#475569] text-xs font-medium"
                     />
                     <Textarea
@@ -317,9 +333,10 @@ export default function HotelBrandingForm({ formErrors }) {
                         required
                     />
                 </div>
+
                 <div className="space-y-1">
                     <InputLabel
-                        value="Upload section banner"
+                        value={t("uploadSectionBanner")}
                         className="text-[#475569] text-xs font-medium"
                     />
                     <BrandingImageUploader
@@ -329,14 +346,15 @@ export default function HotelBrandingForm({ formErrors }) {
                             brandingFormData.section_banner_image_url
                         }
                         onChange={handleBrandingChange}
-                        label="Section Banner Image"
+                        label={t("uploadSectionBanner")}
                     />
                 </div>
+
                 <div className="grid gap-3 sm:grid-cols-2 grid-cols-1">
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="key_finder_bottom_btn_text"
-                            value="Telephone (Preview, read-only)"
+                            value={t("nextBookingButtonText")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -346,14 +364,15 @@ export default function HotelBrandingForm({ formErrors }) {
                             value={brandingFormData.key_finder_bottom_btn_text}
                             onChange={handleBrandingChange}
                             className="block w-full"
-                            placeholder="eg: jetzt buchen"
+                            placeholder={t("keyfinderBottomButtonTextExample")}
                             required
                         />
                     </div>
+
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="key_finder_bottom_btn_url"
-                            value="Telephone (Preview, read-only)"
+                            value={t("nextBookingButtonUrl")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <TextInput
@@ -363,16 +382,17 @@ export default function HotelBrandingForm({ formErrors }) {
                             value={brandingFormData.key_finder_bottom_btn_url}
                             onChange={handleBrandingChange}
                             className="block w-full"
-                            placeholder="eg: https://www.hotelname.com/booking"
+                            placeholder={t("keyfinderBottomButtonUrlExample")}
                             required
                         />
                     </div>
                 </div>
+
                 <div className="grid gap-3 sm:grid-cols-2 grid-cols-1">
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="key_finder_bottom_btn_text_color"
-                            value="Section button text color"
+                            value={t("sectionButtonTextColor")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <ColorInput
@@ -384,14 +404,15 @@ export default function HotelBrandingForm({ formErrors }) {
                             }
                             onChange={handleBrandingChange}
                             className="block w-full"
-                            placeholder="Color"
+                            placeholder={t("colorPlaceholder")}
                             required
                         />
                     </div>
+
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="key_finder_bottom_btn_bg_color"
-                            value="Section button BG color"
+                            value={t("sectionButtonBgColor")}
                             className="text-[#475569] text-xs font-medium"
                         />
                         <ColorInput
@@ -403,7 +424,7 @@ export default function HotelBrandingForm({ formErrors }) {
                             }
                             onChange={handleBrandingChange}
                             className="block w-full"
-                            placeholder="Color"
+                            placeholder={t("colorPlaceholder")}
                             required
                         />
                     </div>

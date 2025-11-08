@@ -111,7 +111,7 @@ export default function Login({ status, canResetPassword }) {
                         Log in
                     </PrimaryButton>
                 </div>
-                <div className="flex justify-center gap-4 items-center">
+                {/* <div className="flex justify-center gap-4 items-center">
                     {canResetPassword && (
                         <Link
                             href={route("password.request")}
@@ -136,7 +136,7 @@ export default function Login({ status, canResetPassword }) {
                             Forgot password
                         </Link>
                     )}
-                </div>
+                </div> */}
             </form>
         </GuestLayout>
     );

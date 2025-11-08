@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang } from "@/context/TranslationProvider";
 import React from "react";
 import {
     LineChart,
@@ -13,6 +14,7 @@ import {
 } from "recharts";
 
 const CustomTooltip = ({ active, payload, label }) => {
+    const { t } = useLang();
     if (active && Array.isArray(payload) && payload.length) {
         const date = new Date(label);
         const dd = String(date.getDate()).padStart(2, "0");
@@ -53,7 +55,7 @@ const CustomTooltip = ({ active, payload, label }) => {
                         lineHeight: "16px",
                     }}
                 >
-                    Views: {totalViews}
+                    {t("dashboard.DashboardViewsChart.views")}: {totalViews}
                 </p>
                 <p
                     style={{
@@ -64,7 +66,7 @@ const CustomTooltip = ({ active, payload, label }) => {
                         lineHeight: "16px",
                     }}
                 >
-                    Unique Views: {uniqueViews}
+                    {t("dashboard.DashboardViewsChart.uniqueViews")}: {uniqueViews}
                 </p>
             </div>
         );
@@ -73,6 +75,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function DashboardViewsChart({ selectedDuration, chartViews }) {
+    const { t } = useLang();
     // Ensure chartViews is always an array
     const safeChartViews = Array.isArray(chartViews) ? chartViews : [];
 
@@ -82,16 +85,16 @@ export default function DashboardViewsChart({ selectedDuration, chartViews }) {
             <div className="flex justify-between">
                 <div className="flex flex-col gap-1">
                     <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
-                        Overview hotel info site views
+                        {t("dashboard.DashboardViewsChart.header")}
                     </h5>
                     <p className="text-xs text-[#544854]">
-                        Description of this graph can land here
+                        {t("dashboard.DashboardViewsChart.description")}
                     </p>
                 </div>
                 <div className="flex items-center gap-1">
                     <div className="h-2 w-2 shrink-0 bg-[#85AF84] rounded-full"></div>
                     <span className="text-[#334155] font-medium text-xs leading-5">
-                        :Line Page views/day
+                        {t("dashboard.DashboardViewsChart.linePageViews")}
                     </span>
                 </div>
             </div>

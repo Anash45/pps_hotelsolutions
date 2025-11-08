@@ -13,7 +13,13 @@ class HotelPageController extends Controller
     public function show($key, $id)
     {
         // Find the page by id
-        $page = Page::with('hotel')->findOrFail($id);
+        $page = Page::with('hotel')->find($id);
+
+        if (!$page) {
+            return response()->json([
+                'message' => __('messages.hotelPageController.show.page_not_found')
+            ], 404);
+        }
 
         // Fetch selectedHotel with details (using page's hotel_id)
         $selectedHotel = null;
@@ -23,7 +29,13 @@ class HotelPageController extends Controller
                     $q->orderBy('order'); // ascending
                 },
                 'pages',
-            ])->findOrFail($page->hotel_id);
+            ])->find($page->hotel_id);
+
+            if (!$selectedHotel) {
+                return response()->json([
+                    'message' => __('messages.hotelPageController.show.hotel_not_found')
+                ], 404);
+            }
         }
 
         return inertia('HotelPages/Show', [
@@ -48,7 +60,7 @@ class HotelPageController extends Controller
         // Authorization check
         $hotel = Hotel::findOrFail($validated['hotel_id']);
         if (($user->hotel?->id !== $hotel->id) && !$user->is_admin()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('messages.hotelPageController.store.unauthorized')], 403);
         }
 
         // Auto-generate slug if not provided
@@ -69,7 +81,7 @@ class HotelPageController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Page saved successfully!',
+            'message' => __('messages.hotelPageController.store.success'),
             'page' => $page,
         ], 201);
     }
@@ -81,7 +93,7 @@ class HotelPageController extends Controller
         // ✅ Authorization check
         $hotel = Hotel::findOrFail($page->hotel_id);
         if (($user->hotel?->id !== $hotel->id) && !$user->is_admin()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('messages.hotelPageController.update.unauthorized')], 403);
         }
 
         // ✅ Only validate title + content (no slug)
@@ -91,11 +103,9 @@ class HotelPageController extends Controller
                 'required',
                 'string',
                 function ($attribute, $value, $fail) {
-                    // Strip all tags, decode entities, and trim spaces
                     $plainText = trim(strip_tags($value));
-
                     if (strlen($plainText) === 0) {
-                        $fail('The ' . $attribute . ' field must contain text.');
+                        $fail(__('messages.hotelPageController.update.validation_error'));
                     }
                 },
             ],
@@ -108,30 +118,36 @@ class HotelPageController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Page updated successfully!',
+            'message' => __('messages.hotelPageController.update.success'),
             'page' => $page,
         ]);
     }
-
-
 
     public function destroy($id)
     {
         $user = auth()->user();
 
         // Find the page
-        $page = Page::findOrFail($id);
+        $page = Page::find($id);
+
+        if (!$page) {
+            return response()->json([
+                'message' => __('messages.hotelPageController.destroy.not_found')
+            ], 404);
+        }
 
         // Check if user is admin or page belongs to user's hotel
         if (!$user->is_admin() && $page->hotel_id !== $user->hotel_id) {
-            abort(403, 'Unauthorized action.');
+            return response()->json([
+                'message' => __('messages.hotelPageController.destroy.unauthorized')
+            ], 403);
         }
 
         // Delete the page
         $page->delete();
 
         return response()->json([
-            'message' => 'Page deleted successfully.',
+            'message' => __('messages.hotelPageController.destroy.success'),
         ]);
     }
 

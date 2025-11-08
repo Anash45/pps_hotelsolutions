@@ -7,12 +7,14 @@ import { Transition } from "@headlessui/react";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { Mail } from "lucide-react";
 import ProfilePhotoUpload from "./ProfilePhotoUpload";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
     status,
     className = "",
 }) {
+    const { t } = useLang("profile.UpdateProfileInformation");
     const user = usePage().props.auth.user;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
@@ -28,7 +30,7 @@ export default function UpdateProfileInformation({
         e.preventDefault();
 
         patch(route("profile.update"), {
-            forceFormData: data.profile_image instanceof File, // only force if new file
+            forceFormData: data.profile_image instanceof File,
             onBefore: (visit) => {
                 if (visit.formData) {
                     for (let pair of visit.formData.entries()) {
@@ -50,24 +52,23 @@ export default function UpdateProfileInformation({
             <div className="flex flex-col gap-6">
                 <header className="flex flex-col gap-1 pb-5 border-b border-b-[#EAECF0]">
                     <h2 className="text-lg font-semibold text-grey900">
-                        Personal info
+                        {t("headerTitle")}
                     </h2>
 
                     <p className="text-sm text-[#475467] font-inter">
-                        Update your photo and personal details here.
+                        {t("headerDescription")}
                     </p>
                 </header>
 
                 <form onSubmit={submit} className="space-y-5 xl:max-w-[1000px]">
                     {/* First Name & Last Name */}
-                    {/* Hotel Name (only for hotel users) */}
                     {user.role === "hotel" && (
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                             <div className="md:col-span-4 space-y-2">
                                 <InputLabel
                                     className="text-[#344054] font-medium"
                                     htmlFor="hotel_name"
-                                    value="Hotel Name"
+                                    value={t("hotelName")}
                                 />
                                 <InputError
                                     className="mt-2"
@@ -93,7 +94,7 @@ export default function UpdateProfileInformation({
                             <InputLabel
                                 className=" text-[#344054] font-medium"
                                 htmlFor="first_name"
-                                value="Name"
+                                value={t("name")}
                             />
                             <InputError
                                 className="mt-2"
@@ -144,7 +145,7 @@ export default function UpdateProfileInformation({
                             <InputLabel
                                 className=" text-[#344054] font-medium"
                                 htmlFor="email"
-                                value="Email"
+                                value={t("email")}
                             />
                             <InputError
                                 className="mt-2"
@@ -187,10 +188,12 @@ export default function UpdateProfileInformation({
                             leave="transition ease-in-out"
                             leaveTo="opacity-0"
                         >
-                            <p className="text-sm text-green-600">Saved.</p>
+                            <p className="text-sm text-green-600">
+                                {t("saved")}
+                            </p>
                         </Transition>
                         <PrimaryButton disabled={processing}>
-                            Save
+                            {t("saveButton")}
                         </PrimaryButton>
                     </div>
                 </form>

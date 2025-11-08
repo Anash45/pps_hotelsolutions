@@ -6,43 +6,49 @@ import CodeGroupsPreview from "./CodeGroupsPreview";
 import Alert from "@/Components/Alert";
 import FlashMessage from "@/Components/FlashMessage";
 import { useState } from "react";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function Codes() {
+    const { t } = useLang("codes");
     const { codeGroups, flash } = usePage().props;
     const [previewCodes, setPreviewCodes] = useState([]);
 
-    console.log(codeGroups);
-
     return (
         <AuthenticatedLayout>
-            <Head title="Dashboard" />
+            <Head title={t("dashboardTitle")} />
 
             <div className="py-4 md:px-6 px-4 flex flex-col gap-6">
-                <CodesTitle title={"Code Generator"} />
+                <CodesTitle title={t("codeGenerator")} />
                 <div className="grid xl:grid-cols-[60%,40%] grid-cols-1 gap-[14px]">
                     <div className="py-4 md:px-6 px-4 rounded-[14px] main-box bg-white flex flex-col gap-3">
                         <FlashMessage message={flash?.success} type="success" />
                         <FlashMessage message={flash?.error} type="error" />
                         <div className="flex flex-col gap-1">
                             <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
-                                Create new code block
+                                {t("createNewCodeBlock")}
                             </h5>
                             <p className="text-xs text-[#544854]">
-                                Description of this block
+                                {t("createNewCodeBlockDescription")}
                             </p>
                         </div>
-                        <CodesForm previewCodes={previewCodes} setPreviewCodes={setPreviewCodes} />
+                        <CodesForm
+                            previewCodes={previewCodes}
+                            setPreviewCodes={setPreviewCodes}
+                        />
                     </div>
                     <div className="py-4 md:px-6 px-4 rounded-[14px] main-box bg-white flex flex-col gap-3">
                         <div className="flex flex-col gap-1">
                             <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
-                                History
+                                {t("historyTitle")}
                             </h5>
                             <p className="text-xs text-[#544854]">
-                                Description of this block
+                                {t("historyDescription")}
                             </p>
                         </div>
-                        <CodeGroupsPreview previewGroups={codeGroups} setPreviewCodes={setPreviewCodes} />
+                        <CodeGroupsPreview
+                            previewGroups={codeGroups}
+                            setPreviewCodes={setPreviewCodes}
+                        />
                     </div>
                 </div>
             </div>

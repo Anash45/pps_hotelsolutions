@@ -1,0 +1,403 @@
+{
+    "dashboard": {
+        "title": "Dashboard",
+        "selectHotel": "Hotel auswählen",
+        "noData": "Keine Daten verfügbar",
+        "totalViews": "Gesamtansichten",
+        "uniqueViews": "Eindeutige Ansichten",
+        "buttonsViews": "Button-Ansichten",
+        "chartDataUnavailable": "Diagrammdaten nicht verfügbar",
+        "viewsDataUnavailable": "Ansichtsdaten nicht verfügbar",
+        "stats": {
+            "siteViewToday": "Seitenaufrufe heute",
+            "uniqueSiteViewToday": "Eindeutige Seitenaufrufe heute",
+            "totalKeys": "Gesamtschlüssel",
+            "activeKeys": "Aktive Schlüssel"
+        },
+        "DashboardTitle": {
+            "durations": {
+                "7_days": "7 Tage",
+                "30_days": "30 Tage",
+                "90_days": "90 Tage"
+            }
+        },
+        "DashboardViewsChart": {
+            "header": "Übersicht Hotel-Info-Seitenaufrufe",
+            "description": "Dieses Diagramm bietet einen Überblick über die Hotelinformationen sowie die Anzahl der Seitenaufrufe im Zeitverlauf.",
+            "linePageViews": "Seitenaufrufe/Tag",
+            "views": "Ansichten",
+            "uniqueViews": "Eindeutige Ansichten"
+        },
+        "DashboardButtonsViewsChart": {
+            "header": "Übersicht Hotel-Info-Button-Ansichten",
+            "description": "Zeigt die gesamten Ansichten der Hotel-Buttons an und hebt die Benutzerinteraktionen auf der Seite hervor.",
+            "tooltipPercentage": "Prozentsatz"
+        }
+    },
+    "hotels": {
+        "title": "Konfigurator",
+        "SelectInput": {
+            "placeholder": "Hotel auswählen"
+        },
+        "HotelsTitle": {
+            "testLanding": "Test-Landingpage",
+            "savePublish": "Speichern & Veröffentlichen",
+            "saving": "Wird gespeichert..."
+        }
+    },
+    "keys": {
+        "page": {
+            "title": "Schlüssel",
+            "selectHotel": "Hotel auswählen"
+        },
+        "KeysTitle": {
+            "title": "Schlüsselverwaltung",
+            "createNewKey": "Neuen Schlüssel erstellen"
+        },
+        "KeysTable": {
+            "columns": {
+                "name": "Name",
+                "code": "Code",
+                "stay": "Aufenthalt",
+                "room": "Zimmer",
+                "status": "Status",
+                "keyType": "Schlüsseltyp",
+                "actions": "Aktionen",
+                "setActive": "Aktivieren",
+                "setInactive": "Deaktivieren",
+                "edit": "Bearbeiten"
+            },
+            "status": {
+                "active": "Aktiv",
+                "inactive": "Inaktiv"
+            }
+        }
+    },
+    "profile": {
+        "page": {
+            "title": "Profil",
+            "tabDetails": "Meine Daten",
+            "tabPassword": "Passwort"
+        },
+        "ProfileTitle": {
+            "title": "Profileinstellungen"
+        },
+        "ProfilePhotoUpload": {
+            "label": "Ihr Foto",
+            "clickToUpload": "Zum Hochladen klicken",
+            "dropLikeItsHot": "Einfach fallen lassen",
+            "orDragAndDrop": "oder ziehen und ablegen",
+            "fileTypes": "SVG, PNG, JPG oder GIF (max. :maxSizeMB MB)"
+        },
+        "UpdatePasswordForm": {
+            "headerTitle": "Passwort",
+            "headerDescription": "Bitte geben Sie Ihr aktuelles Passwort ein, um Ihr Passwort zu ändern.",
+            "currentPassword": "Aktuelles Passwort",
+            "newPassword": "Neues Passwort",
+            "confirmPassword": "Passwort bestätigen",
+            "placeholder": "********",
+            "saved": "Gespeichert.",
+            "saveButton": "Speichern"
+        },
+        "UpdateProfileInformation": {
+            "headerTitle": "Persönliche Informationen",
+            "headerDescription": "Aktualisieren Sie hier Ihr Foto und Ihre persönlichen Daten.",
+            "hotelName": "Hotelname",
+            "name": "Name",
+            "email": "E-Mail",
+            "saved": "Gespeichert.",
+            "saveButton": "Speichern"
+        }
+    },
+    "users": {
+        "Users": {
+            "title": "Benutzerverwaltung",
+            "addUser": "Benutzer hinzufügen"
+        },
+        "Create": {
+            "title": "Benutzer erstellen",
+            "back": "Zurück"
+        },
+        "Edit": {
+            "title": "Benutzer bearbeiten",
+            "back": "Zurück"
+        },
+        "UserForm": {
+            "hotelName": "Hotelname",
+            "firstName": "Vorname",
+            "lastName": "Nachname",
+            "email": "E-Mail",
+            "role": "Rolle",
+            "admin": "Administrator",
+            "hotel": "Hotel",
+            "password": "Passwort",
+            "passwordHint": "(leer lassen, um aktuelles beizubehalten)",
+            "passwordConfirmation": "Passwort bestätigen",
+            "createUser": "Benutzer erstellen",
+            "updateUser": "Benutzer aktualisieren"
+        },
+        "UserTable": {
+            "id": "ID",
+            "name": "Name",
+            "email": "E-Mail",
+            "role": "Rolle",
+            "actions": "Aktionen",
+            "deleteConfirm": "Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?"
+        }
+    },
+    "codes": {
+        "dashboardTitle": "Dashboard",
+        "codeGenerator": "Code-Generator",
+        "createNewCodeBlock": "Neuen Code-Block erstellen",
+        "createNewCodeBlockDescription": "Beschreibung dieses Blocks",
+        "historyTitle": "Verlauf",
+        "historyDescription": "Beschreibung dieses Blocks"
+    },
+    "unsubscribe": {
+        "pageTitle": "Abbestellen"
+    },
+    "hotelPages": {
+        "defaultPageTitle": "Hotelseite"
+    },
+    "Components": {
+        "AskDetails": {
+            "description1": "Dieser Schlüssel kann nach Ihrem Aufenthalt als Schlüsselfinder dienen.",
+            "description2": "Dazu müssen Sie im nächsten Dialog Ihre Handynummer sowie weitere Details eingeben, damit Sie ein Finder <span class=\"font-bold\">kontaktieren kann</span>.",
+            "question": "Möchten Sie die Schlüsselfinder-Funktion nutzen?",
+            "yes": "Ja",
+            "no": "Nein"
+        },
+        "BrandingImageUploader": {
+            "clickToUpload": "Zum Hochladen klicken",
+            "orDragAndDrop": "oder ziehen und ablegen",
+            "fileSize": "Dateigröße sollte weniger als :maxSizeMBMB betragen"
+        },
+        "CreateKeyModal": {
+            "title": "Neuen Schlüssel registrieren",
+            "description": "QR-Code scannen (Barcode-Scanner-Eingabezeile) - oder Code/URL eingeben",
+            "barcode": "Barcode / URL",
+            "recognize": "Erkennen",
+            "keyRecognized": "Schlüssel erkannt: :link",
+            "keyType": "Schlüsseltyp",
+            "stayFrom": "Aufenthalt von",
+            "stayTill": "Aufenthalt bis",
+            "gdprConsentLabel": "Gastdaten eingeben (Name, Titel, Anrede, E-Mail etc.)",
+            "gdprConsentDescription": "Wenn deaktiviert, werden für neue Schlüssel keine Personennamen gespeichert.",
+            "salutation": "Anrede",
+            "titleField": "Titel",
+            "firstName": "Vorname",
+            "lastName": "Nachname",
+            "roomNumber": "Zimmernummer",
+            "mobilePhone": "Handynummer (nur für Schlüsselfinder)",
+            "emailAddress": "E-Mail-Adresse",
+            "cancel": "Abbrechen",
+            "registerNewKey": "Neuen Schlüssel registrieren",
+            "updateKey": "Schlüssel aktualisieren",
+            "loading": "Wird geladen...",
+            "fixErrors": "Beheben Sie die Fehler im Formular.",
+            "barcodeAndHotelRequired": "Bitte geben Sie Barcode/URL ein und wählen Sie ein Hotel aus.",
+            "keyNotRecognized": "Schlüssel nicht erkannt oder bereits zugewiesen.",
+            "codeNotFound": "Code nicht gefunden.",
+            "codeAlreadyAssigned": "Code bereits aktiv/zugewiesen.",
+            "unexpectedError": "Unerwarteter Fehler ist aufgetreten.",
+            "networkError": "Netzwerkfehler."
+        },
+        "GuestBox": {
+            "defaultHeading": "Ihr Schlüsselfinder",
+            "defaultDescription": "Geben Sie Ihre Daten ein, um Ihren Schlüssel im Verlustfall leichter zu finden.",
+            "defaultButtonText": "Button-Text eingeben",
+            "sectionBannerAlt": "Bereichs-Banner"
+        },
+        "HotelBrandingButtons": {
+            "buttonsHeading": "Buttons",
+            "buttonsDescription": "Sie können die Reihenfolge mit ↑/↓ ändern.",
+            "createNewButton": "Neuen Button erstellen",
+            "selectHotelFirst": "Wählen Sie zuerst ein Hotel aus, um einen neuen Button zu erstellen",
+            "addButton": "Button hinzufügen",
+            "icon": "Symbol",
+            "no": "Nr.",
+            "text": "Text",
+            "type": "Typ",
+            "action": "Aktion",
+            "edit": "Bearbeiten",
+            "delete": "Löschen",
+            "confirmDelete": "Sind Sie sicher, dass Sie diesen Button löschen möchten?"
+        },
+        "HotelBrandingForm": {
+            "brandingTitle": "Branding",
+            "brandingDescription": "Beschreibung dieses Diagramms kann hier stehen",
+            "fixErrorsMessage": "Bitte beheben Sie die folgenden Fehler:",
+            "headingUnderLogo": "Überschrift (unter Logo)",
+            "subHeadingUnderHeading": "Unterüberschrift (unter Überschrift)",
+            "primaryColorButtons": "Primärfarbe (Buttons)",
+            "backgroundColorPage": "Hintergrundfarbe (Seite)",
+            "textColorMainText": "Textfarbe (Haupttext)",
+            "buttonTextColor": "Button-Textfarbe",
+            "uploadLogo": "Logo hochladen",
+            "uploadBanner": "Banner hochladen",
+            "keyfinderPageTitle": "Schlüsselfinder-Seite",
+            "keyfinderWhatsAppText": "WhatsApp-Text ist festgelegt: \"Ich habe Ihren Schlüssel gefunden. Bitte kontaktieren Sie mich.\"",
+            "keyfinderPageHeading": "Schlüsselfinder-Seitenüberschrift",
+            "keyfinderPageTextPlaceholder": "Sie haben diesen Schlüssel gefunden? Bitte kontaktieren Sie den Eigentümer unter:",
+            "telephonePreviewReadOnly": "Telefon (Vorschau, schreibgeschützt)",
+            "colorsPreview": "Farben (Vorschau)",
+            "keyfinderBottomSectionTitle": "Schlüsselfinder unterer Bereich",
+            "keyfinderBottomSectionDescription": "Bearbeiten Sie die Details für den unteren Bereich des Schlüsselfinders",
+            "sectionHeading": "Bereichsüberschrift",
+            "sectionDescription": "Bereichsbeschreibung",
+            "uploadSectionBanner": "Bereichs-Banner hochladen",
+            "sectionButtonTextColor": "Bereichs-Button-Textfarbe",
+            "sectionButtonBgColor": "Bereichs-Button-Hintergrundfarbe",
+            "keyfinderBottomButtonTextExample": "z.B.: jetzt buchen",
+            "keyfinderBottomButtonUrlExample": "z.B.: https://www.hotelname.com/booking",
+            "colorPlaceholder": "Farbe",
+            "nextBookingButtonText": "Nächster Buchungs-Button-Text",
+            "nextBookingButtonUrl": "Nächster Buchungs-Button-URL"
+        },
+        "HotelBrandingPages": {
+            "individualPagesTitle": "Individuelle Seiten",
+            "individualPagesDescription": "Erstellen Sie Inhalte wie Gästeverzeichnisse, Spa-Informationen etc. und verknüpfen Sie diese mit den Buttons.",
+            "createPageButton": "Seite erstellen",
+            "createPageTooltip": "Neuen Button erstellen",
+            "createPageDisabledTooltip": "Wählen Sie zuerst ein Hotel aus, um einen neuen Button zu erstellen",
+            "edit": "Bearbeiten",
+            "delete": "Löschen"
+        },
+        "HotelBrandingPreview": {
+            "livePreviewTitle": "Live-Vorschau",
+            "livePreviewDescription": "Vorschau ist mobil (feste Breite).",
+            "landingTab": "Landingpage",
+            "keyFinderTab": "Schlüsselfinder"
+        },
+        "HotelButtonsModal": {
+            "editButtonTitle": "Button bearbeiten",
+            "createButtonTitle": "Button erstellen",
+            "buttonTypeLabel": "Button-Typ",
+            "buttonTextLabel": "Button-Text",
+            "buttonIconLabel": "Button-Symbol",
+            "buttonTextColorLabel": "Button-Textfarbe",
+            "buttonBgColorLabel": "Button-Hintergrundfarbe",
+            "urlLabel": "URL",
+            "urlPlaceholder": "https://example.com",
+            "phoneLabel": "Telefonnummer",
+            "phonePlaceholder": "+1234567890",
+            "whatsappLabel": "WhatsApp-Nummer",
+            "whatsappPlaceholder": "+1234567890",
+            "emailLabel": "E-Mail-Adresse",
+            "emailPlaceholder": "example@email.com",
+            "wifiNameLabel": "WiFi-Name",
+            "wifiNamePlaceholder": "Netzwerk-SSID",
+            "wifiPasswordLabel": "WiFi-Passwort",
+            "wifiPasswordPlaceholder": "Passwort",
+            "selectPageLabel": "Seite",
+            "selectMapLabel": "Kartenstandort",
+            "cancelButton": "Abbrechen",
+            "createButton": "Erstellen",
+            "saveButton": "Speichern",
+            "fixFormErrors": "Beheben Sie die Fehler im Formular."
+        },
+        "HotelCustomPage": {
+            "back": "Zurück"
+        },
+        "HotelKeyFinderDetails": {
+            "phone": "Telefon",
+            "whatsapp": "WhatsApp",
+            "whatsappMessage": "Ich habe Ihren Schlüssel gefunden. Bitte kontaktieren Sie mich."
+        },
+        "HotelLandingDetails": {
+            "guestNamePlaceholder": "Gastname",
+            "roomNumberPlaceholder": "Zimmer 312",
+            "room": "Zimmer",
+            "defaultHotelName": "Hotelname"
+        },
+        "hotel_page_modal": {
+            "create_title": "Seite erstellen",
+            "edit_title": "Seite bearbeiten",
+            "create_description": "Erstellen Sie individuelle Seiten für das Hotel.",
+            "edit_description": "Bearbeiten Sie hier individuelle Seiten.",
+            "page_name": "Seitenname",
+            "placeholder_page_name": "Seitennamen eingeben",
+            "cancel": "Abbrechen",
+            "create": "Erstellen",
+            "update": "Aktualisieren",
+            "form_error": "Beheben Sie die Fehler im Formular."
+        },
+        "hotelWifiModal": {
+            "title": "Wi-Fi-Details",
+            "description": "Anzeigen oder scannen, um eine Verbindung zum Hotel-Wi-Fi herzustellen.",
+            "ssid": "SSID",
+            "password": "Passwort",
+            "close": "Schließen"
+        },
+        "SidebarMenu": {
+            "dashboard": "Dashboard",
+            "keyManagement": "Schlüsselverwaltung",
+            "hotelConfigurator": "Hotel-Konfigurator",
+            "usersManagement": "Benutzerverwaltung",
+            "codeGenerator": "Code-Generator"
+        },
+        "sidebarUserDrop": {
+            "myProfile": "Mein Profil",
+            "signOut": "Abmelden"
+        },
+        "unsubscribeData": {
+            "keyIconAlt": "Schlüssel",
+            "title": "Schlüsselfinder abbestellt",
+            "description": "Ihre Daten wurden gelöscht und die Schlüsselfinder-Funktion deaktiviert.",
+            "landingPageButton": "Landingpage"
+        },
+        "userSelfEdit": {
+            "title": "Schlüsselfinder registrieren",
+            "subtitle": "Schlüsselfinder einrichten",
+            "stayFrom": "Aufenthalt von",
+            "stayTill": "Aufenthalt bis",
+            "salutation": "Anrede",
+            "mr": "Herr",
+            "mrs": "Frau",
+            "ms": "Frau",
+            "titleLabel": "Titel",
+            "titlePlaceholder": "z.B. Dr.",
+            "firstName": "Vorname",
+            "firstNamePlaceholder": "Vorname",
+            "lastName": "Nachname",
+            "lastNamePlaceholder": "Nachname",
+            "roomNumber": "Zimmernummer",
+            "roomNumberPlaceholder": "Zimmer Nr.",
+            "phoneNumber": "Handynummer (nur für Schlüsselfinder)",
+            "phoneNumberPlaceholder": "+49 123 456789",
+            "email": "E-Mail-Adresse",
+            "emailPlaceholder": "example@email.com",
+            "loading": "Wird geladen...",
+            "formError": "Beheben Sie die Fehler im Formular.",
+            "genericError": "Etwas ist schiefgelaufen.",
+            "cancel": "Abbrechen",
+            "save": "Speichern"
+        },
+        "codeGroupsPreview": {
+            "createdAt": "Erstellt am",
+            "hotel": "Hotel",
+            "type": "Typ",
+            "number": "Nummer",
+            "action": "Aktion",
+            "confirmDelete": "Sind Sie sicher? Es wird nur gelöscht, wenn keine Schlüsselzuweisungen vorhanden sind"
+        },
+        "codesForm": {
+            "hotel": "Hotel",
+            "keyType": "Schlüsseltyp",
+            "numberOfCodes": "Anzahl der Codes",
+            "domainReadOnly": "Domain (schreibgeschützt)",
+            "generateCodes": "Codes generieren",
+            "clearPreview": "Vorschau löschen",
+            "urlsGenerated": "URLs generiert und CSV heruntergeladen.",
+            "urlsImmediatelyActive": "Sobald generiert, sind die URLs sofort aktiv. Die CSV wird automatisch heruntergeladen und im Verlauf rechts gespeichert."
+        },
+        "codesPreview": {
+            "previewGeneratedUrls": "Vorschau: generierte URLs",
+            "hotel": "Hotel",
+            "url": "URL",
+            "type": "Typ",
+            "code": "Code",
+            "createdAt": "Erstellt am"
+        }
+    }
+}

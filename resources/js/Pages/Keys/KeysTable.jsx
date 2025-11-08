@@ -9,6 +9,8 @@ import { format, parseISO } from "date-fns";
 import { router } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { getDomain } from "@/utils/viteConfig";
+import { useLang } from "@/context/TranslationProvider";
+import axios from "axios";
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
@@ -22,6 +24,7 @@ function formatDate(dateStr) {
 DataTable.use(DT);
 
 export default function KeysTable({ codes = [], selectedHotel = null }) {
+    const { t } = useLang();
     const { openModal } = useModal();
     const { keyTypes = [] } = usePage().props;
 
@@ -29,16 +32,13 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
         "https://app.ppshotelsolutions.de"
     );
 
-    // fetch domain at component mount
     useEffect(() => {
         (async () => {
             const domain = await getDomain();
-            console.log("Fetched domain:", domain);
-            setLinkDomain(domain); // update local state
+            setLinkDomain(domain);
         })();
     }, []);
 
-    // Keep both tableData (for DataTable) and original mapping
     const tableData = codes.map((c) => ({
         name: c.key_assignment?.first_name
             ? `${c.key_assignment.salutation ?? ""} ${
@@ -54,14 +54,14 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
         code: c.code,
         status: c.status,
         keyType: c.key_type?.display_name ?? "-",
-        id: c.id, // useful for actions
-        original: c, // ✅ keep the full object here
+        id: c.id,
+        original: c,
     }));
 
     const columns = [
-        { title: "Name", data: "name" },
+        { title: t("keys.KeysTable.columns.name"), data: "name" },
         {
-            title: "Code",
+            title: t("keys.KeysTable.columns.code"),
             data: "code",
             createdCell: (td, cellData, rowData) => {
                 const root = createRoot(td);
@@ -78,18 +78,22 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
                 );
             },
         },
-        { title: "Stay", data: "stay" },
-        { title: "Room", data: "room" },
+        { title: t("keys.KeysTable.columns.stay"), data: "stay" },
+        { title: t("keys.KeysTable.columns.room"), data: "room" },
         {
-            title: "Status",
+            title: t("keys.KeysTable.columns.status"),
             data: "status",
             render: (data) =>
                 data === "active"
-                    ? `<span class="px-3 py-1 rounded-full text-green-900 text-sm bg-green-100 capitalize">${data}</span>`
-                    : `<span class="px-3 py-1 rounded-full text-red-900 text-sm bg-red-100 capitalize">${data}</span>`,
+                    ? `<span class="px-3 py-1 rounded-full text-green-900 text-sm bg-green-100 capitalize">${t(
+                          "keys.KeysTable.status.active"
+                      )}</span>`
+                    : `<span class="px-3 py-1 rounded-full text-red-900 text-sm bg-red-100 capitalize">${t(
+                          "keys.KeysTable.status.inactive"
+                      )}</span>`,
         },
         {
-            title: "Key Type",
+            title: t("keys.KeysTable.columns.keyType"),
             data: "keyType",
             render: (data) =>
                 !data || data === "-"
@@ -97,7 +101,7 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
                     : `<span class="capitalize">${data}</span>`,
         },
         {
-            title: "Actions",
+            title: t("keys.KeysTable.columns.actions"),
             data: "id",
             orderable: false,
             createdCell: (td, cellData, rowData) => {
@@ -113,7 +117,7 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
                                 })
                             }
                         >
-                            Edit
+                            {t("keys.KeysTable.columns.edit")}
                         </DropdownItem>
                         <DropdownItem
                             onClick={async () => {
@@ -125,14 +129,9 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
 
                                     const res = await axios.put(
                                         `/keys/${rowData.id}/status`,
-                                        {
-                                            status: newStatus,
-                                        }
+                                        { status: newStatus }
                                     );
 
-                                    console.log("✅ Status updated:", res.data);
-
-                                    // Refresh table or trigger callback
                                     router.reload({ only: ["codes"] });
                                 } catch (err) {
                                     console.error(
@@ -143,16 +142,14 @@ export default function KeysTable({ codes = [], selectedHotel = null }) {
                             }}
                         >
                             {rowData.status === "active"
-                                ? "Set Inactive"
-                                : "Set Active"}
+                                ? t("keys.KeysTable.columns.setInactive")
+                                : t("keys.KeysTable.columns.setActive")}
                         </DropdownItem>
                     </Dropdown>
                 );
             },
         },
     ];
-
-    console.log(codes);
 
     return (
         <div className="p-3 rounded-[14px] main-box bg-white">

@@ -6,8 +6,11 @@ import TextInput from "@/Components/TextInput";
 import { Transition } from "@headlessui/react";
 import { useForm } from "@inertiajs/react";
 import { useRef } from "react";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function UpdatePasswordForm({ className = "" }) {
+    const { t } = useLang("profile.UpdatePasswordForm");
+
     const passwordInput = useRef();
     const currentPasswordInput = useRef();
 
@@ -50,12 +53,11 @@ export default function UpdatePasswordForm({ className = "" }) {
             <div className="flex flex-col gap-6">
                 <header className="flex flex-col gap-1 pb-5 border-b border-b-[#EAECF0]">
                     <h2 className="text-lg font-semibold text-grey900">
-                        Password
+                        {t("headerTitle")}
                     </h2>
 
                     <p className="text-sm text-[#475467] font-inter">
-                        Please enter your current password to change your
-                        password.
+                        {t("headerDescription")}
                     </p>
                 </header>
 
@@ -68,7 +70,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                             <InputLabel
                                 className=" text-[#344054] font-medium"
                                 htmlFor="current_password"
-                                value="Current Password"
+                                value={t("currentPassword")}
                             />
 
                             <InputError
@@ -86,13 +88,13 @@ export default function UpdatePasswordForm({ className = "" }) {
                                     setData("current_password", e.target.value)
                                 }
                                 type="password"
-                                placeholder="********"
+                                placeholder={t("placeholder")}
                                 className="mt-1 block w-full"
                                 autoComplete="current-password"
                             />
                         </div>
                     </div>
-                    
+
                     <Divider />
 
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -100,7 +102,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                             <InputLabel
                                 className=" text-[#344054] font-medium"
                                 htmlFor="password"
-                                value="New Password"
+                                value={t("newPassword")}
                             />
                             <InputError
                                 message={errors.password}
@@ -117,13 +119,13 @@ export default function UpdatePasswordForm({ className = "" }) {
                                     setData("password", e.target.value)
                                 }
                                 type="password"
-                                placeholder="********"
+                                placeholder={t("placeholder")}
                                 className="mt-1 block w-full"
                                 autoComplete="new-password"
                             />
                         </div>
                     </div>
-                    
+
                     <Divider />
 
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -131,7 +133,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                             <InputLabel
                                 className=" text-[#344054] font-medium"
                                 htmlFor="password_confirmation"
-                                value="Confirm Password"
+                                value={t("confirmPassword")}
                             />
                             <InputError
                                 message={errors.password_confirmation}
@@ -149,7 +151,7 @@ export default function UpdatePasswordForm({ className = "" }) {
                                     )
                                 }
                                 type="password"
-                                placeholder="********"
+                                placeholder={t("placeholder")}
                                 className="mt-1 block w-full"
                                 autoComplete="new-password"
                             />
@@ -166,11 +168,13 @@ export default function UpdatePasswordForm({ className = "" }) {
                             leave="transition ease-in-out"
                             leaveTo="opacity-0"
                         >
-                            <p className="text-sm text-green-600">Saved.</p>
+                            <p className="text-sm text-green-600">
+                                {t("saved")}
+                            </p>
                         </Transition>
 
                         <PrimaryButton disabled={processing}>
-                            Save
+                            {t("saveButton")}
                         </PrimaryButton>
                     </div>
                 </form>

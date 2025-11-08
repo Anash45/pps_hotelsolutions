@@ -100,4 +100,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/test-locale', function () {
+    dd(app()->getLocale());
+});
+
+Route::middleware('web')->post('/language', function (Request $request) {
+    $validated = $request->validate([
+        'locale' => ['required', 'in:en,de'],
+    ]);
+
+    $locale = $validated['locale'];
+    Session::put('locale', $locale);
+    App::setLocale($locale);
+
+    return response()->json([
+        'success' => true,
+        'locale' => app()->getLocale(),
+        'session_locale' => session('locale'),
+        'message' => "Language switched to " . app()->getLocale(),
+    ]);
+});
+
+
 require __DIR__ . '/auth.php';

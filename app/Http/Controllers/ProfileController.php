@@ -40,6 +40,10 @@ class ProfileController extends Controller
     {
         $request->validate([
             'profile_image' => 'required|image|max:5120', // 5 MB
+        ], [
+            'profile_image.required' => __('messages.profileController.updatePhoto.validation_image_required'),
+            'profile_image.image' => __('messages.profileController.updatePhoto.validation_image_type'),
+            'profile_image.max' => __('messages.profileController.updatePhoto.validation_image_max'),
         ]);
 
         $user = $request->user();
@@ -56,10 +60,8 @@ class ProfileController extends Controller
         $user->profile_image = $path;
         $user->save();
 
-        return back()->with('success', 'Photo updated');
+        return back()->with('success', __('messages.profileController.updatePhoto.success'));
     }
-
-
 
     public function update(Request $request): RedirectResponse
     {
@@ -71,18 +73,13 @@ class ProfileController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
         ];
 
-        $messages = [
-            'first_name.required' => 'First name is required.',
-            'last_name.required' => 'Last name is required.',
-        ];
 
         // Only validate hotel_name if user is a hotel
         if ($user->role === 'hotel') {
             $rules['hotel_name'] = ['required', 'string', 'max:255'];
-            $messages['hotel_name.required'] = 'Hotel name is required.';
         }
 
-        $validated = $request->validate($rules, $messages);
+        $validated = $request->validate($rules);
 
         // Update user
         $user->first_name = $validated['first_name'];
@@ -102,7 +99,7 @@ class ProfileController extends Controller
             }
         }
 
-        return redirect()->route('profile.edit')->with('success', 'Profile updated.');
+        return redirect()->route('profile.edit')->with('success', __('messages.profileController.update.success'));
     }
 
 

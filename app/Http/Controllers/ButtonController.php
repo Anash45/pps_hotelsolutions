@@ -34,7 +34,7 @@ class ButtonController extends Controller
         // ✅ Authorization check
         $hotel = Hotel::findOrFail($validated['hotel_id']);
         if (($user->hotel?->id !== $hotel->id) && !$user->is_admin()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('messages.buttonController.btn.store.unauthorized')], 403);
         }
 
         // ✅ Get the last order value for this hotel
@@ -46,7 +46,7 @@ class ButtonController extends Controller
         $button = Button::create($validated);
 
         return response()->json([
-            'message' => 'Button created successfully!',
+            'message' => __('messages.buttonController.btn.store.success'),
             'button' => $button,
         ], 201);
     }
@@ -59,7 +59,7 @@ class ButtonController extends Controller
         // Authorization check
         $hotel = Hotel::findOrFail($button->hotel_id);
         if (($user->hotel?->id !== $hotel->id) && !$user->is_admin()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('messages.buttonController.btn.update.unauthorized')], 403);
         }
 
         $validated = $request->validate([
@@ -92,7 +92,7 @@ class ButtonController extends Controller
         $button->update($validated);
 
         return response()->json([
-            'message' => 'Button updated successfully!',
+            'message' => __('messages.buttonController.btn.update.success'),
             'button' => $button,
         ]);
     }
@@ -105,13 +105,13 @@ class ButtonController extends Controller
         // Authorization check
         $hotel = Hotel::findOrFail($button->hotel_id);
         if (($user->hotel?->id !== $hotel->id) && !$user->is_admin()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('messages.buttonController.btn.destroy.unauthorized')], 403);
         }
 
         $button->delete();
 
         return response()->json([
-            'message' => 'Button deleted successfully!',
+            'message' => __('messages.buttonController.btn.destroy.success'),
         ]);
     }
 
@@ -131,14 +131,14 @@ class ButtonController extends Controller
 
             // ✅ Authorization check: must belong to hotel of current user
             if (($user->hotel?->id !== $button->hotel_id) && !$user->is_admin()) {
-                return response()->json(['message' => 'Unauthorized'], 403);
+                return response()->json(['message' => __('messages.buttonController.btn.reorder.unauthorized')], 403);
             }
 
             $button->update(['order' => $btnData['order']]);
         }
 
         return response()->json([
-            'message' => 'Button order updated successfully.',
+            'message' => __('messages.buttonController.btn.reorder.success'),
         ]);
     }
 
@@ -149,6 +149,8 @@ class ButtonController extends Controller
             'viewed_at' => now(),
         ]);
 
-        return response()->json(['message' => 'View tracked']);
+        return response()->json([
+            'message' => __('messages.buttonController.btn.trackView.success'),
+        ]);
     }
 }

@@ -1,15 +1,16 @@
 import GuestBox from "@/Components/GuestBox";
 import HotelCustomPage from "@/Components/HotelCustomPage";
-import HotelLanding from "@/Components/HotelLanding";
 import { PageContext } from "@/context/PageProvider";
 import GuestKeyLayout from "@/Layouts/GuestKeyLayout";
 import { mapHotelToBrandingFormData } from "@/utils/mapHotelToBrandingFormData";
 import { Head, usePage } from "@inertiajs/react";
 import { useContext, useEffect } from "react";
+import { useLang } from "@/context/TranslationProvider";
 
-function Show() {
+function HotelPages() {
     const { selectedHotel = null, page, key } = usePage().props;
     const { setBrandingFormData } = useContext(PageContext);
+    const { t } = useLang("Pages.hotelPages");
 
     // keep brandingFormData for hotel styles/config only
     useEffect(() => {
@@ -22,7 +23,7 @@ function Show() {
 
     return (
         <>
-            <Head title={page?.title ?? "Hotel Page"} />
+            <Head title={page?.title ?? t("defaultPageTitle")} />
             <GuestBox realPhone={true}>
                 {/* ✅ pass key separately */}
                 <HotelCustomPage page={page} guestKey={key} />
@@ -32,6 +33,6 @@ function Show() {
 }
 
 // ✅ Attach layout
-Show.layout = (page) => <GuestKeyLayout children={page} />;
+HotelPages.layout = (page) => <GuestKeyLayout>{page}</GuestKeyLayout>;
 
-export default Show;
+export default HotelPages;

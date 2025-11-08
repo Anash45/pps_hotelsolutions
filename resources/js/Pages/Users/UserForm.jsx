@@ -4,8 +4,11 @@ import TextInput from "@/Components/TextInput";
 import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectInput from "@/Components/SelectInput";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function UserForm({ user = null }) {
+    const { t } = useLang("users.UserForm");
+
     const { data, setData, post, put, processing, errors } = useForm({
         hotel_name: user?.hotel?.hotel_name || "",
         first_name: user?.first_name || "",
@@ -18,7 +21,6 @@ export default function UserForm({ user = null }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         if (user) {
             put(route("users.update", user.id));
         } else {
@@ -37,7 +39,7 @@ export default function UserForm({ user = null }) {
                     <div className="space-y-1">
                         <InputLabel
                             htmlFor="hotel_name"
-                            value="Hotel Name"
+                            value={t("hotelName")}
                             className="text-[#344054] font-medium"
                         />
                         <TextInput
@@ -62,7 +64,7 @@ export default function UserForm({ user = null }) {
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="first_name"
-                        value="First Name"
+                        value={t("firstName")}
                         className="text-[#344054] font-medium"
                     />
                     <TextInput
@@ -80,7 +82,7 @@ export default function UserForm({ user = null }) {
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="last_name"
-                        value="Last Name"
+                        value={t("lastName")}
                         className="text-[#344054] font-medium"
                     />
                     <TextInput
@@ -100,7 +102,7 @@ export default function UserForm({ user = null }) {
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="email"
-                        value="Email"
+                        value={t("email")}
                         className="text-[#344054] font-medium"
                     />
                     <TextInput
@@ -119,7 +121,7 @@ export default function UserForm({ user = null }) {
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="role"
-                        value="Role"
+                        value={t("role")}
                         className="text-[#344054] font-medium"
                     />
                     <SelectInput
@@ -129,8 +131,8 @@ export default function UserForm({ user = null }) {
                         onChange={(e) => setData("role", e.target.value)}
                         className="w-full block"
                         options={[
-                            { value: "admin", label: "Admin" },
-                            { value: "hotel", label: "Hotel" },
+                            { value: "admin", label: t("admin") },
+                            { value: "hotel", label: t("hotel") },
                         ]}
                     />
                     <InputError message={errors.role} className="mt-1" />
@@ -142,9 +144,11 @@ export default function UserForm({ user = null }) {
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="password"
-                        value={`Password${
-                            user ? " (leave blank to keep current)" : ""
-                        }`}
+                        value={
+                            user
+                                ? `${t("password")} ${t("passwordHint")}`
+                                : t("password")
+                        }
                         className="text-[#344054] font-medium"
                     />
                     <TextInput
@@ -162,7 +166,7 @@ export default function UserForm({ user = null }) {
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="password_confirmation"
-                        value="Confirm Password"
+                        value={t("passwordConfirmation")}
                         className="text-[#344054] font-medium"
                     />
                     <TextInput
@@ -181,7 +185,7 @@ export default function UserForm({ user = null }) {
             {/* Submit */}
             <div className="flex justify-end">
                 <PrimaryButton type="submit" disabled={processing}>
-                    {user ? "Update User" : "Create User"}
+                    {user ? t("updateUser") : t("createUser")}
                 </PrimaryButton>
             </div>
         </form>
