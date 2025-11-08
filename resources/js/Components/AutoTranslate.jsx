@@ -9,8 +9,9 @@ export default function AutoTranslate({ text }) {
     const [loading, setLoading] = useState(false);
 
     const originalText = useRef(text);
-    const translationCache = useRef({}); // cache translations
+    const translationCache = useRef({}); // { "en->de:text": "..." }
 
+    // Update original text on prop change
     useEffect(() => {
         originalText.current = text;
         if (!lang) setTranslated(text); // failsafe
@@ -50,8 +51,18 @@ export default function AutoTranslate({ text }) {
         }
     };
 
-    const translateHTML = async (html) => {
-        // Regex to match text nodes but skip tags and attributes
+    const translateHTML = async (html, targetLang) => {
+        // Detect if the input has HTML tags
+        const hasHTML = /<[^>]+>/.test(html);
+
+        if (!hasHTML) {
+            // Plain text, just translate the whole string
+            const detectedLang = await detectLanguage(html);
+            if (detectedLang === targetLang) return html;
+            return await translateLine(html, detectedLang, targetLang);
+        }
+
+        // Rich HTML case
         const regex = />([^<]+)</g;
         const matches = [...html.matchAll(regex)];
         let result = html;
@@ -62,14 +73,15 @@ export default function AutoTranslate({ text }) {
 
             const detectedLang = await detectLanguage(originalText);
             let translatedText = originalText;
-            if (detectedLang !== lang) {
+            if (detectedLang !== targetLang) {
                 translatedText = await translateLine(
                     originalText,
                     detectedLang,
-                    lang
+                    targetLang
                 );
             }
-            // Replace original text in HTML with translated
+
+            // Replace only first occurrence
             result = result.replace(originalText, translatedText);
         }
         return result;
@@ -80,7 +92,10 @@ export default function AutoTranslate({ text }) {
 
         const processText = async () => {
             setLoading(true);
-            const translatedHTML = await translateHTML(originalText.current);
+            const translatedHTML = await translateHTML(
+                originalText.current,
+                lang
+            );
             setTranslated(translatedHTML);
             setLoading(false);
         };
