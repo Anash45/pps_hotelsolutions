@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { getIcon } from "@/data/iconMap";
 import { useModal } from "@/context/ModalProvider";
 import { PageContext } from "@/context/PageProvider";
+import AutoTranslate from "./AutoTranslate";
 
 export default function HotelLandingButtons({
     codeDetails = {},
@@ -75,12 +76,9 @@ export default function HotelLandingButtons({
                                 brandingFormData.primary_color,
                         }}
                         target={
-                            [
-                                "url",
-                                "map",
-                                "whatsapp",
-                                "email",
-                            ].includes(button.type)
+                            ["url", "map", "whatsapp", "email"].includes(
+                                button.type
+                            )
                                 ? "_blank"
                                 : "_self"
                         }
@@ -89,7 +87,9 @@ export default function HotelLandingButtons({
                     >
                         <div className="flex justify-start items-center gap-2">
                             {Icon ? <Icon size={18} /> : <span />}
-                            <span>{button.text}</span>
+                            <span>
+                                <AutoTranslate text={button.text} />
+                            </span>
                             {isLoading && (
                                 <svg
                                     className="animate-spin ml-auto h-4 w-4 text-white"

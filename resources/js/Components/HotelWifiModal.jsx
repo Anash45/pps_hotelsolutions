@@ -3,6 +3,7 @@ import LightButton from "./LightButton";
 import { PageContext } from "@/context/PageProvider";
 import { QRCodeSVG } from "qrcode.react";
 import { useLang } from "@/context/TranslationProvider";
+import AutoTranslate from "./AutoTranslate";
 
 export default function HotelWifiModal({ onClose, wifiName, wifiPassword }) {
     const { t } = useLang("Components.hotelWifiModal");
@@ -28,19 +29,19 @@ export default function HotelWifiModal({ onClose, wifiName, wifiPassword }) {
             <div className="space-y-3">
                 <div className="space-y-1">
                     <h2 className="text-lg text-[#201A20] font-semibold">
-                        {t("title")}
+                        <AutoTranslate text={'Wi-Fi Details'} />
                     </h2>
                     <p className="text-xs font-medium text-[#475569]">
-                        {t("description")}
+                        <AutoTranslate text={'View or scan to connect to the hotel Wi-Fi.'} />
                     </p>
                 </div>
 
                 <div className="space-y-3 text-center font-semibold">
                     <h3 className="text-2xl">
-                        {t("ssid")}: {wifiName}
+                        SSID: {wifiName}
                     </h3>
                     <h3 className="text-2xl">
-                        {t("password")}: {wifiPassword}
+                        Password: {wifiPassword}
                     </h3>
 
                     {/* QR Code */}

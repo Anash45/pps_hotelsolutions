@@ -4,6 +4,7 @@ import { format, parseISO } from "date-fns";
 import { useContext } from "react";
 import HotelLandingButtons from "./HotelLandingButtons";
 import { useLang } from "@/context/TranslationProvider";
+import AutoTranslate from "./AutoTranslate";
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
@@ -31,10 +32,10 @@ const HotelLandingDetails = () => {
                 brandingFormData.user_view === false ? (
                     <>
                         <span className="text-base font-medium">
-                            {t("guestNamePlaceholder")}
+                            <AutoTranslate text={`Guest Name`} />
                         </span>
-                        <span className="text-base font-medium">
-                            {t("roomNumberPlaceholder")}
+                        <span className="text-base font-medium ml-auto">
+                            <AutoTranslate text={`Room 312`} />
                         </span>
                     </>
                 ) : (
@@ -45,8 +46,8 @@ const HotelLandingDetails = () => {
                         </span>
 
                         {keyDetails?.room_number && (
-                            <span className="text-base font-medium">
-                                {t("room")} {keyDetails?.room_number}
+                            <span className="text-base font-medium ml-auto">
+                                <AutoTranslate text={`Room`} /> {keyDetails?.room_number}
                             </span>
                         )}
                     </>
@@ -70,7 +71,7 @@ const HotelLandingDetails = () => {
 
                 <div className="flex flex-col">
                     <p className="text-2xl font-semibold">
-                        {brandingFormData.heading ?? t("defaultHotelName")}
+                        {brandingFormData.heading ?? <AutoTranslate text={`Hotel Name`} />}
                     </p>
 
                     {keyDetails?.stay_from && keyDetails?.stay_till ? (
@@ -88,7 +89,7 @@ const HotelLandingDetails = () => {
 
                 {brandingFormData.sub_heading && (
                     <p className="text-lg text-center">
-                        {brandingFormData.sub_heading}
+                        <AutoTranslate text={brandingFormData.sub_heading} />
                     </p>
                 )}
             </div>

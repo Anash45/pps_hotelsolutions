@@ -37,11 +37,11 @@ export function AutoTranslateProvider({ children }) {
             {children}
 
             {/* Floating dropdown */}
-            <div className="fixed bottom-6 right-6 z-50" ref={ref}>
+            <div className="fixed top-4 right-4 z-50" ref={ref}>
                 <div className="relative">
                     {/* Drop-up menu */}
                     {open && (
-                        <div className="absolute bottom-12 right-0 mb-2 w-36 rounded-2xl shadow-lg bg-white border border-gray-200 transition-all duration-150">
+                        <div className="absolute top-12 right-0 mb-2 w-36 rounded-2xl shadow-lg bg-white border border-gray-200 transition-all duration-150">
                             {languages.map((l) => (
                                 <button
                                     key={l.code}

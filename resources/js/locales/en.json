@@ -160,13 +160,6 @@
         "defaultPageTitle": "Hotel Page"
     },
     "Components": {
-        "AskDetails": {
-            "description1": "This key can serve as a key finder after your stay.",
-            "description2": "To do so you must enter your mobile number along with other details in next dialog so that a finder can <span class=\"font-bold\">contact you</span>.",
-            "question": "Would you like to use the key finder function?",
-            "yes": "Yes",
-            "no": "No"
-        },
         "BrandingImageUploader": {
             "clickToUpload": "Click to upload",
             "orDragAndDrop": "or drag and drop",
@@ -201,12 +194,6 @@
             "codeAlreadyAssigned": "Code already active/assigned.",
             "unexpectedError": "Unexpected error occurred.",
             "networkError": "Network error."
-        },
-        "GuestBox": {
-            "defaultHeading": "Your Key Finder",
-            "defaultDescription": "Enter your details to help locate your key if lost.",
-            "defaultButtonText": "Enter button text",
-            "sectionBannerAlt": "Section Banner"
         },
         "HotelBrandingButtons": {
             "buttonsHeading": "Buttons",
@@ -303,12 +290,6 @@
             "phone": "Phone",
             "whatsapp": "Whatsapp",
             "whatsappMessage": "I found your key. Please contact me."
-        },
-        "HotelLandingDetails": {
-            "guestNamePlaceholder": "Guest Name",
-            "roomNumberPlaceholder": "Room 312",
-            "room": "Room",
-            "defaultHotelName": "Hotel Name"
         },
         "hotel_page_modal": {
             "create_title": "Create page",
