@@ -16,20 +16,17 @@ export default function HotelPageModal({
 }) {
     const { t } = useLang("Components.hotel_page_modal");
 
-    const title = page
-        ? t("edit_title")
-        : t("create_title");
-
-    const description = page
-        ? t("edit_description")
-        : t("create_description");
+    const title = page ? t("edit_title") : t("create_title");
+    const description = page ? t("edit_description") : t("create_description");
 
     const [show, setShow] = useState(false);
     const [formErrors, setFormErrors] = useState({});
     const [formData, setFormData] = useState({
         hotel_id: selectedHotel?.id ?? null,
         title: page?.title ?? "",
+        title_de: page?.title_de ?? "",
         content: page?.content ?? "",
+        content_de: page?.content_de ?? "",
     });
 
     useEffect(() => {
@@ -54,6 +51,8 @@ export default function HotelPageModal({
                 ? await axios.put(`/hotel-pages/${page.id}`, formData)
                 : await axios.post("/hotel-pages", formData);
 
+            // console.log("response: ", response);
+
             router.reload({ only: ["selectedHotel"] });
             setTimeout(handleClose, 500);
         } catch (err) {
@@ -64,6 +63,8 @@ export default function HotelPageModal({
             }
         }
     };
+
+    // console.log("form data: ", formData);
 
     return (
         <div
@@ -83,41 +84,71 @@ export default function HotelPageModal({
                 </div>
 
                 <div className="space-y-3">
-                    <div className="space-y-1">
-                        <InputLabel
-                            htmlFor="title"
-                            value={t("page_name")}
-                            className="text-[#475569] text-xs font-medium"
-                        />
-                        <TextInput
-                            id="title"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleChange}
-                            type="text"
-                            className="date-inp block w-full"
-                            placeholder={t(
-                                "placeholder_page_name"
-                            )}
-                            required
-                        />
-                        <InputError message={formErrors.title?.[0]} />
+                    <div className="grid gap-3 sm:grid-cols-2 grid-cols-1">
+                        <div className="space-y-1">
+                            <InputLabel
+                                htmlFor="title"
+                                value={t("page_name")}
+                                className="text-[#475569] text-xs font-medium"
+                            />
+                            <TextInput
+                                id="title"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                                type="text"
+                                className="date-inp block w-full"
+                                placeholder={t("placeholder_page_name")}
+                                required
+                            />
+                            <InputError message={formErrors.title?.[0]} />
+                        </div>
+                        <div className="space-y-1">
+                            <InputLabel
+                                htmlFor="title_de"
+                                value={t("page_name_de")}
+                                className="text-[#475569] text-xs font-medium"
+                            />
+                            <TextInput
+                                id="title_de"
+                                name="title_de"
+                                value={formData.title_de}
+                                onChange={handleChange}
+                                type="text"
+                                className="date-inp block w-full"
+                                placeholder={t("placeholder_page_name_de")}
+                                required
+                            />
+                            <InputError message={formErrors.title_de?.[0]} />
+                        </div>
                     </div>
 
                     <div className="space-y-1">
                         <HotelPageEditor
+                            fieldName="content"
                             formData={formData}
                             handleChange={handleChange}
+                            label={t("englishLabel")}
+                            placeholder="Start writing your page content..."
                         />
                         <InputError message={formErrors.content?.[0]} />
+                    </div>
+
+                    <div className="space-y-1">
+                        <HotelPageEditor
+                            fieldName="content_de"
+                            formData={formData}
+                            handleChange={handleChange}
+                            label={t("germanLabel")}
+                            placeholder="Beginnen Sie mit dem Schreiben Ihres Seiteninhalts...."
+                        />
+                        <InputError message={formErrors.content_de?.[0]} />
                     </div>
                 </div>
 
                 <div className="flex items-center gap-2 justify-end flex-wrap">
                     {Object.keys(formErrors).length > 0 && (
-                        <InputError
-                            message={t("form_error")}
-                        />
+                        <InputError message={t("form_error")} />
                     )}
                     <LightButton onClick={handleClose}>
                         {t("cancel")}
@@ -126,9 +157,7 @@ export default function HotelPageModal({
                         disabled={!selectedHotel}
                         onClick={handleSave}
                     >
-                        {page
-                            ? t("update")
-                            : t("create")}
+                        {page ? t("update") : t("create")}
                     </PrimaryButton>
                 </div>
             </div>

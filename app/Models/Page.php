@@ -12,8 +12,10 @@ class Page extends Model
     protected $fillable = [
         'hotel_id',
         'title',
+        'title_de',
         'slug',
         'content',
+        'content_de',
     ];
 
     // Automatically generate unique slug from title

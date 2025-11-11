@@ -14,6 +14,7 @@ class Hotel extends Model
         'hotel_name',
         'heading',
         'sub_heading',
+        'sub_heading_de',
         'keyfinder_heading',
         'logo_image',
         'banner_image',
@@ -30,6 +31,11 @@ class Hotel extends Model
         'key_finder_bottom_btn_text_color',
         'key_finder_bottom_btn_bg_color',
         'section_banner_image',
+        'keyfinder_heading_de',
+        'key_finder_page_text_de',
+        'key_finder_bottom_heading_de',
+        'key_finder_bottom_description_de',
+        'key_finder_bottom_btn_text_de',
     ];
 
     // Relationship: Hotel has many users

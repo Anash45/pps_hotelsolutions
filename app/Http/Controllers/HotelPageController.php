@@ -53,7 +53,9 @@ class HotelPageController extends Controller
         $validated = $request->validate([
             'hotel_id' => ['required', 'exists:hotels,id'],
             'title' => ['required', 'string', 'max:255'],
+            'title_de' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
+            'content_de' => ['required', 'string'],
             'slug' => ['nullable', 'string', 'max:255'],
         ]);
 
@@ -76,8 +78,10 @@ class HotelPageController extends Controller
         $page = Page::create([
             'hotel_id' => $validated['hotel_id'],
             'title' => $validated['title'],
+            'title_de' => $validated['title_de'],
             'slug' => $slug,
             'content' => $validated['content'],
+            'content_de' => $validated['content_de'],
         ]);
 
         return response()->json([
@@ -109,12 +113,25 @@ class HotelPageController extends Controller
                     }
                 },
             ],
+            'title_de' => ['required', 'string', 'max:255'],
+            'content_de' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    $plainText = trim(strip_tags($value));
+                    if (strlen($plainText) === 0) {
+                        $fail(__('messages.hotelPageController.update.validation_error'));
+                    }
+                },
+            ],
         ]);
 
         // ✅ Update only title and content, leave slug untouched
         $page->update([
             'title' => $validated['title'],
             'content' => $validated['content'],
+            'title_de' => $validated['title_de'],
+            'content_de' => $validated['content_de'],
         ]);
 
         return response()->json([

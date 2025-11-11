@@ -4,6 +4,7 @@ import { getIcon } from "@/data/iconMap";
 import { useModal } from "@/context/ModalProvider";
 import { PageContext } from "@/context/PageProvider";
 import AutoTranslate from "./AutoTranslate";
+import { useAutoTranslate } from "@/context/AutoTranslateProvider";
 
 export default function HotelLandingButtons({
     codeDetails = {},
@@ -11,6 +12,8 @@ export default function HotelLandingButtons({
 }) {
     const { openModal } = useModal();
     const { loadingButton, setLoadingButton } = useContext(PageContext);
+    const context = useAutoTranslate();
+    const isDE = context?.isDE || null;
 
     const handleView = async (buttonId) => {
         try {
@@ -88,7 +91,9 @@ export default function HotelLandingButtons({
                         <div className="flex justify-start items-center gap-2">
                             {Icon ? <Icon size={18} /> : <span />}
                             <span>
-                                <AutoTranslate text={button.text} />
+                                {isDE && button.text_de
+                                    ? button.text_de
+                                    : button.text}
                             </span>
                             {isLoading && (
                                 <svg

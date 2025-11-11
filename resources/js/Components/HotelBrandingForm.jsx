@@ -70,22 +70,41 @@ export default function HotelBrandingForm({ formErrors }) {
                 </div>
 
                 {/* Sub Heading */}
-                <div className="space-y-1">
-                    <InputLabel
-                        htmlFor="sub_heading"
-                        value={t("subHeadingUnderHeading")}
-                        className="text-[#475569] text-xs font-medium"
-                    />
-                    <TextInput
-                        id="sub_heading"
-                        name="sub_heading"
-                        type="text"
-                        value={brandingFormData.sub_heading}
-                        onChange={handleBrandingChange}
-                        className="block w-full"
-                        placeholder={t("subHeadingUnderHeading")}
-                        required
-                    />
+                <div className="grid gap-3 sm:grid-cols-2 grid-cols-1">
+                    <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="sub_heading"
+                            value={t("subHeadingUnderHeading")}
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <TextInput
+                            id="sub_heading"
+                            name="sub_heading"
+                            type="text"
+                            value={brandingFormData.sub_heading}
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder={t("subHeadingUnderHeading")}
+                            required
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="sub_heading_de"
+                            value={t("subHeadingUnderHeadingDE")}
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <TextInput
+                            id="sub_heading_de"
+                            name="sub_heading_de"
+                            type="text"
+                            value={brandingFormData.sub_heading_de}
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder={t("subHeadingUnderHeadingDE")}
+                            required
+                        />
+                    </div>
                 </div>
 
                 {/* Colors */}
@@ -214,25 +233,49 @@ export default function HotelBrandingForm({ formErrors }) {
                     </p>
                 </div>
 
-                <div className="space-y-1">
-                    <InputLabel
-                        htmlFor="keyfinder_heading"
-                        value={t("keyfinderPageHeading")}
-                        className="text-[#475569] text-xs font-medium"
-                    />
-                    <TextInput
-                        id="keyfinder_heading"
-                        name="keyfinder_heading"
-                        type="text"
-                        value={brandingFormData.keyfinder_heading}
-                        onChange={handleBrandingChange}
-                        className="block w-full"
-                        placeholder={t("keyfinderPageHeading")}
-                        required
-                    />
+                <div className="grid gap-3 sm:grid-cols-2 grid-cols-1">
+                    <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="keyfinder_heading"
+                            value={t("keyfinderPageHeading")}
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <TextInput
+                            id="keyfinder_heading"
+                            name="keyfinder_heading"
+                            type="text"
+                            value={brandingFormData.keyfinder_heading}
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder={t("keyfinderPageHeading")}
+                            required
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="keyfinder_heading_de"
+                            value={t("keyfinderPageHeadingDE")}
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <TextInput
+                            id="keyfinder_heading_de"
+                            name="keyfinder_heading_de"
+                            type="text"
+                            value={brandingFormData.keyfinder_heading_de}
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder={t("keyfinderPageHeadingDE")}
+                            required
+                        />
+                    </div>
                 </div>
 
                 <div className="space-y-1">
+                    <InputLabel
+                        htmlFor="key_finder_page_text"
+                        value={t("keyfinderPageText")}
+                        className="text-[#475569] text-xs font-medium"
+                    />
                     <Textarea
                         id="key_finder_page_text"
                         name="key_finder_page_text"
@@ -242,6 +285,25 @@ export default function HotelBrandingForm({ formErrors }) {
                         onChange={handleBrandingChange}
                         className="block w-full"
                         placeholder={t("keyfinderPageTextPlaceholder")}
+                        required
+                    />
+                </div>
+
+                <div className="space-y-1">
+                    <InputLabel
+                        htmlFor="key_finder_page_text_de"
+                        value={t("keyfinderPageTextDE")}
+                        className="text-[#475569] text-xs font-medium"
+                    />
+                    <Textarea
+                        id="key_finder_page_text_de"
+                        name="key_finder_page_text_de"
+                        type="text"
+                        rows={5}
+                        value={brandingFormData.key_finder_page_text_de}
+                        onChange={handleBrandingChange}
+                        className="block w-full"
+                        placeholder={t("keyfinderPageTextPlaceholderDE")}
                         required
                     />
                 </div>
@@ -297,22 +359,41 @@ export default function HotelBrandingForm({ formErrors }) {
                     </p>
                 </div>
 
-                <div className="space-y-1">
-                    <InputLabel
-                        htmlFor="key_finder_bottom_heading"
-                        value={t("sectionHeading")}
-                        className="text-[#475569] text-xs font-medium"
-                    />
-                    <TextInput
-                        id="key_finder_bottom_heading"
-                        name="key_finder_bottom_heading"
-                        type="text"
-                        value={brandingFormData.key_finder_bottom_heading}
-                        onChange={handleBrandingChange}
-                        className="block w-full"
-                        placeholder=""
-                        required
-                    />
+                <div className="grid gap-3 sm:grid-cols-2 grid-cols-1">
+                    <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="key_finder_bottom_heading"
+                            value={t("sectionHeading")}
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <TextInput
+                            id="key_finder_bottom_heading"
+                            name="key_finder_bottom_heading"
+                            type="text"
+                            value={brandingFormData.key_finder_bottom_heading}
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder=""
+                            required
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="key_finder_bottom_heading_de"
+                            value={t("sectionHeadingDE")}
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <TextInput
+                            id="key_finder_bottom_heading_de"
+                            name="key_finder_bottom_heading_de"
+                            type="text"
+                            value={brandingFormData.key_finder_bottom_heading_de}
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder=""
+                            required
+                        />
+                    </div>
                 </div>
 
                 <div className="space-y-1">
@@ -327,6 +408,25 @@ export default function HotelBrandingForm({ formErrors }) {
                         type="text"
                         rows={5}
                         value={brandingFormData.key_finder_bottom_description}
+                        onChange={handleBrandingChange}
+                        className="block w-full"
+                        placeholder=""
+                        required
+                    />
+                </div>
+
+                <div className="space-y-1">
+                    <InputLabel
+                        htmlFor="key_finder_bottom_description_de"
+                        value={t("sectionDescriptionDE")}
+                        className="text-[#475569] text-xs font-medium"
+                    />
+                    <Textarea
+                        id="key_finder_bottom_description_de"
+                        name="key_finder_bottom_description_de"
+                        type="text"
+                        rows={5}
+                        value={brandingFormData.key_finder_bottom_description_de}
                         onChange={handleBrandingChange}
                         className="block w-full"
                         placeholder=""
@@ -368,8 +468,25 @@ export default function HotelBrandingForm({ formErrors }) {
                             required
                         />
                     </div>
-
                     <div className="space-y-1">
+                        <InputLabel
+                            htmlFor="key_finder_bottom_btn_text_de"
+                            value={t("nextBookingButtonTextDE")}
+                            className="text-[#475569] text-xs font-medium"
+                        />
+                        <TextInput
+                            id="key_finder_bottom_btn_text_de"
+                            name="key_finder_bottom_btn_text_de"
+                            type="text"
+                            value={brandingFormData.key_finder_bottom_btn_text_de}
+                            onChange={handleBrandingChange}
+                            className="block w-full"
+                            placeholder={t("keyfinderBottomButtonTextExample")}
+                            required
+                        />
+                    </div>
+
+                    <div className="space-y-1 sm:col-span-2">
                         <InputLabel
                             htmlFor="key_finder_bottom_btn_url"
                             value={t("nextBookingButtonUrl")}

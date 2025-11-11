@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { useLang } from "@/context/TranslationProvider";
 import { Link } from "@inertiajs/react";
 import AutoTranslate from "./AutoTranslate";
+import { useAutoTranslate } from "@/context/AutoTranslateProvider";
 
 const GuestBox = ({
     realPhone = false,
@@ -11,6 +12,8 @@ const GuestBox = ({
     children,
     showNextBox = false,
 }) => {
+    const context = useAutoTranslate();
+    const isDE = context?.isDE || null;
     const { t } = useLang("Components.GuestBox"); // 🔥 translations for this component
     const { brandingFormData } = useContext(PageContext);
 
@@ -51,17 +54,30 @@ const GuestBox = ({
                     } origin-top`}
                     style={{ backgroundColor: bgColor }}
                 >
-                    {(bottomHeading || bottomDescription) && (
+                    {(brandingFormData.key_finder_bottom_heading_de ||
+                        brandingFormData.key_finder_bottom_heading ||
+                        brandingFormData.key_finder_bottom_description_de ||
+                        brandingFormData.key_finder_bottom_description) && (
                         <div>
-                            {bottomHeading && (
+                            {((isDE &&
+                                brandingFormData.key_finder_bottom_heading_de) ||
+                                brandingFormData.key_finder_bottom_heading) && (
                                 <h4 className="text-[#161616] text-[22px] font-semibold">
-                                    <AutoTranslate text={bottomHeading} />
+                                    {isDE &&
+                                    brandingFormData.key_finder_bottom_heading_de
+                                        ? brandingFormData.key_finder_bottom_heading_de
+                                        : brandingFormData.key_finder_bottom_heading}
                                 </h4>
                             )}
 
-                            {bottomDescription && (
+                            {((isDE &&
+                                brandingFormData.key_finder_bottom_description_de) ||
+                                brandingFormData.key_finder_bottom_description) && (
                                 <p className="text-base leading-tight">
-                                    <AutoTranslate text={bottomDescription} />
+                                    {isDE &&
+                                    brandingFormData.key_finder_bottom_description_de
+                                        ? brandingFormData.key_finder_bottom_description_de
+                                        : brandingFormData.key_finder_bottom_description}
                                 </p>
                             )}
                         </div>
@@ -95,7 +111,10 @@ const GuestBox = ({
                                     brandingFormData.primary_color,
                             }}
                         >
-                            <AutoTranslate text={bottomBtnText} />
+                            {isDE &&
+                            brandingFormData.key_finder_bottom_btn_text_de
+                                ? brandingFormData.key_finder_bottom_btn_text_de
+                                : brandingFormData.key_finder_bottom_btn_text}
                         </a>
                     </div>
                 </div>

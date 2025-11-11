@@ -1,10 +1,12 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@inertiajs/react";
-import { useLang } from "@/context/TranslationProvider";
 import AutoTranslate from "./AutoTranslate";
+import { useAutoTranslate } from "@/context/AutoTranslateProvider";
 
 export default function HotelCustomPage({ page = null, guestKey = null }) {
-    console.log(page?.content);
+    const context = useAutoTranslate();
+    const isDE = context?.isDE || null;
+    // console.log(page?.content);
 
     return (
         <div className="space-y-4 px-2">
@@ -14,7 +16,7 @@ export default function HotelCustomPage({ page = null, guestKey = null }) {
                     className="flex items-center justify-start gap-1 text-xs text-dark cursor-pointer"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    <span>{<AutoTranslate text={"Back"} />}</span>
+                    <span>{isDE ? "Zurück" : "Back"}</span>
                 </Link>
             ) : (
                 <a
@@ -22,13 +24,20 @@ export default function HotelCustomPage({ page = null, guestKey = null }) {
                     className="flex items-center justify-start gap-1 text-xs text-dark cursor-pointer"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    <span>{<AutoTranslate text={"Back"} />}</span>
+                    <span>{isDE ? "Zurück" : "Back"}</span>
                 </a>
             )}
 
             <div className="space-y-3">
                 <div className="custom-page-content">
-                    <AutoTranslate text={page?.content} />
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html:
+                                isDE && page.content_de
+                                    ? page.content_de
+                                    : page.content,
+                        }}
+                    />
                 </div>
             </div>
         </div>

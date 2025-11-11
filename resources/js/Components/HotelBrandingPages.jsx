@@ -73,7 +73,7 @@ export default function HotelBrandingPages() {
                                         <span className="font-bold">
                                             {brandingFormData.heading}
                                         </span>
-                                        /{page.title}{" "}
+                                        /
                                         <span className="text-xs">
                                             ({page.slug})
                                         </span>

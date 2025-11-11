@@ -12,6 +12,7 @@ class Button extends Model
         'hotel_id',
         'type',
         'text',
+        'text_de',
         'icon',
         'order',
         'text_color',

@@ -121,6 +121,7 @@ export default function HotelBrandingButtons({}) {
                                             {t("text")}:
                                         </span>
                                         <span>{button.text}</span>
+                                        <span>{button.text_de}</span>
                                     </div>
 
                                     <div className="lg:w-[20%] w-1/2 flex mt-2 flex-col">

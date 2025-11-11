@@ -3,15 +3,15 @@
         "title": "Dashboard",
         "selectHotel": "Hotel auswählen",
         "noData": "Keine Daten verfügbar",
-        "totalViews": "Gesamtansichten",
-        "uniqueViews": "Eindeutige Ansichten",
-        "buttonsViews": "Button-Ansichten",
+        "totalViews": "Gesamtaufrufe",
+        "uniqueViews": "Einmalige Aufrufe",
+        "buttonsViews": "Button-Aufrufe",
         "chartDataUnavailable": "Diagrammdaten nicht verfügbar",
-        "viewsDataUnavailable": "Ansichtsdaten nicht verfügbar",
+        "viewsDataUnavailable": "Aufrufdaten nicht verfügbar",
         "stats": {
             "siteViewToday": "Seitenaufrufe heute",
-            "uniqueSiteViewToday": "Eindeutige Seitenaufrufe heute",
-            "totalKeys": "Gesamtschlüssel",
+            "uniqueSiteViewToday": "Einmalige Seitenaufrufe heute",
+            "totalKeys": "Schlüssel gesamt",
             "activeKeys": "Aktive Schlüssel"
         },
         "DashboardTitle": {
@@ -22,15 +22,15 @@
             }
         },
         "DashboardViewsChart": {
-            "header": "Übersicht Hotel-Info-Seitenaufrufe",
+            "header": "Übersicht Hotel-Info Seitenaufrufe",
             "description": "Dieses Diagramm bietet einen Überblick über die Hotelinformationen sowie die Anzahl der Seitenaufrufe im Zeitverlauf.",
             "linePageViews": "Seitenaufrufe/Tag",
-            "views": "Ansichten",
-            "uniqueViews": "Eindeutige Ansichten"
+            "views": "Aufrufe",
+            "uniqueViews": "Einmalige Aufrufe"
         },
         "DashboardButtonsViewsChart": {
-            "header": "Übersicht Hotel-Info-Button-Ansichten",
-            "description": "Zeigt die gesamten Ansichten der Hotel-Buttons an und hebt die Benutzerinteraktionen auf der Seite hervor.",
+            "header": "Übersicht Hotel-Info Button-Aufrufe",
+            "description": "Zeigt die gesamten Aufrufe der Hotel-Buttons an und hebt die Benutzerinteraktionen auf der Seite hervor.",
             "tooltipPercentage": "Prozentsatz"
         }
     },
@@ -40,7 +40,7 @@
             "placeholder": "Hotel auswählen"
         },
         "HotelsTitle": {
-            "testLanding": "Test-Landingpage",
+            "testLanding": "Test Landing",
             "savePublish": "Speichern & Veröffentlichen",
             "saving": "Wird gespeichert..."
         }
@@ -160,17 +160,10 @@
         "defaultPageTitle": "Hotelseite"
     },
     "Components": {
-        "AskDetails": {
-            "description1": "Dieser Schlüssel kann nach Ihrem Aufenthalt als Schlüsselfinder dienen.",
-            "description2": "Dazu müssen Sie im nächsten Dialog Ihre Handynummer sowie weitere Details eingeben, damit Sie ein Finder <span class=\"font-bold\">kontaktieren kann</span>.",
-            "question": "Möchten Sie die Schlüsselfinder-Funktion nutzen?",
-            "yes": "Ja",
-            "no": "Nein"
-        },
         "BrandingImageUploader": {
             "clickToUpload": "Zum Hochladen klicken",
             "orDragAndDrop": "oder ziehen und ablegen",
-            "fileSize": "Dateigröße sollte weniger als :maxSizeMBMB betragen"
+            "fileSize": "Dateigröße sollte weniger als :maxSizeMB MB betragen"
         },
         "CreateKeyModal": {
             "title": "Neuen Schlüssel registrieren",
@@ -188,7 +181,7 @@
             "firstName": "Vorname",
             "lastName": "Nachname",
             "roomNumber": "Zimmernummer",
-            "mobilePhone": "Handynummer (nur für Schlüsselfinder)",
+            "mobilePhone": "Mobiltelefonnummer (nur für Keyfinder)",
             "emailAddress": "E-Mail-Adresse",
             "cancel": "Abbrechen",
             "registerNewKey": "Neuen Schlüssel registrieren",
@@ -201,12 +194,6 @@
             "codeAlreadyAssigned": "Code bereits aktiv/zugewiesen.",
             "unexpectedError": "Unerwarteter Fehler ist aufgetreten.",
             "networkError": "Netzwerkfehler."
-        },
-        "GuestBox": {
-            "defaultHeading": "Ihr Schlüsselfinder",
-            "defaultDescription": "Geben Sie Ihre Daten ein, um Ihren Schlüssel im Verlustfall leichter zu finden.",
-            "defaultButtonText": "Button-Text eingeben",
-            "sectionBannerAlt": "Bereichs-Banner"
         },
         "HotelBrandingButtons": {
             "buttonsHeading": "Buttons",
@@ -229,22 +216,29 @@
             "fixErrorsMessage": "Bitte beheben Sie die folgenden Fehler:",
             "headingUnderLogo": "Überschrift (unter Logo)",
             "subHeadingUnderHeading": "Unterüberschrift (unter Überschrift)",
+            "subHeadingUnderHeadingDE": "Unterüberschrift (unter Überschrift) auf Deutsch",
             "primaryColorButtons": "Primärfarbe (Buttons)",
             "backgroundColorPage": "Hintergrundfarbe (Seite)",
             "textColorMainText": "Textfarbe (Haupttext)",
             "buttonTextColor": "Button-Textfarbe",
             "uploadLogo": "Logo hochladen",
             "uploadBanner": "Banner hochladen",
-            "keyfinderPageTitle": "Schlüsselfinder-Seite",
+            "keyfinderPageTitle": "Keyfinder-Seite",
             "keyfinderWhatsAppText": "WhatsApp-Text ist festgelegt: \"Ich habe Ihren Schlüssel gefunden. Bitte kontaktieren Sie mich.\"",
-            "keyfinderPageHeading": "Schlüsselfinder-Seitenüberschrift",
-            "keyfinderPageTextPlaceholder": "Sie haben diesen Schlüssel gefunden? Bitte kontaktieren Sie den Eigentümer unter:",
+            "keyfinderPageHeading": "Keyfinder-Seitenüberschrift",
+            "keyfinderPageHeadingDE": "Keyfinder-Seitenüberschrift auf Deutsch",
+            "keyfinderPageText": "Keyfinder-Seitentext",
+            "keyfinderPageTextPlaceholder": "Haben Sie diesen Schlüssel gefunden? Bitte kontaktieren Sie den Eigentümer unter:",
+            "keyfinderPageTextDE": "Keyfinder-Seitentext auf Deutsch",
+            "keyfinderPageTextPlaceholderDE": "Haben Sie diesen Schlüssel gefunden? Bitte kontaktieren Sie den Eigentümer unter:",
             "telephonePreviewReadOnly": "Telefon (Vorschau, schreibgeschützt)",
             "colorsPreview": "Farben (Vorschau)",
-            "keyfinderBottomSectionTitle": "Schlüsselfinder unterer Bereich",
-            "keyfinderBottomSectionDescription": "Bearbeiten Sie die Details für den unteren Bereich des Schlüsselfinders",
+            "keyfinderBottomSectionTitle": "Keyfinder unterer Bereich",
+            "keyfinderBottomSectionDescription": "Bearbeiten Sie die Details für den unteren Keyfinder-Bereich",
             "sectionHeading": "Bereichsüberschrift",
+            "sectionHeadingDE": "Bereichsüberschrift auf Deutsch",
             "sectionDescription": "Bereichsbeschreibung",
+            "sectionDescriptionDE": "Bereichsbeschreibung auf Deutsch",
             "uploadSectionBanner": "Bereichs-Banner hochladen",
             "sectionButtonTextColor": "Bereichs-Button-Textfarbe",
             "sectionButtonBgColor": "Bereichs-Button-Hintergrundfarbe",
@@ -252,11 +246,12 @@
             "keyfinderBottomButtonUrlExample": "z.B.: https://www.hotelname.com/booking",
             "colorPlaceholder": "Farbe",
             "nextBookingButtonText": "Nächster Buchungs-Button-Text",
+            "nextBookingButtonTextDE": "Nächster Buchungs-Button-Text auf Deutsch",
             "nextBookingButtonUrl": "Nächster Buchungs-Button-URL"
         },
         "HotelBrandingPages": {
             "individualPagesTitle": "Individuelle Seiten",
-            "individualPagesDescription": "Erstellen Sie Inhalte wie Gästeverzeichnisse, Spa-Informationen etc. und verknüpfen Sie diese mit den Buttons.",
+            "individualPagesDescription": "Erstellen Sie Inhalte wie Gästeordner, Spa-Informationen etc. und verknüpfen Sie diese mit den Buttons.",
             "createPageButton": "Seite erstellen",
             "createPageTooltip": "Neuen Button erstellen",
             "createPageDisabledTooltip": "Wählen Sie zuerst ein Hotel aus, um einen neuen Button zu erstellen",
@@ -266,14 +261,15 @@
         "HotelBrandingPreview": {
             "livePreviewTitle": "Live-Vorschau",
             "livePreviewDescription": "Vorschau ist mobil (feste Breite).",
-            "landingTab": "Landingpage",
-            "keyFinderTab": "Schlüsselfinder"
+            "landingTab": "Landing",
+            "keyFinderTab": "Key Finder"
         },
         "HotelButtonsModal": {
             "editButtonTitle": "Button bearbeiten",
             "createButtonTitle": "Button erstellen",
             "buttonTypeLabel": "Button-Typ",
             "buttonTextLabel": "Button-Text",
+            "buttonTextLabelDE": "Button-Text auf Deutsch",
             "buttonIconLabel": "Button-Symbol",
             "buttonTextColorLabel": "Button-Textfarbe",
             "buttonBgColorLabel": "Button-Hintergrundfarbe",
@@ -301,14 +297,8 @@
         },
         "HotelKeyFinderDetails": {
             "phone": "Telefon",
-            "whatsapp": "WhatsApp",
+            "whatsapp": "Whatsapp",
             "whatsappMessage": "Ich habe Ihren Schlüssel gefunden. Bitte kontaktieren Sie mich."
-        },
-        "HotelLandingDetails": {
-            "guestNamePlaceholder": "Gastname",
-            "roomNumberPlaceholder": "Zimmer 312",
-            "room": "Zimmer",
-            "defaultHotelName": "Hotelname"
         },
         "hotel_page_modal": {
             "create_title": "Seite erstellen",
@@ -317,6 +307,8 @@
             "edit_description": "Bearbeiten Sie hier individuelle Seiten.",
             "page_name": "Seitenname",
             "placeholder_page_name": "Seitennamen eingeben",
+            "englishLabel": "Englischer Inhalt",
+            "germanLabel": "Deutscher Inhalt",
             "cancel": "Abbrechen",
             "create": "Erstellen",
             "update": "Aktualisieren",
@@ -342,13 +334,13 @@
         },
         "unsubscribeData": {
             "keyIconAlt": "Schlüssel",
-            "title": "Schlüsselfinder abbestellt",
-            "description": "Ihre Daten wurden gelöscht und die Schlüsselfinder-Funktion deaktiviert.",
-            "landingPageButton": "Landingpage"
+            "title": "Keyfinder abbestellt",
+            "description": "Ihre Daten wurden gelöscht und die Keyfinder-Funktion deaktiviert.",
+            "landingPageButton": "Landing Page"
         },
         "userSelfEdit": {
-            "title": "Schlüsselfinder registrieren",
-            "subtitle": "Schlüsselfinder einrichten",
+            "title": "Key Finder registrieren",
+            "subtitle": "Key Finder einrichten",
             "stayFrom": "Aufenthalt von",
             "stayTill": "Aufenthalt bis",
             "salutation": "Anrede",
@@ -362,8 +354,8 @@
             "lastName": "Nachname",
             "lastNamePlaceholder": "Nachname",
             "roomNumber": "Zimmernummer",
-            "roomNumberPlaceholder": "Zimmer Nr.",
-            "phoneNumber": "Handynummer (nur für Schlüsselfinder)",
+            "roomNumberPlaceholder": "Zimmer #",
+            "phoneNumber": "Mobiltelefonnummer (nur für Key Finder)",
             "phoneNumberPlaceholder": "+49 123 456789",
             "email": "E-Mail-Adresse",
             "emailPlaceholder": "example@email.com",
@@ -389,7 +381,7 @@
             "generateCodes": "Codes generieren",
             "clearPreview": "Vorschau löschen",
             "urlsGenerated": "URLs generiert und CSV heruntergeladen.",
-            "urlsImmediatelyActive": "Sobald generiert, sind die URLs sofort aktiv. Die CSV wird automatisch heruntergeladen und im Verlauf rechts gespeichert."
+            "urlsImmediatelyActive": "Sobald generiert, sind die URLs sofort aktiv. Die CSV wird automatisch heruntergeladen und im Verlauf auf der rechten Seite gespeichert."
         },
         "codesPreview": {
             "previewGeneratedUrls": "Vorschau: generierte URLs",

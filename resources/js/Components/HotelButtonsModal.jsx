@@ -121,7 +121,7 @@ export default function HotelButtonsModal({
 
                 <div className="space-y-3">
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
-                        <div>
+                        <div className="md:col-span-2">
                             <InputLabel
                                 htmlFor="type"
                                 value={t("buttonTypeLabel")}
@@ -188,6 +188,23 @@ export default function HotelButtonsModal({
                                 type="text"
                                 className="block w-full"
                                 placeholder={t("buttonTextLabel")}
+                            />
+                            <InputError message={formErrors.text?.[0]} />
+                        </div>
+                        <div>
+                            <InputLabel
+                                htmlFor="text_de"
+                                value={t("buttonTextLabelDE")}
+                                className="text-[#475569] text-xs font-medium"
+                            />
+                            <TextInput
+                                id="text_de"
+                                name="text_de"
+                                value={formData.text_de}
+                                onChange={handleChange}
+                                type="text"
+                                className="block w-full"
+                                placeholder={t("buttonTextLabelDE")}
                             />
                             <InputError message={formErrors.text?.[0]} />
                         </div>

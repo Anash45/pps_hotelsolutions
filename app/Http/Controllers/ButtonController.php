@@ -16,6 +16,7 @@ class ButtonController extends Controller
             'hotel_id' => ['required', 'exists:hotels,id'],
             'type' => ['required', 'string', 'in:page,map,url,phone,wifi,whatsapp,email'],
             'text' => ['required', 'string', 'max:255'],
+            'text_de' => ['required', 'string', 'max:255'],
             'icon' => ['nullable', 'string', 'max:255'],
             'text_color' => ['required', 'string', 'max:100'], // e.g. #ffffff
             'background_color' => ['required', 'string', 'max:100'],
@@ -65,6 +66,7 @@ class ButtonController extends Controller
         $validated = $request->validate([
             'type' => ['required', 'string', 'in:page,map,url,phone,wifi,whatsapp,email'],
             'text' => ['required', 'string', 'max:255'],
+            'text_de' => ['required', 'string', 'max:255'],
             'icon' => ['nullable', 'string', 'max:255'],
             'text_color' => ['required', 'string', 'max:100'],
             'background_color' => ['required', 'string', 'max:100'],

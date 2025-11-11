@@ -7,7 +7,7 @@ import LightButton from "./LightButton";
 import { FaWhatsapp } from "react-icons/fa";
 import { Phone } from "lucide-react";
 import { useLang } from "@/context/TranslationProvider";
-import AutoTranslate from "./AutoTranslate";
+import { useAutoTranslate } from "@/context/AutoTranslateProvider";
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
@@ -20,6 +20,8 @@ function formatDate(dateStr) {
 
 const HotelKeyFinderDetails = () => {
     const { brandingFormData } = useContext(PageContext);
+    const context = useAutoTranslate();
+    const isDE = context?.isDE || null;
     const { codeDetails } = usePage().props;
     const { t } = useLang("Components.HotelKeyFinderDetails");
 
@@ -41,11 +43,14 @@ const HotelKeyFinderDetails = () => {
                 )}
 
                 <p className="text-[#161616] text-2xl font-semibold">
-                    {brandingFormData.keyfinder_heading ?? ""}
+                    {isDE && brandingFormData.keyfinder_heading_de
+                        ? brandingFormData.keyfinder_heading_de
+                        : brandingFormData.keyfinder_heading}
                 </p>
             </div>
 
-            {brandingFormData.key_finder_page_text && (
+            {brandingFormData.key_finder_page_text ||
+            brandingFormData.key_finder_page_text_de ? (
                 <p
                     style={{
                         color: brandingFormData?.page_text_color ?? "#020617",
@@ -53,11 +58,11 @@ const HotelKeyFinderDetails = () => {
                     }}
                     className="text-center text-base"
                 >
-                    <AutoTranslate
-                        text={brandingFormData.key_finder_page_text}
-                    />
+                    {isDE && brandingFormData.key_finder_page_text_de
+                        ? brandingFormData.key_finder_page_text_de
+                        : brandingFormData.key_finder_page_text}
                 </p>
-            )}
+            ) : null}
 
             <p
                 style={{
@@ -77,9 +82,7 @@ const HotelKeyFinderDetails = () => {
                 >
                     <span className="text-[#020617] text-base flex items-center justify-center gap-2">
                         <Phone className="h-5 w-5" />
-                        <span>
-                            <AutoTranslate text={`Phone`} />
-                        </span>
+                        <span>{isDE ? "Telefon" : "Phone"}</span>
                     </span>
                 </LightButton>
 
@@ -95,7 +98,7 @@ const HotelKeyFinderDetails = () => {
                     <div className="flex text-base justify-center items-center gap-2">
                         <FaWhatsapp className="h-6 w-6" />
                         <span>
-                            <AutoTranslate text={`WhatsApp`} />
+                            <span>WhatsApp</span>
                         </span>
                     </div>
                 </PrimaryButton>

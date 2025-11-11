@@ -29,10 +29,10 @@ export default function HotelWifiModal({ onClose, wifiName, wifiPassword }) {
             <div className="space-y-3">
                 <div className="space-y-1">
                     <h2 className="text-lg text-[#201A20] font-semibold">
-                        <AutoTranslate text={'Wi-Fi Details'} />
+                        Wi-Fi Details
                     </h2>
                     <p className="text-xs font-medium text-[#475569]">
-                        <AutoTranslate text={'View or scan to connect to the hotel Wi-Fi.'} />
+                        View or scan to connect to the hotel Wi-Fi.
                     </p>
                 </div>
 

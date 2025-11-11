@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import InputLabel from "./InputLabel";
 
-// Custom toolbar config
+// Toolbar config
 const toolbarOptions = [
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
     ["bold", "italic", "underline", "strike"],
@@ -12,10 +13,7 @@ const toolbarOptions = [
     ["link", "image", "video"],
 ];
 
-const modules = {
-    toolbar: toolbarOptions,
-};
-
+const modules = { toolbar: toolbarOptions };
 const formats = [
     "header",
     "bold",
@@ -32,36 +30,40 @@ const formats = [
     "align",
 ];
 
-const HotelPageEditor = ({ formData, handleChange }) => {
+const HotelPageEditor = ({
+    fieldName,
+    formData,
+    handleChange,
+    label,
+    placeholder,
+}) => {
     const quillRef = useRef();
-    const [editorValue, setEditorValue] = useState(
-        formData?.content || "<p>Start writing...</p>"
-    );
+    const [editorValue, setEditorValue] = useState(formData?.[fieldName] || "");
 
+    // Sync editor if parent updates
     useEffect(() => {
-        if (quillRef.current && formData?.content) {
+        if (quillRef.current && formData?.[fieldName] !== editorValue) {
             const editor = quillRef.current.getEditor();
-            // Only set content if it's different from current value
-            if (formData.content !== editor.root.innerHTML) {
-                editor.setContents(editor.clipboard.convert(formData.content));
-            }
+            editor.setContents(
+                editor.clipboard.convert(formData[fieldName] || "")
+            );
+            setEditorValue(formData[fieldName] || "");
         }
-    }, [formData?.content]);
+    }, [formData?.[fieldName]]);
 
-    const handleEditorChange = (content, delta, source, editor) => {
-        console.log("HTML:", content);
-        console.log("Plain text:", editor.getText());
-        console.log("Delta:", editor.getContents());
-
+    const handleEditorChange = (content) => {
         setEditorValue(content);
-
-        handleChange({
-            target: { name: "content", value: content },
-        });
+        handleChange({ target: { name: fieldName, value: content } });
     };
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-1">
+            {label && (
+                <InputLabel
+                    value={label}
+                    className="text-[#475569] text-xs font-medium"
+                />
+            )}
             <ReactQuill
                 ref={quillRef}
                 theme="snow"
@@ -69,7 +71,8 @@ const HotelPageEditor = ({ formData, handleChange }) => {
                 modules={modules}
                 formats={formats}
                 onChange={handleEditorChange}
-                className="min-h-[250px] flex flex-col border rounded bg-white"
+                placeholder={placeholder}
+                className="min-h-[250px] border rounded bg-white"
             />
         </div>
     );

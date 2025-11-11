@@ -4,7 +4,7 @@ import { format, parseISO } from "date-fns";
 import { useContext } from "react";
 import HotelLandingButtons from "./HotelLandingButtons";
 import { useLang } from "@/context/TranslationProvider";
-import AutoTranslate from "./AutoTranslate";
+import { useAutoTranslate } from "@/context/AutoTranslateProvider";
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
@@ -18,6 +18,8 @@ function formatDate(dateStr) {
 const HotelLandingDetails = () => {
     const { codeDetails } = usePage().props;
     const { brandingFormData } = useContext(PageContext);
+    const context = useAutoTranslate();
+    const isDE = context?.isDE || null;
     const { t } = useLang("Components.HotelLandingDetails");
 
     const keyDetails = codeDetails?.key_assignment ?? {};
@@ -32,10 +34,10 @@ const HotelLandingDetails = () => {
                 brandingFormData.user_view === false ? (
                     <>
                         <span className="text-base font-medium">
-                            <AutoTranslate text={`Guest Name`} />
+                            {isDE ? "Guest Name" : "Name des Gastes"}
                         </span>
                         <span className="text-base font-medium ml-auto">
-                            <AutoTranslate text={`Room 312`} />
+                            {isDE ? "Zimmer 123" : "Room 123"}
                         </span>
                     </>
                 ) : (
@@ -47,7 +49,8 @@ const HotelLandingDetails = () => {
 
                         {keyDetails?.room_number && (
                             <span className="text-base font-medium ml-auto">
-                                <AutoTranslate text={`Room`} /> {keyDetails?.room_number}
+                                {isDE ? "Zimmer" : "Room"}{" "}
+                                {keyDetails?.room_number}
                             </span>
                         )}
                     </>
@@ -71,7 +74,7 @@ const HotelLandingDetails = () => {
 
                 <div className="flex flex-col">
                     <p className="text-2xl font-semibold">
-                        {brandingFormData.heading ?? <AutoTranslate text={`Hotel Name`} />}
+                        {brandingFormData.heading ?? "Hotel Name"}
                     </p>
 
                     {keyDetails?.stay_from && keyDetails?.stay_till ? (
@@ -87,9 +90,12 @@ const HotelLandingDetails = () => {
                     ) : null}
                 </div>
 
-                {brandingFormData.sub_heading && (
+                {(brandingFormData.sub_heading_de ||
+                    brandingFormData.sub_heading) && (
                     <p className="text-lg text-center">
-                        <AutoTranslate text={brandingFormData.sub_heading} />
+                        {isDE && brandingFormData.sub_heading_de
+                            ? brandingFormData.sub_heading_de
+                            : brandingFormData.sub_heading}
                     </p>
                 )}
             </div>
