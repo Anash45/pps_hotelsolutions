@@ -58,6 +58,7 @@ export default function HotelButtonsModal({
     const [formData, setFormData] = useState({
         type: button?.type ?? "",
         text: button?.text ?? "",
+        text_de: button?.text_de ?? "",
         icon: button?.icon ?? "",
         text_color:
             button?.text_color ??
@@ -105,6 +106,8 @@ export default function HotelButtonsModal({
             else console.error(err);
         }
     };
+
+    console.log("button: ",button);
 
     return (
         <div
