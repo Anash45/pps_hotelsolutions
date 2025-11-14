@@ -80,7 +80,10 @@ class CodesController extends Controller
         $rules = [
             'stay_from' => 'required|date',
             'stay_till' => 'required|date|after:stay_from',
-            'phone_number' => 'required|string',
+            'phone_number' => [
+                'required',
+                'regex:/^\+\d{6,15}$/'
+            ],
         ];
 
         // If GDPR consent → stricter rules

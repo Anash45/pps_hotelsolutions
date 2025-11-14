@@ -29,7 +29,7 @@ class KeyAssignmentController extends Controller
             if ($hotelId) {
                 $codes = Code::with(['keyAssignment', 'hotel', 'keyType'])
                     ->where('hotel_id', $hotelId)
-                    ->where('status','active')
+                    ->where('status', 'active')
                     ->orderByDesc(
                         KeyAssignment::select('id')
                             ->whereColumn('key_assignments.code_id', 'codes.id')
@@ -48,7 +48,7 @@ class KeyAssignmentController extends Controller
         } else {
             $codes = Code::with(['keyAssignment', 'keyType', 'hotel'])
                 ->where('hotel_id', $user->hotel_id)
-                ->where('status','active')
+                ->where('status', 'active')
                 ->orderByDesc(
                     KeyAssignment::select('id')
                         ->whereColumn('key_assignments.code_id', 'codes.id')
@@ -77,7 +77,10 @@ class KeyAssignmentController extends Controller
             'first_name' => 'nullable|string',
             'last_name' => 'nullable|string',
             'email' => 'nullable|email',
-            'phone_number' => 'nullable|string',
+            'phone_number' => [
+                'nullable',
+                'regex:/^\+\d{6,15}$/'
+            ],
             'room_number' => 'nullable|string',
             'stay_from' => 'required|date',
             'stay_till' => 'required|date|after_or_equal:stay_from',
@@ -112,7 +115,10 @@ class KeyAssignmentController extends Controller
 
         // If key type is "key_finder", require phone number
         if ($code->keyType->name === 'key_finder') {
-            $rules['phone_number'] = 'required|string';
+            $rules['phone_number'] = [
+                'required',
+                'regex:/^\+\d{6,15}$/'
+            ];
         }
 
         // Final validation
@@ -265,7 +271,10 @@ class KeyAssignmentController extends Controller
             'first_name' => 'nullable|string',
             'last_name' => 'nullable|string',
             'email' => 'nullable|email',
-            'phone_number' => 'nullable|string',
+            'phone_number' => [
+                'nullable',
+                'regex:/^\+\d{6,15}$/'
+            ],
             'room_number' => 'nullable|string',
             'stay_from' => 'required|date',
             'stay_till' => 'required|date|after_or_equal:stay_from',
@@ -278,6 +287,13 @@ class KeyAssignmentController extends Controller
             $rules['last_name'] = 'required|string';
             $rules['email'] = 'required|email';
             $rules['salutation'] = 'required|string';
+        }
+        // If key type is "key_finder", require phone number
+        if ($assignment->code->keyType->name === 'key_finder') {
+            $rules['phone_number'] = [
+                'required',
+                'regex:/^\+\d{6,15}$/'
+            ];
         }
 
         // Validate

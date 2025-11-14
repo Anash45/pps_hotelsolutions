@@ -76,7 +76,7 @@ const HotelKeyFinderDetails = () => {
             <div className="grid grid-cols-2 gap-2">
                 <LightButton
                     onClick={() =>
-                        (window.location = `tel:+${codeDetails?.key_assignment?.phone_number}`)
+                        (window.location = `tel:${codeDetails?.key_assignment?.phone_number}`)
                     }
                     className="border-[#F1F1F1]"
                 >
