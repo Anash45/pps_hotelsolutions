@@ -43,7 +43,7 @@ export default function AskDetails() {
             </div>
             <p>
                 {isDE
-                    ? "Dieser Schlüssel kann nach Ihrem Aufenthalt als Schlüsselfinder dienen."
+                    ? "Dieser Keytag kann nach Ihrem Aufenthalt als Schlüsselfinder dienen."
                     : "This key can serve as a key finder after your stay."}
             </p>
             <p>
