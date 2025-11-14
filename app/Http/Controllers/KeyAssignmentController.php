@@ -29,7 +29,7 @@ class KeyAssignmentController extends Controller
             if ($hotelId) {
                 $codes = Code::with(['keyAssignment', 'hotel', 'keyType'])
                     ->where('hotel_id', $hotelId)
-                    ->whereHas('keyAssignment')
+                    ->where('status','active')
                     ->orderByDesc(
                         KeyAssignment::select('id')
                             ->whereColumn('key_assignments.code_id', 'codes.id')
@@ -48,7 +48,7 @@ class KeyAssignmentController extends Controller
         } else {
             $codes = Code::with(['keyAssignment', 'keyType', 'hotel'])
                 ->where('hotel_id', $user->hotel_id)
-                ->whereHas('keyAssignment')
+                ->where('status','active')
                 ->orderByDesc(
                     KeyAssignment::select('id')
                         ->whereColumn('key_assignments.code_id', 'codes.id')

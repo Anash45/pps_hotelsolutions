@@ -4,14 +4,24 @@ import UserSelfEdit from "./UserSelfEdit";
 import { usePage, router } from "@inertiajs/react";
 import { useState } from "react";
 import { useLang } from "@/context/TranslationProvider";
+import { useAutoTranslate } from "@/context/AutoTranslateProvider";
 
 export default function AskDetails() {
     const { codeDetails, flash } = usePage().props;
     const [showSelfEdit, setShowSelfEdit] = useState(false);
-    const { t } = useLang("Components.AskDetails");
+    const context = useAutoTranslate();
+    const isDE = context?.isDE || null;
 
     const handleNoClick = () => {
-        router.get(route("key.makeActive", { code: codeDetails.code }));
+        if (
+            confirm(
+                isDE
+                    ? "Sind Sie sicher? Diese Handlung kann nicht rückgängig gemacht werden."
+                    : "Are you sure? This action cannot be undone."
+            )
+        ) {
+            router.get(route("key.makeActive", { code: codeDetails.code }));
+        }
     };
 
     const handleYesClick = () => {
@@ -32,21 +42,36 @@ export default function AskDetails() {
                 />
             </div>
             <p>
-                This key can serve as a key finder after your stay.
+                {isDE
+                    ? "Dieser Schlüssel kann nach Ihrem Aufenthalt als Schlüsselfinder dienen."
+                    : "This key can serve as a key finder after your stay."}
             </p>
             <p>
-                To do so, you must enter your mobile number along with other details in the next dialog so that a finder can <span class="font-bold">contact you</span>.
+                {isDE ? (
+                    <>
+                        Um dies zu ermöglichen, müssen Sie im nächsten Dialog
+                        Ihre Mobilnummer sowie weitere Angaben eingeben, damit
+                        ein Finder{" "}
+                        <span className="font-bold">Sie kontaktieren</span>{" "}
+                        kann.
+                    </>
+                ) : (
+                    <>
+                        To do so, you must enter your mobile number along with
+                        other details in the next dialog so that a finder can{" "}
+                        <span className="font-bold">contact you</span>.
+                    </>
+                )}
             </p>
+
             <p>
-                Would you like to use the key finder function?
+                {isDE
+                    ? "Möchten Sie die Schlüsselsuchfunktion nutzen?"
+                    : "Would you like to use the key finder function?"}
             </p>
             <div className="flex flex-col gap-2">
-                <PrimaryButton onClick={handleYesClick}>
-                    Yes
-                </PrimaryButton>
-                <LightButton onClick={handleNoClick}>
-                    No
-                </LightButton>
+                <PrimaryButton onClick={handleYesClick}>{isDE ? "Ja":"Yes"}</PrimaryButton>
+                <LightButton onClick={handleNoClick}>{isDE ? "Nein":"No"}</LightButton>
             </div>
         </div>
     );
