@@ -44,7 +44,7 @@ export default function AskDetails() {
             <p>
                 {isDE
                     ? "Dieser Keytag kann nach Ihrem Aufenthalt als Schlüsselfinder dienen."
-                    : "This key can serve as a key finder after your stay."}
+                    : "This Keytag can serve as a key finder after your stay."}
             </p>
             <p>
                 {isDE ? (
