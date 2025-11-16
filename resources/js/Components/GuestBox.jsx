@@ -36,7 +36,7 @@ const GuestBox = ({
         <div
             className={`${
                 realPhone ? "pt-4 px-4" : "pt-20"
-            } pb-4 max-h-full overflow-y-auto scrollbar-hidden min-h-screen h-full flex flex-col justify-between gap-8`}
+            } pb-4 max-h-full overflow-y-auto scrollbar-hidden min-h-screen h-full flex flex-col justify-between gap-20`}
         >
             <div
                 className={`rounded-2xl p-3 guest-box ${
@@ -70,20 +70,23 @@ const GuestBox = ({
                                 </h4>
                             )}
 
-                            {((isDE &&
-                                brandingFormData.key_finder_bottom_description_de) ||
+                            {(brandingFormData.key_finder_bottom_description_de ||
                                 brandingFormData.key_finder_bottom_description) && (
-                                <p className="text-base leading-tight">
-                                    {isDE &&
-                                    brandingFormData.key_finder_bottom_description_de
-                                        ? brandingFormData.key_finder_bottom_description_de
-                                        : brandingFormData.key_finder_bottom_description}
-                                </p>
+                                <p
+                                    className="text-base leading-tight"
+                                    dangerouslySetInnerHTML={{
+                                        __html: (isDE
+                                            ? brandingFormData.key_finder_bottom_description_de ||
+                                              brandingFormData.key_finder_bottom_description
+                                            : brandingFormData.key_finder_bottom_description
+                                        )?.replace(/\n/g, "<br/>"),
+                                    }}
+                                />
                             )}
                         </div>
                     )}
 
-                    <div className="relative rounded-lg overflow-hidden h-[100px]">
+                    <div className="relative rounded-lg overflow-hidden h-[200px]">
                         <img
                             src={
                                 brandingFormData?.section_banner_image_url ??
@@ -114,7 +117,9 @@ const GuestBox = ({
                             {isDE &&
                             brandingFormData.key_finder_bottom_btn_text_de
                                 ? brandingFormData.key_finder_bottom_btn_text_de
-                                : brandingFormData.key_finder_bottom_btn_text}
+                                : brandingFormData.key_finder_bottom_btn_text
+                                ? brandingFormData.key_finder_bottom_btn_text
+                                : "Next"}
                         </a>
                     </div>
                 </div>

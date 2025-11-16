@@ -41,7 +41,7 @@
                   <tr>
                     <td align="center" style="padding-bottom:8px;">
                       <img class="logo" src="{{ $logo_url}}" width="100" alt="{{ $hotel_name}} Logo"
-                           style="display:block; border:0; border-radius:12px; width:100px; height:auto; max-height: 100px;">
+                           style="display:block; border:0; border-radius:0; object-fit: cover; object-position: center; width:auto; max-width: 192px; height:auto; max-height: 128px;">
                     </td>
                   </tr>
                   <tr>

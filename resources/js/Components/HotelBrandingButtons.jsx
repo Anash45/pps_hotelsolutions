@@ -78,6 +78,7 @@ export default function HotelBrandingButtons({}) {
                                 id: btn.id || btn.button_id,
                                 order: index + 1,
                             }));
+                            axios.post(route("buttons.reorder"), { buttons: updatedList });
                             setBrandingFormData((prev) => ({
                                 ...prev,
                                 buttons: updatedList,
