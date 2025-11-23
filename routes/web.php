@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CodesController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\BasicController;
 use App\Http\Controllers\ButtonController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HotelPageController;
@@ -103,6 +104,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/test-locale', function () {
     dd(app()->getLocale());
 });
+    Route::get('/get-link-url', [BasicController::class, 'getLinkUrl']);
 
 Route::middleware('web')->post('/language', function (Request $request) {
     $validated = $request->validate([

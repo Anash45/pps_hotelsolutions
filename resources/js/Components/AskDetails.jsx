@@ -36,7 +36,7 @@ export default function AskDetails() {
         <div className="space-y-4 text-center sm:px-7 py-4 text-base">
             <div className="h-[120px] w-[120px] flex items-center justify-center mx-auto rounded-full border-light border">
                 <img
-                    src="/images/key_icon.svg"
+                    src="/images/keytag.png"
                     alt="Key"
                     className="h-16 w-16"
                 />

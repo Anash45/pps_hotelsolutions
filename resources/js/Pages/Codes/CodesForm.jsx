@@ -151,7 +151,7 @@ export default function CodesForm({ previewCodes, setPreviewCodes }) {
 
             {previewCodes.length > 0 && (
                 <CodesPreview
-                    domain={data.domain}
+                    domain={linkDomain}
                     previewCodes={previewCodes}
                 />
             )}

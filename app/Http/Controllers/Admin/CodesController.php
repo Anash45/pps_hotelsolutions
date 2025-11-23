@@ -52,7 +52,7 @@ class CodesController extends Controller
                 : __('messages.adminCodeController.showByKey.default_description'),
             'image' => $selectedHotel->logo_image
                 ? '/storage/' . $selectedHotel->logo_image
-                : __('messages.adminCodeController.showByKey.default_image'),
+                : '/images/favicons/android-chrome-192x192.png',
             'url' => request()->fullUrl(),
         ];
 

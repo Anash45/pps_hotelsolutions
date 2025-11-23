@@ -77,7 +77,7 @@ function Show() {
                     rel="icon"
                     type="image/png"
                     href={
-                        brandingFormData?.logo_image_url ??
+                        brandingFormData?.logo_image_url ?? brandingFormData?.banner_image_url ??
                         "/images/building-placeholder.webp"
                     }
                 />
