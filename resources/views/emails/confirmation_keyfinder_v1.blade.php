@@ -40,8 +40,8 @@
                 <table role="presentation" width="100%">
                   <tr>
                     <td align="center" style="padding-bottom:8px;">
-                      <img class="logo" src="{{ $logo_url}}" width="100" alt="{{ $hotel_name}} Logo"
-                           style="display:block; border:0; border-radius:0; object-fit: cover; object-position: center; width:auto; max-width: 192px; height:auto; max-height: 128px;">
+                      <img class="logo" src="{{ $logo_url }}" alt="{{ $hotel_name}} Logo"
+                           style="display:block; border:0; border-radius:0; object-fit: contain; object-position: center; width:auto; max-width: 100%; height:auto; max-height: 128px;">
                     </td>
                   </tr>
                   <tr>

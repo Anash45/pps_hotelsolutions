@@ -79,7 +79,7 @@ class KeyAssignmentController extends Controller
             'email' => 'nullable|email',
             'phone_number' => [
                 'nullable',
-                'regex:/^\+\d{6,15}$/'
+                'regex:/^\+[\d\s\-]{5,}$/'
             ],
             'room_number' => 'nullable|string',
             'stay_from' => 'required|date',
@@ -117,7 +117,7 @@ class KeyAssignmentController extends Controller
         if ($code->keyType->name === 'key_finder') {
             $rules['phone_number'] = [
                 'required',
-                'regex:/^\+\d{6,15}$/'
+                'regex:/^\+[\d\s\-]{5,}$/'
             ];
         }
 
@@ -273,7 +273,7 @@ class KeyAssignmentController extends Controller
             'email' => 'nullable|email',
             'phone_number' => [
                 'nullable',
-                'regex:/^\+\d{6,15}$/'
+                'regex:/^\+[\d\s\-]{5,}$/'
             ],
             'room_number' => 'nullable|string',
             'stay_from' => 'required|date',
@@ -292,7 +292,7 @@ class KeyAssignmentController extends Controller
         if ($assignment->code->keyType->name === 'key_finder') {
             $rules['phone_number'] = [
                 'required',
-                'regex:/^\+\d{6,15}$/'
+                'regex:/^\+[\d\s\-]{5,}$/'
             ];
         }
 
