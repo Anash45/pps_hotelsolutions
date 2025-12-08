@@ -70,13 +70,13 @@ const HotelKeyFinderDetails = () => {
                 }}
                 className="text-center text-base font-bold"
             >
-                {codeDetails?.key_assignment?.phone_number?.trim() ?? ""}
+                {codeDetails?.key_assignment?.phone_number ?? ""}
             </p>
 
             <div className="grid grid-cols-2 gap-2">
                 <LightButton
                     onClick={() =>
-                        (window.location = `tel:${codeDetails?.key_assignment?.phone_number?.trim()}`)
+                        (window.location = `tel:${codeDetails?.key_assignment?.phone_number}`)
                     }
                     className="border-[#F1F1F1]"
                 >
@@ -89,7 +89,7 @@ const HotelKeyFinderDetails = () => {
                 <PrimaryButton
                     onClick={() =>
                         window.open(
-                            `https://wa.me/${codeDetails?.key_assignment?.phone_number?.trim()}?text=` +
+                            `https://wa.me/${codeDetails?.key_assignment?.phone_number}?text=` +
                                 encodeURIComponent(t("whatsappMessage"))
                         )
                     }
