@@ -22,31 +22,7 @@ export default function DashboardButtonsViewsChart({
     const safeButtonsViews = Array.isArray(buttonsViews) ? buttonsViews : [];
     const barColors = generateShades("#74B574", safeButtonsViews.length || 1);
 
-    // Custom Legend
-    const CustomLegend = ({ data }) => {
-        if (!data || !data.length) return null;
-        return (
-            <div className="flex flex-wrap gap-4 mt-4">
-                {data.map((entry, index) => (
-                    <div
-                        key={`legend-${index}`}
-                        className="flex items-center gap-2"
-                    >
-                        <span
-                            className="inline-block w-3 h-3 rounded-full"
-                            style={{
-                                backgroundColor:
-                                    barColors[index % barColors.length],
-                            }}
-                        ></span>
-                        <span className="text-sm font-medium text-gray-700 font-['Arial']">
-                            {entry.button_text || "N/A"}
-                        </span>
-                    </div>
-                ))}
-            </div>
-        );
-    };
+
 
     const CustomLeftLabel = ({ y, index }) => {
         const text = safeButtonsViews[index]?.button_text || "";
@@ -83,7 +59,7 @@ export default function DashboardButtonsViewsChart({
     );
 
     return (
-        <div className="p-4 rounded-xl bg-white flex flex-col gap-6">
+        <div className="p-4 rounded-xl bg-white flex flex-col gap-0">
             {/* Header */}
             <div className="flex flex-col gap-1 mb-2">
                 <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
@@ -104,8 +80,8 @@ export default function DashboardButtonsViewsChart({
                     <BarChart
                         layout="vertical"
                         data={safeButtonsViews}
-                        margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
-                        barCategoryGap={34}
+                        margin={{ top: 30, right: 30, left: 0, bottom: 0 }}
+                        barCategoryGap={40}
                     >
                         <XAxis hide type="number" />
                         <YAxis type="category" dataKey="button_text" hide />
@@ -129,7 +105,7 @@ export default function DashboardButtonsViewsChart({
                         <Bar
                             dataKey="total_views"
                             isAnimationActive={false}
-                            barSize={12}
+                            barSize={10}
                             fill="#A6DBA5"
                             cursor="default"
                             shape={(props) => (
@@ -161,9 +137,11 @@ export default function DashboardButtonsViewsChart({
                             <Legend
                                 verticalAlign="bottom"
                                 align="left"
-                                content={
-                                    <CustomLegend data={safeButtonsViews} />
-                                }
+                                payload={safeButtonsViews.map((entry, index) => ({
+                                    value: entry.button_text || "N/A",
+                                    type: "square",
+                                    color: barColors[index % barColors.length],
+                                }))}
                             />
                         )}
                     </BarChart>

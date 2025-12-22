@@ -29,7 +29,7 @@
             "uniqueViews": "Unique Views"
         },
         "DashboardButtonsViewsChart": {
-            "header": "Overview hotel info bhutton views",
+            "header": "Overview hotel info button views",
             "description": "Displays the total views of hotel buttons, highlighting user interactions on the page.",
             "tooltipPercentage": "Percentage"
         }

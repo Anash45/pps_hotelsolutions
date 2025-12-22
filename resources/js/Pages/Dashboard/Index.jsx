@@ -23,7 +23,21 @@ export default function Dashboard() {
         "30_days",
         "90_days",
     ]);
-    const [selectedDuration, setSelectedDuration] = useState(durations[0]);
+    const [selectedDuration, setSelectedDuration] = useState(() => {
+        if (typeof window !== "undefined") {
+            const saved = localStorage.getItem("dashboard_selectedDuration");
+            if (saved && ["7_days", "30_days", "90_days"].includes(saved)) {
+                return saved;
+            }
+        }
+        return durations[0];
+    });
+        // Persist selectedDuration to localStorage
+        useEffect(() => {
+            if (typeof window !== "undefined" && selectedDuration) {
+                localStorage.setItem("dashboard_selectedDuration", selectedDuration);
+            }
+        }, [selectedDuration]);
     const [currentViews, setCurrentViews] = useState(null);
 
     const [selected, setSelected] = useState(
