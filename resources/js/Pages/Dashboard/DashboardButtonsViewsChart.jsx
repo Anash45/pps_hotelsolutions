@@ -58,8 +58,21 @@ export default function DashboardButtonsViewsChart({
         </text>
     );
 
+    // Dynamically calculate chart height based on number of items
+    const baseHeight = 64 * 4; // 4 rows default (256px)
+    const perItemHeight = 24; // px per item
+    const minHeight = 192; // minimum chart height
+    const maxHeight = 600; // maximum chart height
+    const chartHeight = Math.max(
+        minHeight,
+        Math.min(
+            baseHeight + (safeButtonsViews.length - 4) * perItemHeight,
+            maxHeight
+        )
+    );
+
     return (
-        <div className="p-4 rounded-xl bg-white flex flex-col gap-0">
+        <div className="p-4 rounded-xl bg-white flex flex-col gap-6">
             {/* Header */}
             <div className="flex flex-col gap-1 mb-2">
                 <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
@@ -71,7 +84,7 @@ export default function DashboardButtonsViewsChart({
             </div>
 
             {/* Chart */}
-            <div className="w-full h-64">
+            <div className="w-full" style={{ height: chartHeight }}>
                 <ResponsiveContainer
                     width="100%"
                     height="100%"
@@ -80,8 +93,8 @@ export default function DashboardButtonsViewsChart({
                     <BarChart
                         layout="vertical"
                         data={safeButtonsViews}
-                        margin={{ top: 30, right: 30, left: 0, bottom: 0 }}
-                        barCategoryGap={40}
+                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                        barCategoryGap={34}
                     >
                         <XAxis hide type="number" />
                         <YAxis type="category" dataKey="button_text" hide />
@@ -105,7 +118,7 @@ export default function DashboardButtonsViewsChart({
                         <Bar
                             dataKey="total_views"
                             isAnimationActive={false}
-                            barSize={10}
+                            barSize={12}
                             fill="#A6DBA5"
                             cursor="default"
                             shape={(props) => (
@@ -137,6 +150,16 @@ export default function DashboardButtonsViewsChart({
                             <Legend
                                 verticalAlign="bottom"
                                 align="left"
+                                iconSize={16}
+                                wrapperStyle={{
+                                    paddingTop: 16,
+                                    paddingBottom: 8,
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    rowGap: 12,
+                                    columnGap: 32,
+                                    maxWidth: "100%",
+                                }}
                                 payload={safeButtonsViews.map((entry, index) => ({
                                     value: entry.button_text || "N/A",
                                     type: "square",
