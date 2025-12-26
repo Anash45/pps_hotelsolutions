@@ -1,34 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getDomain } from "@/utils/viteConfig";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
-import LightButton from "@/Components/PrimaryButton copy";
+import LightButton from "@/Components/LightButton";
 import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import { usePage, useForm } from "@inertiajs/react";
 import CodesPreview from "./CodesPreview";
 import Divider from "@/Components/Divider";
+import { useLang } from "@/context/TranslationProvider";
 
-export default function CodesForm() {
+export default function CodesForm({ previewCodes, setPreviewCodes }) {
+    const { t } = useLang("Components.codesForm");
     const { hotels, keyTypes } = usePage().props;
+
+    const [linkDomain, setLinkDomain] = useState(
+        "https://app.ppshotelsolutions.de"
+    );
+
+    useEffect(() => {
+        (async () => {
+            const domain = await getDomain();
+            setLinkDomain(domain);
+            setData("domain", domain);
+        })();
+    }, []);
 
     const { data, setData, post, processing, errors } = useForm({
         hotel_id: hotels.length > 0 ? hotels[0].id : "",
         key_type: keyTypes.length > 0 ? keyTypes[0].name : "",
         no_of_codes: "10",
-        domain: import.meta.env.VITE_LINK_URL ||
-            "https://test-app.ppshotelsolutions.de",
+        domain: linkDomain,
     });
-
-    const [previewCodes, setPreviewCodes] = useState([]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         post(route("codes.store"), {
             data,
             onSuccess: (page) => {
-                console.log(page);
-                // backend should return generated codes in page or props
                 if (page.props.flash.generatedCodes) {
                     setPreviewCodes(page.props.flash.generatedCodes);
                 }
@@ -48,7 +57,7 @@ export default function CodesForm() {
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="hotel"
-                        value="Hotel"
+                        value={t("hotel")}
                         className="text-[#344054] font-medium"
                     />
                     <SelectInput
@@ -68,7 +77,7 @@ export default function CodesForm() {
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="key_type"
-                        value="Key Type"
+                        value={t("keyType")}
                         className="text-[#344054] font-medium"
                     />
                     <SelectInput
@@ -88,7 +97,7 @@ export default function CodesForm() {
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="no_of_codes"
-                        value="Number of Codes"
+                        value={t("numberOfCodes")}
                         className="text-[#344054] font-medium"
                     />
                     <TextInput
@@ -101,17 +110,17 @@ export default function CodesForm() {
                     />
                 </div>
 
-                {/* Domain (read-only) */}
+                {/* Domain */}
                 <div className="space-y-1">
                     <InputLabel
                         htmlFor="domain"
-                        value="Domain (read-only)"
+                        value={t("domainReadOnly")}
                         className="text-[#344054] font-medium"
                     />
                     <TextInput
                         id="domain"
                         name="domain"
-                        value={data.domain}
+                        value={linkDomain}
                         readOnly
                         className="block w-full"
                     />
@@ -120,10 +129,10 @@ export default function CodesForm() {
                 {/* Buttons */}
                 <div className="flex-wrap gap-1 items-center md:col-span-2 flex mt-3">
                     <PrimaryButton type="submit" disabled={processing}>
-                        Generate Codes
+                        {t("generateCodes")}
                     </PrimaryButton>
                     <LightButton type="button" onClick={clearPreview}>
-                        Clear Preview
+                        {t("clearPreview")}
                     </LightButton>
                 </div>
             </form>
@@ -131,21 +140,18 @@ export default function CodesForm() {
             {previewCodes.length > 0 && (
                 <div className="flex flex-col gap-3 py-3">
                     <p className="text-[#079E04] text-xs font-medium">
-                        {previewCodes.length} URLs generated and CSV downloaded.
+                        {previewCodes.length} {t("urlsGenerated")}
                     </p>
                     <p className="text-xs leading-5 font-medium text-[#475569]">
-                        Once generated, the URLs are **immediately active**. The
-                        CSV is automatically downloaded and stored in the
-                        **History** on the right.
+                        {t("urlsImmediatelyActive")}
                     </p>
                     <Divider className="mt-3" />
                 </div>
             )}
 
-            {/* Preview Table */}
             {previewCodes.length > 0 && (
                 <CodesPreview
-                    domain={data.domain}
+                    domain={linkDomain}
                     previewCodes={previewCodes}
                 />
             )}

@@ -4,15 +4,16 @@ import { useState } from "react";
 import SelectInput from "@/Components/SelectInput";
 import KeysTable from "./KeysTable";
 import KeysTitle from "./KeysTitle";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function Keys() {
+    const { t } = useLang();
     const {
         auth,
         hotels = [],
         codes = [],
         selectedHotel = null,
     } = usePage().props;
-
     const [selected, setSelected] = useState(
         selectedHotel ? String(selectedHotel) : ""
     );
@@ -25,16 +26,16 @@ export default function Keys() {
 
     return (
         <AuthenticatedLayout>
-            <Head title="Keys" />
+            <Head title={t("keys.page.title")} />
 
             <div className="py-4 md:px-6 px-4 flex flex-col gap-6">
                 <KeysTitle
-                    title={"Keys Management"}
+                    title={t("keys.KeysTitle.title")}
                     selectedHotel={selected}
                 />
 
                 {isAdmin && (
-                    <div className="mb-6 w-64">
+                    <div className="w-64">
                         <SelectInput
                             id="hotel_id"
                             name="hotel_id"
@@ -42,7 +43,10 @@ export default function Keys() {
                             onChange={handleHotelChange}
                             className="w-full block"
                             options={[
-                                { value: "", label: "Select Hotel" },
+                                {
+                                    value: "",
+                                    label: t("keys.page.selectHotel"),
+                                },
                                 ...hotels.map((h) => ({
                                     value: String(h.id),
                                     label: h.hotel_name,

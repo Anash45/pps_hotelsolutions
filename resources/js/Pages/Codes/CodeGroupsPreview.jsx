@@ -1,24 +1,49 @@
+import { useLang } from "@/context/TranslationProvider";
 import { Link } from "@inertiajs/react";
 import dayjs from "dayjs";
-import { Download } from "lucide-react";
+import { Download, Eye, Trash2 } from "lucide-react";
 
-export default function CodeGroupsPreview({ previewGroups, domain }) {
+export default function CodeGroupsPreview({
+    previewGroups,
+    domain,
+    setPreviewCodes,
+}) {
+    const { t } = useLang("Components.codeGroupsPreview");
+
+    function handlePreviewCodes(
+        codes = [],
+        hotel_name = "",
+        key_type_name = ""
+    ) {
+        if (!Array.isArray(codes) || codes.length === 0) {
+            console.warn("No codes to preview");
+            return;
+        }
+
+        const updatedCodes = codes.map((code) => ({
+            ...code,
+            hotel_name,
+            key_type_name,
+        }));
+
+        setPreviewCodes(updatedCodes);
+    }
+
     return (
         <div>
-            <h3 className="text-grey900 font-semibold text-lg mb-3">
-                Preview: generated URLs
-            </h3>
             <div className="overflow-auto w-full max-h-[730px]">
                 <div className="xl:w-max min-w-full space-y-3">
                     {/* Header */}
                     <div className="hidden lg:flex border-b gap-4 border-gray-200 pb-2 px-4 text-xs font-semibold text-[#263238]">
-                        <div className="w-28 shrink-0">Created at</div>
+                        <div className="w-28 shrink-0">{t("createdAt")}</div>
                         <div className="flex-1 min-w-[120px] shrink-0">
-                            Hotel
+                            {t("hotel")}
                         </div>
-                        <div className="w-24 shrink-0">Type</div>
-                        <div className="w-14">Number</div>
-                        <div className="w-8 text-center shrink-0">CSV</div>
+                        <div className="w-24 shrink-0">{t("type")}</div>
+                        <div className="w-14">{t("number")}</div>
+                        <div className="w-16 text-center shrink-0">
+                            {t("action")}
+                        </div>
                     </div>
 
                     {/* Rows */}
@@ -30,45 +55,59 @@ export default function CodeGroupsPreview({ previewGroups, domain }) {
                             <div className="flex flex-col lg:flex-row lg:items-center lg:flex-1 lg:gap-4 w-full">
                                 <div className="lg:w-28 shrink-0">
                                     <span className="lg:hidden text-[10px] text-gray-500">
-                                        Created at:{" "}
+                                        {t("createdAt")}:{" "}
                                     </span>
                                     <span className="text-xs text-body">
-                                        <span>
-                                            {dayjs(cg.created_at).format(
-                                                "DD.MM.YYYY, HH:mm"
-                                            )}
-                                        </span>
+                                        {dayjs(cg.created_at).format(
+                                            "DD.MM.YYYY, HH:mm"
+                                        )}
                                     </span>
                                 </div>
                                 <div className="flex-1 min-w-[120px] shrink-0">
                                     <span className="lg:hidden text-[10px] text-gray-500">
-                                        Hotel:{" "}
+                                        {t("hotel")}:{" "}
                                     </span>
                                     <span className="text-xs text-body">
-                                        <span>{cg.hotel.hotel_name}</span>
+                                        {cg.hotel.hotel_name}
                                     </span>
                                 </div>
                                 <div className="lg:w-24 shrink-0">
                                     <span className="lg:hidden text-[10px] text-gray-500">
-                                        Type:{" "}
+                                        {t("type")}:{" "}
                                     </span>
                                     <span className="text-xs text-body">
-                                        <span>{cg.key_type.display_name}</span>
+                                        {cg.key_type.display_name}
                                     </span>
                                 </div>
                                 <div className="lg:w-14 shrink-0">
                                     <span className="lg:hidden text-[10px] text-gray-500">
-                                        Number:{" "}
+                                        {t("number")}:{" "}
                                     </span>
                                     <span className="text-xs text-body">
-                                        <span>{cg.count}</span>
+                                        {cg.count}
                                     </span>
                                 </div>
-                                <div className="lg:w-8 flex items-center gap-2 shrink-0">
+                                <div className="lg:w-16 flex items-center gap-2 shrink-0">
                                     <span className="lg:hidden text-[10px] text-gray-500">
-                                        CSV:{" "}
+                                        {t("action")}:{" "}
                                     </span>
-                                    <span className="text-xs text-body">
+                                    <span className="text-xs text-blue-500 flex gap-1">
+                                        <button
+                                            className="text-center"
+                                            onClick={() =>
+                                                handlePreviewCodes(
+                                                    cg?.codes ?? [],
+                                                    cg?.hotel?.hotel_name ?? "",
+                                                    cg?.key_type?.name ?? ""
+                                                )
+                                            }
+                                        >
+                                            <Eye
+                                                size={16}
+                                                className="text-body mx-auto"
+                                                strokeWidth={2}
+                                            />
+                                        </button>
                                         <a
                                             target="_blank"
                                             href={route(
@@ -80,6 +119,22 @@ export default function CodeGroupsPreview({ previewGroups, domain }) {
                                             <Download
                                                 size={16}
                                                 className="text-body mx-auto"
+                                                strokeWidth={2}
+                                            />
+                                        </a>
+                                        <a
+                                            onClick={() =>
+                                                confirm(t("confirmDelete"))
+                                            }
+                                            href={route(
+                                                "codes.group.delete",
+                                                cg.id
+                                            )}
+                                            className="text-center"
+                                        >
+                                            <Trash2
+                                                size={16}
+                                                className="text-red-600 mx-auto"
                                                 strokeWidth={2}
                                             />
                                         </a>

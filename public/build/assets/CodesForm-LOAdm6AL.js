@@ -1,1 +1,0 @@
-import{j as e}from"./app-CzSMpXLj.js";function o(){return e.jsx("div",{className:"py-4 px-6 rounded-xl bg-white flex flex-col gap-6",children:e.jsx("h5",{className:"font-bold text-xl text-grey900",children:"Codes Generator"})})}export{o as default};

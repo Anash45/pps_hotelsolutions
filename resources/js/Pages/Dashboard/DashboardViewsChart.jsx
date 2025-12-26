@@ -1,5 +1,7 @@
 "use client";
 
+import { useLang } from "@/context/TranslationProvider";
+import React from "react";
 import {
     LineChart,
     Line,
@@ -10,15 +12,18 @@ import {
     ResponsiveContainer,
     Area,
 } from "recharts";
-import { data7Days, data30Days, data90Days } from "@/utils/dummyViews";
+
 const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
+    const { t } = useLang();
+    if (active && Array.isArray(payload) && payload.length) {
         const date = new Date(label);
         const dd = String(date.getDate()).padStart(2, "0");
         const mm = String(date.getMonth() + 1).padStart(2, "0");
         const yyyy = date.getFullYear();
-        const formattedDate = `${dd}.${mm}`;
         const formattedDate2 = `${dd}.${mm}.${yyyy}`;
+
+        const totalViews = payload[0]?.value ?? 0;
+        const uniqueViews = payload[1]?.value ?? 0;
 
         return (
             <div
@@ -50,37 +55,46 @@ const CustomTooltip = ({ active, payload, label }) => {
                         lineHeight: "16px",
                     }}
                 >
-                    Views: {payload[0].value}
+                    {t("dashboard.DashboardViewsChart.views")}: {totalViews}
+                </p>
+                <p
+                    style={{
+                        margin: 0,
+                        color: "#2563EB",
+                        fontWeight: 500,
+                        fontSize: 12,
+                        lineHeight: "16px",
+                    }}
+                >
+                    {t("dashboard.DashboardViewsChart.uniqueViews")}: {uniqueViews}
                 </p>
             </div>
         );
     }
     return null;
 };
-export default function DashboardViewsChart({ selectedDuration }) {
-    // Pick dataset based on selected duration
-    const chartData =
-        selectedDuration === "7 Days"
-            ? data7Days
-            : selectedDuration === "30 Days"
-            ? data30Days
-            : data90Days;
+
+export default function DashboardViewsChart({ selectedDuration, chartViews }) {
+    const { t } = useLang();
+    // Ensure chartViews is always an array
+    const safeChartViews = Array.isArray(chartViews) ? chartViews : [];
 
     return (
         <div className="p-4 rounded-xl bg-white flex flex-col gap-6">
+            {/* Header */}
             <div className="flex justify-between">
                 <div className="flex flex-col gap-1">
                     <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
-                        Overview hotel info site views
+                        {t("dashboard.DashboardViewsChart.header")}
                     </h5>
                     <p className="text-xs text-[#544854]">
-                        Description of this graph can land here
+                        {t("dashboard.DashboardViewsChart.description")}
                     </p>
                 </div>
                 <div className="flex items-center gap-1">
                     <div className="h-2 w-2 shrink-0 bg-[#85AF84] rounded-full"></div>
                     <span className="text-[#334155] font-medium text-xs leading-5">
-                        :Line Page views/day
+                        {t("dashboard.DashboardViewsChart.linePageViews")}
                     </span>
                 </div>
             </div>
@@ -89,10 +103,9 @@ export default function DashboardViewsChart({ selectedDuration }) {
             <div className="w-full h-72">
                 <ResponsiveContainer>
                     <LineChart
-                        data={chartData}
+                        data={safeChartViews}
                         margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
                     >
-                        {/* Grid */}
                         <CartesianGrid
                             strokeDasharray="0 0"
                             stroke="#929CAB"
@@ -100,10 +113,10 @@ export default function DashboardViewsChart({ selectedDuration }) {
                             className="opacity-10"
                         />
 
-                        {/* X Axis */}
                         <XAxis
                             dataKey="date"
                             tickFormatter={(date) => {
+                                if (!date) return "";
                                 const dt = new Date(date);
                                 const dd = String(dt.getDate()).padStart(
                                     2,
@@ -113,7 +126,7 @@ export default function DashboardViewsChart({ selectedDuration }) {
                                     2,
                                     "0"
                                 );
-                                return `${dd}.${mm}`; // 09.12 format
+                                return `${dd}.${mm}`;
                             }}
                             tick={{
                                 fill: "#929CAB",
@@ -124,7 +137,6 @@ export default function DashboardViewsChart({ selectedDuration }) {
                             tickLine={false}
                         />
 
-                        {/* Y Axis */}
                         <YAxis
                             tick={{
                                 fill: "#929CAB",
@@ -137,44 +149,23 @@ export default function DashboardViewsChart({ selectedDuration }) {
 
                         <Tooltip content={<CustomTooltip />} />
 
-                        {/* Smooth Line */}
                         <Line
                             type="monotone"
-                            dataKey="views"
+                            dataKey="total_views"
                             stroke="#83AF82"
                             strokeWidth={2}
                             dot={false}
+                            isAnimationActive={false}
                         />
 
-                        {/* Area Shade under Line */}
-                        <Area
+                        <Line
                             type="monotone"
-                            dataKey="views"
-                            stroke="none"
-                            fill="url(#colorViews)"
+                            dataKey="unique_views"
+                            stroke="#ff0000"
+                            strokeWidth={2}
+                            dot={false}
+                            isAnimationActive={false}
                         />
-
-                        {/* Gradient for Area */}
-                        <defs>
-                            <linearGradient
-                                id="colorViews"
-                                x1="0"
-                                y1="0"
-                                x2="0"
-                                y2="1"
-                            >
-                                <stop
-                                    offset="10%"
-                                    stopColor="#85AF84"
-                                    stopOpacity={0.9}
-                                />
-                                <stop
-                                    offset="95%"
-                                    stopColor="#85AF84"
-                                    stopOpacity={0.5}
-                                />
-                            </linearGradient>
-                        </defs>
                     </LineChart>
                 </ResponsiveContainer>
             </div>

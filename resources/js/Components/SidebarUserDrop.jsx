@@ -3,11 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronUp, LogOut, User } from "lucide-react";
 import { router, usePage } from "@inertiajs/react";
+import { useLang } from "@/context/TranslationProvider";
 
 const SidebarUserDrop = () => {
     const [open, setOpen] = useState(false);
     const wrapperRef = useRef(null);
     const user = usePage().props.auth.user;
+    const { t } = useLang("Components.sidebarUserDrop");
 
     // Close on outside click
     useEffect(() => {
@@ -25,7 +27,7 @@ const SidebarUserDrop = () => {
     }, []);
 
     return (
-        <div ref={wrapperRef} className="drop-wrapper p-4 relative">
+        <div ref={wrapperRef} className="drop-wrapper px-4 relative">
             {/* Trigger */}
             <div
                 onClick={() => setOpen(!open)}
@@ -78,7 +80,7 @@ const SidebarUserDrop = () => {
                                 className="h-4 w-4 text-[#1E293B]"
                                 strokeWidth={2}
                             />
-                            <span>My Profile</span>
+                            <span>{t("myProfile")}</span>
                         </a>
                     </li>
 
@@ -95,7 +97,7 @@ const SidebarUserDrop = () => {
                                 className="h-4 w-4 text-[#1E293B]"
                                 strokeWidth={2}
                             />
-                            <span>Sign Out</span>
+                            <span>{t("signOut")}</span>
                         </button>
                     </li>
                 </ul>

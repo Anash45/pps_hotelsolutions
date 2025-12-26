@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { router } from "@inertiajs/react"; // 👈 needed for direct POST/PATCH
+import { router } from "@inertiajs/react";
 import InputLabel from "@/Components/InputLabel";
 import InputError from "@/Components/InputError";
 import { UploadCloud } from "lucide-react";
+import { useLang } from "@/context/TranslationProvider";
 
 export default function ProfilePhotoUpload({ value, errors, maxSizeMB = 5 }) {
+    const { t } = useLang('profile.ProfilePhotoUpload');
     const [preview, setPreview] = useState(null);
     const [existingImage, setExistingImage] = useState(null);
     const [customError, setCustomError] = useState("");
@@ -25,12 +27,8 @@ export default function ProfilePhotoUpload({ value, errors, maxSizeMB = 5 }) {
 
         router.post(route("profile.update.photo"), formData, {
             forceFormData: true,
-            onSuccess: () => {
-                console.log("✅ Photo uploaded");
-            },
-            onError: (err) => {
-                console.error("❌ Upload error:", err);
-            },
+            onSuccess: () => console.log("✅ Photo uploaded"),
+            onError: (err) => console.error("❌ Upload error:", err),
         });
     };
 
@@ -40,13 +38,13 @@ export default function ProfilePhotoUpload({ value, errors, maxSizeMB = 5 }) {
                 const rejection = fileRejections[0];
                 if (rejection.errors.some((e) => e.code === "file-too-large")) {
                     setCustomError(
-                        `File is too large. Max size is ${maxSizeMB} MB.`
+                        t("fileTypes", { maxSizeMB })
                     );
                 } else if (
                     rejection.errors.some((e) => e.code === "file-invalid-type")
                 ) {
                     setCustomError(
-                        "Invalid file type. Only SVG, PNG, JPG or GIF allowed."
+                        t("fileTypes", { maxSizeMB })
                     );
                 }
                 return;
@@ -56,7 +54,7 @@ export default function ProfilePhotoUpload({ value, errors, maxSizeMB = 5 }) {
             setPreview(URL.createObjectURL(file));
             setExistingImage(null);
             setCustomError("");
-            uploadPhoto(file); // 👈 directly upload
+            uploadPhoto(file);
         },
         [maxSizeMB]
     );
@@ -80,7 +78,7 @@ export default function ProfilePhotoUpload({ value, errors, maxSizeMB = 5 }) {
                 <InputLabel
                     className="text-[#344054] font-medium"
                     htmlFor="photo"
-                    value="Your photo"
+                    value={t("label")}
                 />
                 <InputError
                     className="mt-2"
@@ -122,19 +120,27 @@ export default function ProfilePhotoUpload({ value, errors, maxSizeMB = 5 }) {
                                 <p className="text-[#475467] text-sm">
                                     {isDragActive ? (
                                         <span className="font-semibold text-[#6941C6]">
-                                            Drop like it's hot
+                                            {t(
+                                                "dropLikeItsHot"
+                                            )}
                                         </span>
                                     ) : (
                                         <span>
                                             <span className="font-semibold text-[#6941C6]">
-                                                Click to upload
+                                                {t(
+                                                    "clickToUpload"
+                                                )}
                                             </span>{" "}
-                                            or drag and drop
+                                            {t(
+                                                "orDragAndDrop"
+                                            )}
                                         </span>
                                     )}
                                 </p>
                                 <p className="text-[#475467] text-xs leading-[18px]">
-                                    SVG, PNG, JPG or GIF (max. {maxSizeMB} MB)
+                                    {t("fileTypes", {
+                                        maxSizeMB,
+                                    })}
                                 </p>
                             </div>
                         </div>

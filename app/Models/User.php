@@ -55,4 +55,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Hotel::class);
     }
+
+    public function is_admin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
 }

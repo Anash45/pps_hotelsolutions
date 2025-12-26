@@ -1,1 +1,0 @@
-import{j as r}from"./app-CzSMpXLj.js";function a({message:t,className:n="",...e}){return t?r.jsx("p",{...e,className:"text-sm text-red-600 "+n,children:t}):null}function o({value:t,className:n="",children:e,...s}){return r.jsx("label",{...s,className:"block text-[#475569] text-sm leading-none"+n,children:t||e})}export{o as I,a};

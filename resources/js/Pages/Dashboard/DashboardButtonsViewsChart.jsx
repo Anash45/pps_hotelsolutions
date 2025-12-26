@@ -10,38 +10,24 @@ import {
     LabelList,
     Legend,
 } from "recharts";
-import { getButtonDataByDuration } from "@/utils/dummyButtonView";
+import { generateShades } from "@/utils/generateBarsColors";
+import { useLang } from "@/context/TranslationProvider";
 
-export default function DashboardButtonsViewsChart({ selectedDuration }) {
-    const chartData = getButtonDataByDuration(selectedDuration);
+export default function DashboardButtonsViewsChart({
+    selectedDuration,
+    buttonsViews = [],
+}) {
+    const { t } = useLang();
 
-    // Colors for each button (left square & bar fill)
-    const barColors = ["#A6DBA5", "#8CC78C", "#74B574", "#649D64", "#5D8C5C"];
+    const safeButtonsViews = Array.isArray(buttonsViews) ? buttonsViews : [];
+    const barColors = generateShades("#74B574", safeButtonsViews.length || 1);
 
-    const CustomLegend = ({ data }) => {
-    return (
-        <div className="flex flex-wrap gap-4 mt-4">
-            {data.map((entry, index) => (
-                <div key={`legend-${index}`} className="flex items-center gap-2">
-                    <span
-                        className="inline-block w-3 h-3 rounded-full"
-                        style={{ backgroundColor: barColors[index % barColors.length] }}
-                    ></span>
-                    <span className="text-sm font-medium text-gray-700 font-['Arial']">
-                        {entry.name}
-                    </span>
-                </div>
-            ))}
-        </div>
-    );
-};
 
-    // Custom label for left side (button name with colored square)
-    const CustomLeftLabel = (props) => {
-        const { y, width, index } = props;
+
+    const CustomLeftLabel = ({ y, index }) => {
+        const text = safeButtonsViews[index]?.button_text || "";
         return (
             <g transform={`translate(0, ${y - 5})`}>
-                {/* Button name */}
                 <text
                     x={0}
                     y={0}
@@ -52,61 +38,74 @@ export default function DashboardButtonsViewsChart({ selectedDuration }) {
                     textAnchor="start"
                     alignmentBaseline="left"
                 >
-                    {chartData[index].name}
+                    {text}
                 </text>
             </g>
         );
     };
 
-    // Custom label for right side (percentage)
-    const CustomRightLabel = (props) => {
-        const { x, y, width, value } = props;
-        return (
-            <text
-                x={x + width + 10} // offset to the far right
-                y={y + 6}
-                fill="#334155"
-                fontSize={12}
-                fontFamily="Arial"
-                textAnchor="start"
-                alignmentBaseline="middle"
-            >
-                {value}%
-            </text>
-        );
-    };
+    const CustomRightLabel = ({ x, y, width, value }) => (
+        <text
+            x={x + width + 10}
+            y={y + 6}
+            fill="#334155"
+            fontSize={12}
+            fontFamily="Arial"
+            textAnchor="start"
+            alignmentBaseline="middle"
+        >
+            {value != null ? value : 0}
+        </text>
+    );
+
+    // Dynamically calculate chart height based on number of items
+    const baseHeight = 64 * 4; // 4 rows default (256px)
+    const perItemHeight = 24; // px per item
+    const minHeight = 192; // minimum chart height
+    const maxHeight = 600; // maximum chart height
+    const chartHeight = Math.max(
+        minHeight,
+        Math.min(
+            baseHeight + (safeButtonsViews.length - 4) * perItemHeight,
+            maxHeight
+        )
+    );
 
     return (
         <div className="p-4 rounded-xl bg-white flex flex-col gap-6">
             {/* Header */}
             <div className="flex flex-col gap-1 mb-2">
                 <h5 className="font-semibold text-grey900 text-[18px] leading-[28px]">
-                    Overview hotel info site views
+                    {t("dashboard.DashboardButtonsViewsChart.header")}
                 </h5>
                 <p className="text-xs text-[#544854]">
-                    Description of this graph can land here
+                    {t("dashboard.DashboardButtonsViewsChart.description")}
                 </p>
             </div>
 
             {/* Chart */}
-            <div className="w-full h-64">
+            <div className="w-full" style={{ height: chartHeight }}>
                 <ResponsiveContainer
                     width="100%"
                     height="100%"
-                    id={"buttonsChart"}
+                    id="buttonsChart"
                 >
                     <BarChart
                         layout="vertical"
-                        data={chartData}
-                        margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
-                        barCategoryGap={34} // gap between bars
+                        data={safeButtonsViews}
+                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                        barCategoryGap={34}
                     >
                         <XAxis hide type="number" />
-
-                        <YAxis type="category" dataKey="name" hide />
+                        <YAxis type="category" dataKey="button_text" hide />
 
                         <Tooltip
-                            formatter={(value) => [`${value}%`, "Percentage"]}
+                            formatter={(value) => [
+                                `${value}%`,
+                                t(
+                                    "dashboard.DashboardButtonsViewsChart.tooltipPercentage"
+                                ),
+                            ]}
                             contentStyle={{
                                 backgroundColor: "white",
                                 borderRadius: "8px",
@@ -117,45 +116,57 @@ export default function DashboardButtonsViewsChart({ selectedDuration }) {
                         />
 
                         <Bar
-                            dataKey="percentage"
+                            dataKey="total_views"
                             isAnimationActive={false}
                             barSize={12}
                             fill="#A6DBA5"
-                            cursor="default" // disables hover highlight
-                            shape={(props) => {
-                                const index = props.index;
-                                return (
-                                    <rect
-                                        x={props.x}
-                                        y={props.y}
-                                        width={props.width}
-                                        height={props.height}
-                                        fill={
-                                            barColors[index % barColors.length]
-                                        }
-                                        rx={2}
-                                    />
-                                );
-                            }}
+                            cursor="default"
+                            shape={(props) => (
+                                <rect
+                                    x={props.x}
+                                    y={props.y}
+                                    width={props.width}
+                                    height={props.height}
+                                    fill={
+                                        barColors[
+                                            props.index % barColors.length
+                                        ]
+                                    }
+                                    rx={2}
+                                />
+                            )}
                         >
-                            {/* Custom left labels */}
                             <LabelList
-                                dataKey="name"
+                                dataKey="button_text"
                                 content={<CustomLeftLabel />}
                             />
-                            {/* Custom right labels */}
                             <LabelList
-                                dataKey="percentage"
+                                dataKey="total_views"
                                 content={<CustomRightLabel />}
                             />
                         </Bar>
 
-                        {/* Custom Legend */}
-                        <Legend
-                            verticalAlign="bottom"
-                            align="left"
-                            content={<CustomLegend data={chartData} />}
-                        />
+                        {safeButtonsViews.length > 0 && (
+                            <Legend
+                                verticalAlign="bottom"
+                                align="left"
+                                iconSize={16}
+                                wrapperStyle={{
+                                    paddingTop: 16,
+                                    paddingBottom: 8,
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    rowGap: 12,
+                                    columnGap: 32,
+                                    maxWidth: "100%",
+                                }}
+                                payload={safeButtonsViews.map((entry, index) => ({
+                                    value: entry.button_text || "N/A",
+                                    type: "square",
+                                    color: barColors[index % barColors.length],
+                                }))}
+                            />
+                        )}
                     </BarChart>
                 </ResponsiveContainer>
             </div>
