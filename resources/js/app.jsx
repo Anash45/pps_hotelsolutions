@@ -5,8 +5,11 @@ import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
 import { ModalProvider } from "./context/ModalProvider";
+import { setupConsoleLogging } from "./utils/consoleLogger";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+
+setupConsoleLogging();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
