@@ -9,6 +9,7 @@ import { PageProvider } from "./context/PageProvider";
 import LanguageSwitcher from "./Components/LanguageSwitcher";
 import axios from "axios"; // ← needed for switching later
 import { TranslationProvider } from "./context/TranslationProvider";
+import { setupConsoleLogging } from "./utils/consoleLogger";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
