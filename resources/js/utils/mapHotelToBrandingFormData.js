@@ -1,5 +1,3 @@
-import { se } from "date-fns/locale";
-
 export function mapHotelToBrandingFormData(selectedHotel, options = {}) {
     if (!selectedHotel) return {};
 

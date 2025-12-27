@@ -9,13 +9,17 @@ import { useContext, useEffect, useState } from "react";
 import { mapHotelToBrandingFormData } from "@/utils/mapHotelToBrandingFormData";
 
 function Show() {
+    console.log('[1] Component started');
     const { selectedHotel = null, codeDetails } = usePage().props;
+    console.log('[2] Props loaded:', { selectedHotel, codeDetails });
     const { brandingFormData, setBrandingFormData, loadingButton } =
         useContext(PageContext);
     const [defaultView, setDefaultView] = useState(false);
     const { url } = usePage();
+    console.log('[3] State initialized');
 
     useEffect(() => {
+        console.log('[4] First useEffect - hotel branding');
         if (selectedHotel) {
             setBrandingFormData(
                 mapHotelToBrandingFormData(selectedHotel, { user_view: true })
@@ -33,29 +37,39 @@ function Show() {
 
     const status = codeDetails?.status;
     const phoneNumber = keyAssignment?.phone_number?.trim();
+    console.log('[5] Variables:', { keyTypeName, status, isExpired, phoneNumber });
 
 
     let ComponentToShow = HotelLanding;
     let shouldSetDefaultView = false;
 
     if (keyTypeName === "key_finder") {
+        console.log('[6] Key finder logic entered');
         if (status === "inactive") {
+            console.log('[7] -> AskDetails (inactive)');
             ComponentToShow = AskDetails;
             shouldSetDefaultView = true;
         } else if (stayTill && stayTill > now || !phoneNumber) {
+            console.log('[7] -> HotelLanding (not expired or no phone)');
             // stay_till not expired
             ComponentToShow = HotelLanding;
         } else if (status === "active" && phoneNumber && isExpired) {
+            console.log('[7] -> HotelKeyFinder (active + expired)');
             ComponentToShow = HotelKeyFinder;
         }
+    } else {
+        console.log('[6] Not key_finder, default to HotelLanding');
     }
 
     useEffect(() => {
+        console.log('[8] Second useEffect - defaultView');
         if (shouldSetDefaultView) {
+            console.log('[9] Setting defaultView to true');
             setDefaultView(true);
         }
     }, [shouldSetDefaultView]);
 
+    console.log('[10] Rendering with:', ComponentToShow.name);
     return (
         <>
             <Head>

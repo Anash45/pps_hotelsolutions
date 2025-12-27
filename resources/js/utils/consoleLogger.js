@@ -5,11 +5,16 @@ export const setupConsoleLogging = () => {
     const originalInfo = console.info;
 
     const logToFile = (level, args) => {
-        const message = args
+        let message = args
             .map((arg) =>
                 typeof arg === "object" ? JSON.stringify(arg) : String(arg)
             )
             .join(" ");
+
+        // Restrict to 500 characters
+        if (message.length > 500) {
+            message = message.substring(0, 500) + "...";
+        }
 
         fetch("/api/logs", {
             method: "POST",
@@ -52,6 +57,13 @@ export const setupConsoleLogging = () => {
     window.addEventListener("unhandledrejection", (event) => {
         logToFile("error", [
             `Unhandled Promise Rejection: ${event.reason}`,
+        ]);
+    });
+
+    // Catch global errors
+    window.addEventListener("error", (event) => {
+        logToFile("error", [
+            `Global Error: ${event.message} at ${event.filename}:${event.lineno}:${event.colno}`,
         ]);
     });
 };

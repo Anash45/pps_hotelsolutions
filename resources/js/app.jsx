@@ -6,37 +6,66 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
 import { ModalProvider } from "./context/ModalProvider";
 import { PageProvider } from "./context/PageProvider";
-import LanguageSwitcher from "./Components/LanguageSwitcher";
-import axios from "axios"; // ← needed for switching later
 import { TranslationProvider } from "./context/TranslationProvider";
 import { setupConsoleLogging } from "./utils/consoleLogger";
+import ErrorBoundary from "./Components/ErrorBoundary";
+import { Head } from "@inertiajs/react";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 setupConsoleLogging();
+console.log("[Boot] Inertia app initializing");
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) =>
-        resolvePageComponent(
-            `./Pages/${name}.jsx`,
-            import.meta.glob("./Pages/**/*.jsx")
-        ),
+    resolve: async (name) => {
+        try {
+            return await resolvePageComponent(
+                `./Pages/${name}.jsx`,
+                import.meta.glob("./Pages/**/*.jsx")
+            );
+        } catch (err) {
+            console.error("[Resolve Error] Failed to load page:", name, err);
+            return () => (
+                <>
+                    <Head title="Error Loading Page" />
+                    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+                        <div className="max-w-md w-full bg-white shadow rounded p-6">
+                            <h1 className="text-xl font-semibold text-red-600">
+                                Failed to load page
+                            </h1>
+                            <p className="text-sm text-gray-600">
+                                An error occurred while loading "{name}". Check
+                                the console for details.
+                            </p>
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="mt-3 bg-primary hover:bg-primary text-white px-3 py-2 rounded"
+                            >
+                                Reload Page
+                            </button>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+    },
     setup({ el, App, props }) {
         const root = createRoot(el);
 
         // Get current locale (if shared from Laravel middleware)
         const currentLocale = props.initialPage.props.locale || "en";
 
-
         root.render(
-            <TranslationProvider locale={currentLocale}>
-                <PageProvider>
-                    <ModalProvider>
-                        <App {...props} />
-                    </ModalProvider>
-                </PageProvider>
-            </TranslationProvider>
+            <ErrorBoundary>
+                <TranslationProvider locale={currentLocale}>
+                    <PageProvider>
+                        <ModalProvider>
+                            <App {...props} />
+                        </ModalProvider>
+                    </PageProvider>
+                </TranslationProvider>
+            </ErrorBoundary>
         );
     },
     progress: {
