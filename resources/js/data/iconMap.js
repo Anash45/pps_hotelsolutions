@@ -43,20 +43,20 @@ export const iconMap = {
 
 // ✅ Helper: safely get icon by name with debug logging
 export function getIcon(name) {
-    console.log("[iconMap] Requested icon:", name);
+    // console.log("[iconMap] Requested icon:", name);
 
     if (!name) {
-        console.warn("[iconMap] No name provided.");
+        // console.warn("[iconMap] No name provided.");
         return null;
     }
 
     const icon = iconMap[name];
 
     if (icon) {
-        console.log("[iconMap] Found icon:", name, icon);
+        // console.log("[iconMap] Found icon:", name, icon);
     } else {
-        console.warn("[iconMap] Icon not found for:", name);
-        console.info("[iconMap] Available keys:", Object.keys(iconMap));
+        // console.warn("[iconMap] Icon not found for:", name);
+        // console.info("[iconMap] Available keys:", Object.keys(iconMap));
     }
 
     return icon || null;

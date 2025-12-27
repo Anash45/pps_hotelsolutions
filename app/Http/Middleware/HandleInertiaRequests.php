@@ -36,4 +36,32 @@ class HandleInertiaRequests extends Middleware
             ],
         ];
     }
+
+    /**
+     * Intercept the response to add cache-control headers for iOS Safari.
+     */
+    public function __invoke($request, $next)
+    {
+        $response = $next($request);
+
+        // Add cache-control headers to prevent Safari iOS caching issues
+        // This is crucial for QR code scanning where the same URL is visited multiple times
+        if ($this->shouldAddCacheHeaders($request, $response)) {
+            $response->header('Cache-Control', 'no-cache, no-store, must-revalidate, private');
+            $response->header('Pragma', 'no-cache');
+            $response->header('Expires', '0');
+        }
+
+        return $response;
+    }
+
+    /**
+     * Determine if cache headers should be added to the response.
+     */
+    private function shouldAddCacheHeaders($request, $response): bool
+    {
+        // Only add headers to HTML responses
+        $contentType = $response->headers->get('Content-Type', '');
+        return strpos($contentType, 'text/html') !== false;
+    }
 }

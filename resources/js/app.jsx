@@ -16,6 +16,17 @@ const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 setupConsoleLogging();
 console.log("[Boot] Inertia app initializing");
 
+// Prevent browser back/forward cache (bfcache) issues on iOS Safari
+if (typeof window !== 'undefined') {
+    // Handle page restoration from cache - forces reload
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+            console.log("[Boot] Page restored from bfcache, reloading to prevent white screen");
+            window.location.reload();
+        }
+    });
+}
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: async (name) => {
