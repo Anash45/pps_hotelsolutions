@@ -21,7 +21,6 @@ export default function HotelBrandingPages() {
         try {
             await axios.delete(`/hotel-pages/${pageId}`);
             router.reload({ only: ["selectedHotel"] });
-            console.log("Page deleted successfully");
         } catch (error) {
             console.error(error.response?.data || error);
         }

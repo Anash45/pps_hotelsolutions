@@ -13,10 +13,6 @@ function Show() {
     const { brandingFormData, setBrandingFormData } = useContext(PageContext);
     const { url } = usePage();
 
-    console.log("Data:", {
-        selectedHotel,
-        brandingFormData,
-    });
 
     useEffect(() => {
         if (selectedHotel) {
@@ -26,10 +22,6 @@ function Show() {
         }
     }, [selectedHotel, url]);
 
-    console.log("Data:", {
-        selectedHotel,
-        brandingFormData,
-    });
 
     let ComponentToShow = HotelLanding;
 

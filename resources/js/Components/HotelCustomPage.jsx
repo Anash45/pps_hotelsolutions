@@ -6,7 +6,6 @@ import { useAutoTranslate } from "@/context/AutoTranslateProvider";
 export default function HotelCustomPage({ page = null, guestKey = null }) {
     const context = useAutoTranslate();
     const isDE = context?.isDE || null;
-    // console.log(page?.content);
 
     return (
         <div className="space-y-4 px-2">

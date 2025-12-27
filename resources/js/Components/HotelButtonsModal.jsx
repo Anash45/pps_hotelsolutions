@@ -107,7 +107,6 @@ export default function HotelButtonsModal({
         }
     };
 
-    console.log("button: ",button);
 
     return (
         <div

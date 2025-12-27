@@ -18,7 +18,6 @@ export default function HotelLandingButtons({
     const handleView = async (buttonId) => {
         try {
             await axios.post(`/buttons/${buttonId}/view`);
-            console.log("✅ View tracked for button", buttonId);
         } catch (err) {
             console.error("❌ Failed to track view", err.response?.data || err);
         }

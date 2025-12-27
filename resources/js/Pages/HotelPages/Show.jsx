@@ -19,7 +19,6 @@ function HotelPages() {
         }
     }, [selectedHotel]);
 
-    console.log("Three: ", selectedHotel, page, key);
 
     return (
         <>

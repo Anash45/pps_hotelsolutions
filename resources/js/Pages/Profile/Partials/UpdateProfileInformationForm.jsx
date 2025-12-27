@@ -34,7 +34,7 @@ export default function UpdateProfileInformation({
             onBefore: (visit) => {
                 if (visit.formData) {
                     for (let pair of visit.formData.entries()) {
-                        console.log(pair[0], pair[1]);
+                        
                     }
                 }
             },
@@ -42,7 +42,6 @@ export default function UpdateProfileInformation({
                 console.error("Validation errors:", errors);
             },
             onFinish: () => {
-                console.log("Request finished.");
             },
         });
     };

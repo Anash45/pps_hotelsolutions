@@ -34,13 +34,6 @@ function Show() {
     const status = codeDetails?.status;
     const phoneNumber = keyAssignment?.phone_number?.trim();
 
-    console.log("Data:", {
-        keyTypeName,
-        status,
-        phoneNumber,
-        stayTillRaw,
-        isExpired,
-    });
 
     let ComponentToShow = HotelLanding;
     let shouldSetDefaultView = false;
@@ -49,14 +42,11 @@ function Show() {
         if (status === "inactive") {
             ComponentToShow = AskDetails;
             shouldSetDefaultView = true;
-            console.log("1");
         } else if (stayTill && stayTill > now || !phoneNumber) {
             // stay_till not expired
             ComponentToShow = HotelLanding;
-            console.log("3");
         } else if (status === "active" && phoneNumber && isExpired) {
             ComponentToShow = HotelKeyFinder;
-            console.log("4");
         }
     }
 

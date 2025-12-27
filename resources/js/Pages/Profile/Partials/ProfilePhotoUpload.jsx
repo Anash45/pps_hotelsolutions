@@ -27,7 +27,9 @@ export default function ProfilePhotoUpload({ value, errors, maxSizeMB = 5 }) {
 
         router.post(route("profile.update.photo"), formData, {
             forceFormData: true,
-            onSuccess: () => console.log("✅ Photo uploaded"),
+            onSuccess: () => {
+                
+            },
             onError: (err) => console.error("❌ Upload error:", err),
         });
     };

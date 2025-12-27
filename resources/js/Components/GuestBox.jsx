@@ -17,8 +17,6 @@ const GuestBox = ({
     const { t } = useLang("Components.GuestBox"); // 🔥 translations for this component
     const { brandingFormData } = useContext(PageContext);
 
-    console.log("brandingFormData: ", brandingFormData);
-
     const bgColor =
         noBranding || defaultView
             ? "#ffffff"

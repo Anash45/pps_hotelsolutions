@@ -11,15 +11,12 @@ const Sidebar = () => {
     const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
     const { locale } = usePage().props;
 
-    console.log(locale);
     const handleLangChange = async (lang) => {
-        console.log("Switching language to:", lang);
 
         try {
             const response = await axios.post("/language", {
                 locale: lang,
             });
-            console.log("Language API response:", response.data);
         } catch (error) {
             console.error(
                 "Error switching language:",

@@ -51,7 +51,6 @@ export default function HotelPageModal({
                 ? await axios.put(`/hotel-pages/${page.id}`, formData)
                 : await axios.post("/hotel-pages", formData);
 
-            // console.log("response: ", response);
 
             router.reload({ only: ["selectedHotel"] });
             setTimeout(handleClose, 500);
@@ -64,7 +63,6 @@ export default function HotelPageModal({
         }
     };
 
-    // console.log("form data: ", formData);
 
     return (
         <div
