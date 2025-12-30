@@ -44,12 +44,16 @@ class CodesController extends Controller
             ]);
         }
 
-        // ✅ Add time parameter to URL if not present
-        if (!request()->has('t')) {
-            $currentUrl = request()->fullUrl();
-            $timeParam = now()->format('His'); // Format: HHMMSS
-            $separator = str_contains($currentUrl, '?') ? '&' : '?';
-            return redirect($currentUrl . $separator . 't=' . $timeParam);
+        // ✅ Add or update time parameter to URL with current time
+        $timeParam = now()->format('His'); // Format: HHMMSS
+        $currentTimeParam = request()->get('t');
+        
+        if ($currentTimeParam !== $timeParam) {
+            $url = request()->url();
+            $queryParams = request()->query();
+            $queryParams['t'] = $timeParam;
+            $newUrl = $url . '?' . http_build_query($queryParams);
+            return redirect($newUrl);
         }
 
         // ✅ Prepare meta info
