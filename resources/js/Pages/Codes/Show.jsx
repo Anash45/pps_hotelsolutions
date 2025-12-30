@@ -69,6 +69,8 @@ function Show() {
         }
     }, [shouldSetDefaultView]);
 
+
+
     // console.log('[10] Rendering with:', ComponentToShow.name);
     return (
         <>
